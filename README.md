@@ -34,3 +34,8 @@ Not yet connected
 
 ![Breakout board 1](thermo1.jpg)
 ![Breakout board 2](thermo2.jpg)
+
+Connected to Arduino, thermocouple working with open circuit error condition
+
+
+![incomplete 1](open-circuit-test-working.jpg)
