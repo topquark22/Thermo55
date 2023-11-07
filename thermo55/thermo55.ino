@@ -2,7 +2,7 @@
 
 // SPI hardware configuration
 int thermoDO = 12; // MISO
-int thermoCS = 10; // Chip select
+int thermoCS = 9; // Chip select
 int thermoCLK = 13; // SPI serial clock
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
