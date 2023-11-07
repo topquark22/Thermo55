@@ -28,27 +28,9 @@ Connecting the Adafruit breakout board:
 Testing for open circuits:
 - Use the `readError()` method from the Adafruit MAX31855 library to check for any faults with the thermocouple connections.
 
-## Arduino Library Usage
+## Some components
 
-Installing the library:
-- Use the Library Manager in the Arduino IDE to install the Adafruit MAX31855 library.
+Not yet connected
 
-Example of error checking in Arduino code:
-
-```cpp
-void loop() {
-  double c = thermocouple.readCelsius();
-  
-  if (isnan(c)) {
-    Serial.println("Something went wrong with the thermocouple!");
-    if (thermocouple.readError() & MAX31855_ERROR_OPEN_CIRCUIT) {
-      Serial.println("Open circuit!");
-    }
-    // Additional error checks as needed
-  } else {
-    Serial.print("Temperature: ");
-    Serial.print(c);
-    Serial.println("°C");
-  }
-  delay(1000);
-}
+![Breakout board 1](thermo1.jpg)
+![Breakout board 2](thermo2.jpg)
