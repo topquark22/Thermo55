@@ -1,14 +1,16 @@
 #include "Adafruit_MAX31855.h"
 
 // SPI hardware configuration
-int thermoDO = 12; // MISO
-int thermoCS = 9; // Chip select
-int thermoCLK = 13; // SPI serial clock
+const int thermoDO = 12; // MISO
+const int thermoCS = 9; // Chip select
+const int thermoCLK = 13; // SPI serial clock
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
+const int BAUD_RATE = 9600;
+
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(BAUD_RATE);
   Serial.println("MAX31855 test");
   // wait for MAX31855 to stabilize
   delay(500);
