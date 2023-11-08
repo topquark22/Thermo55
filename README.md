@@ -1,4 +1,4 @@
-# Thermocouple Attachment and Testing Guide
+# Thermocouple Attachment and Testing
 
 This document is a compiled guide based on a conversation about how to attach and test a Type-K thermocouple, specifically when using an Adafruit MAX31855 thermocouple amplifier breakout board with an Arduino.
 
