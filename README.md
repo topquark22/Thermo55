@@ -39,3 +39,7 @@ Connected to Arduino, breakout board working without thermocouple attached. Corr
 
 
 ![incomplete 1](open-circuit-test-working.jpg)
+
+Soldered up and attached to the thermocouple. It is working as expected.
+
+![prototype](thermo3.jpg)
