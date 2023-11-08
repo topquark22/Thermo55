@@ -1,5 +1,7 @@
 #include "Adafruit_MAX31855.h"
 
+const int PIN_LED = 2;
+
 // SPI hardware configuration
 const int thermoDO = 12; // MISO
 const int thermoCS = 9; // Chip select
@@ -10,6 +12,10 @@ Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 const int BAUD_RATE = 9600;
 
 void setup() {
+
+  pinMode(PIN_LED, OUTPUT);
+  digitalWrite(PIN_LED, LOW);
+  
   Serial.begin(BAUD_RATE);
   Serial.println("MAX31855 test");
   // wait for MAX31855 to stabilize
