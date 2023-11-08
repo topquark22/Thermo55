@@ -11,10 +11,12 @@ Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
 const int BAUD_RATE = 9600;
 
+float WARNING_THRESHOLD_C = 100;
+
 void setup() {
 
   pinMode(PIN_LED, OUTPUT);
-  digitalWrite(PIN_LED, LOW);
+  digitalWrite(PIN_LED,LOW);
   
   Serial.begin(BAUD_RATE);
   Serial.println("MAX31855 test");
@@ -42,7 +44,13 @@ void loop() {
   } else {
     Serial.print("Celsius: ");
     Serial.println(c);
+    if (c >= WARNING_THRESHOLD_C) {
+      digitalWrite(PIN_LED, HIGH);
+    } else {
+      digitalWrite(PIN_LED, LOW);
+    }
   }
+
   // Delay between readings
   delay(1000);
 }
