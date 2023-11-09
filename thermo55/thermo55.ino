@@ -1,6 +1,7 @@
 #include "Adafruit_MAX31855.h"
 
-const int PIN_LED = 2;
+const int PIN_OUT = 2;
+const int PIN_OUT_ = 3;
 
 // SPI hardware configuration
 const int thermoDO = 12; // MISO
@@ -11,12 +12,14 @@ Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
 const int BAUD_RATE = 9600;
 
-float WARNING_THRESHOLD_C = 100;
+float WARNING_THRESHOLD_C = 100; // TODO read this from a potentiometer
 
 void setup() {
 
-  pinMode(PIN_LED, OUTPUT);
-  digitalWrite(PIN_LED,LOW);
+  pinMode(PIN_OUT, OUTPUT);
+  pinMode(PIN_OUT_, OUTPUT);
+  digitalWrite(PIN_OUT,LOW);
+  digitalWrite(PIN_OUT_, HIGH);
   
   Serial.begin(BAUD_RATE);
   Serial.println("MAX31855 test");
@@ -45,9 +48,11 @@ void loop() {
     Serial.print("Celsius: ");
     Serial.println(c);
     if (c >= WARNING_THRESHOLD_C) {
-      digitalWrite(PIN_LED, HIGH);
+      digitalWrite(PIN_OUT, HIGH);
+      digitalWrite(PIN_OUT_, LOW);
     } else {
-      digitalWrite(PIN_LED, LOW);
+      digitalWrite(PIN_OUT, LOW);
+      digitalWrite(PIN_OUT_, HIGH);
     }
   }
 
