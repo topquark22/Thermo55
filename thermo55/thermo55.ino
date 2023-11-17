@@ -5,7 +5,7 @@ const int PIN_OUT_ = 3;
 
 // SPI hardware configuration
 const int thermoDO = 12; // MISO
-const int thermoCS = 9; // Chip select
+const int thermoCS = 8; // Chip select
 const int thermoCLK = 13; // SPI serial clock
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
