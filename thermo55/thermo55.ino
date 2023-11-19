@@ -5,14 +5,14 @@ const int PIN_OUT_ = 3;
 
 // SPI hardware configuration
 const int thermoDO = 12; // MISO
-const int thermoCS = 8; // Chip select
+const int thermoCS = A5; // Chip select
 const int thermoCLK = 13; // SPI serial clock
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
 const int BAUD_RATE = 9600;
 
-float WARNING_THRESHOLD_C = 100; // TODO read this from a potentiometer
+float WARNING_THRESHOLD_C = 24; // TODO read this from nRLF24L radio
 
 void setup() {
 
