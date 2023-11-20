@@ -19,6 +19,9 @@ const int PIN_DS3 = A2;
 const int PIN_DS2 = A3;
 const int PIN_DS1 = A4;
 
+// for future use, switch lcd display mode (for max/min etc.)
+const int PIN_DISP_SEL = A5;
+
 // Alarm direction: If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;
 
@@ -34,6 +37,10 @@ const int PIN_THRESHOLD = A0;
 const float TEMP_LOW = -20;
 const float TEMP_HIGH = 200;
 
+// track max and min temp since reset
+float maxTemp = -200; // lowest reading for thermocouple
+float minTemp = 1325; // highest reading for thermocouple
+
 float alarmTemperature() {
   int reading = analogRead(PIN_THRESHOLD);
   // interpolate
@@ -46,7 +53,7 @@ const int INTERVAL = 1000;
 
 const int BAUD_RATE = 9600;
 
-void doOutput(bool value) {
+void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
 }
@@ -58,15 +65,16 @@ void setup() {
   pinMode(PIN_OUT_, OUTPUT);
   pinMode(PIN_THRESHOLD, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
+  pinMode(PIN_DISP_SEL, INPUT_PULLUP);
     
-  doOutput(LOW);
+  setOutput(LOW);
 
   highAlarm = digitalRead(PIN_ALARM_DIR);
-  Serial.print("Will alarm on ");
+  Serial.print(F("Will alarm on "));
   if (highAlarm) {
-    Serial.println("high temperature");
+    Serial.println(F("high temperature threshold"));
   } else {
-    Serial.println("low temperature");
+    Serial.println(F("low temperature threshold"));
   }
   Serial.println();
   
@@ -84,7 +92,7 @@ void loop() {
 
   if (error) {
     
-    doOutput(LOW);
+    setOutput(LOW);
     
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -93,26 +101,33 @@ void loop() {
     
     Serial.print("Error: ");
     if (error & MAX31855_FAULT_OPEN) {
-      Serial.println("Open Circuit!");
+      Serial.println(F("Open Circuit!"));
       lcd.print("Open circuit");
     }
     if (error & MAX31855_FAULT_SHORT_GND) {
-      Serial.println("Short to GND!");
+      Serial.println(F("Short to GND!"));
       lcd.print("Short to GND");
     }
     if (error & MAX31855_FAULT_SHORT_VCC) {
-      Serial.println("Short to VCC!");
+      Serial.println(F("Short to VCC!"));
       lcd.print("Short to VCC)");
     }
     delay(100); // flush serial buffer
     exit(1);
   }
+
+  if (c > maxTemp) {
+    maxTemp = c;
+  }
+  if (c < minTemp) {
+    minTemp = c;
+  }
   
   float threshold = alarmTemperature();
 
-  Serial.print("Temp:  ");
+  Serial.print(F("Temp:  "));
   Serial.println(c);
-  Serial.print("Alarm: ");
+  Serial.print(F("Alarm: "));
   Serial.println(threshold);
   Serial.println();
   
@@ -125,9 +140,9 @@ void loop() {
   lcd.print(threshold);
 
   if ((highAlarm && c >= threshold) || (!highAlarm && c <= threshold)) {
-    doOutput(HIGH);
+    setOutput(HIGH);
   } else {
-    doOutput(LOW);
+    setOutput(LOW);
   }
 
   delay(INTERVAL);
