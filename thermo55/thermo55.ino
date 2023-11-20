@@ -20,12 +20,12 @@ const int PIN_DS2 = A3;
 const int PIN_DS1 = A4;
 
 // for future use, switch lcd display mode (for max/min etc.)
-const int PIN_DISP_SEL = A5;
+const int PIN_DISP_SEL = 5;
 
 // Alarm direction: If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;
 
-bool highAlarm;
+bool alarmOnHighTemp;
 
 LiquidCrystal lcd(PIN_RS, PIN_E, PIN_DS4, PIN_DS3, PIN_DS2, PIN_DS1);
 
@@ -39,7 +39,7 @@ const float TEMP_HIGH = 200;
 
 // track max and min temp since reset
 float maxTemp = -200; // lowest reading for thermocouple
-float minTemp = 1325; // highest reading for thermocouple
+float minTemp = 1350; // highest reading for thermocouple
 
 float alarmTemperature() {
   int reading = analogRead(PIN_THRESHOLD);
@@ -57,6 +57,7 @@ void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
 }
+
 void setup() {
 
   Serial.begin(BAUD_RATE);
@@ -69,9 +70,9 @@ void setup() {
     
   setOutput(LOW);
 
-  highAlarm = digitalRead(PIN_ALARM_DIR);
+  alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
   Serial.print(F("Will alarm on "));
-  if (highAlarm) {
+  if (alarmOnHighTemp) {
     Serial.println(F("high temperature threshold"));
   } else {
     Serial.println(F("low temperature threshold"));
@@ -110,7 +111,7 @@ void loop() {
     }
     if (error & MAX31855_FAULT_SHORT_VCC) {
       Serial.println(F("Short to VCC!"));
-      lcd.print("Short to VCC)");
+      lcd.print("Short to VCC");
     }
     delay(100); // flush serial buffer
     exit(1);
@@ -125,21 +126,42 @@ void loop() {
   
   float threshold = alarmTemperature();
 
-  Serial.print(F("Temp:  "));
-  Serial.println(c);
-  Serial.print(F("Alarm: "));
-  Serial.println(threshold);
-  Serial.println();
+  bool maxMinMode = !digitalRead(PIN_DISP_SEL);
   
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Temp:  ");
-  lcd.print(c);
-  lcd.setCursor(0, 1);
-  lcd.print("Alarm: ");
-  lcd.print(threshold);
+  if (!maxMinMode) { // normal mode
+    
+    Serial.print(F("Temp:  "));
+    Serial.println(c);
+    Serial.print(F("Alarm: "));
+    Serial.println(threshold);
+    Serial.println();
+    
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Temp:  ");
+    lcd.print(c);
+    lcd.setCursor(0, 1);
+    lcd.print("Alarm: ");
+    lcd.print(threshold);
+    
+  } else { // Max/Min mode
+    
+    Serial.print(F("Max: "));
+    Serial.println(maxTemp);
+    Serial.print(F("Min: "));
+    Serial.println(minTemp);
+    Serial.println();
+    
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Max: ");
+    lcd.print(maxTemp);
+    lcd.setCursor(0, 1);
+    lcd.print("Min: ");
+    lcd.print(minTemp);
+  }
 
-  if ((highAlarm && c >= threshold) || (!highAlarm && c <= threshold)) {
+  if ((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold)) {
     setOutput(HIGH);
   } else {
     setOutput(LOW);
