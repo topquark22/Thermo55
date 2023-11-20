@@ -34,6 +34,9 @@ float alarmTemperature() {
   return alarmTemp;
 }
 
+// Delay between readings
+const int INTERVAL = 1000;
+
 const int BAUD_RATE = 9600;
 
 void setup() {
@@ -43,9 +46,11 @@ void setup() {
   digitalWrite(PIN_OUT,LOW);
   digitalWrite(PIN_OUT_, HIGH);
   pinMode(PIN_THRESHOLD, INPUT);
+
+  lcd.begin(16,2);
   
   Serial.begin(BAUD_RATE);
-  Serial.println("MAX31855 test");
+
   // wait for MAX31855 to stabilize
   delay(500);
 }
@@ -57,31 +62,55 @@ void loop() {
   uint8_t error = thermocouple.readError();
 
   if (error) {
+    
+    digitalWrite(PIN_OUT, LOW);
+    digitalWrite(PIN_OUT_, HIGH);
+    
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Error:");
+    lcd.setCursor(0, 1);
+    
     Serial.print("Error: ");
     if (error & MAX31855_FAULT_OPEN) {
       Serial.println("Open Circuit!");
+      lcd.print("Open circuit");
     }
     if (error & MAX31855_FAULT_SHORT_GND) {
       Serial.println("Short to GND!");
+      lcd.print("Short to GND");
     }
     if (error & MAX31855_FAULT_SHORT_VCC) {
       Serial.println("Short to VCC!");
+      lcd.print("Short to VCC)");
     }
+    delay(100); // flush serial buffer
+    exit(1);
+  }
+  
+  float threshold = alarmTemperature();
+
+  Serial.print("Temp:  ");
+  Serial.println(c);
+  Serial.print("Alarm: ");
+  Serial.println(threshold);
+  Serial.println();
+  
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Temp:  ");
+  lcd.print(c);
+  lcd.setCursor(0, 1);
+  lcd.print("Alarm: ");
+  lcd.print(threshold);
+
+  if (c >= threshold) {
+    digitalWrite(PIN_OUT, HIGH);
+    digitalWrite(PIN_OUT_, LOW);
   } else {
-    float threshold = alarmTemperature();
-    Serial.print("Alarm threshold: ");
-    Serial.println(threshold);
-    Serial.print("Celsius: ");
-    Serial.println(c);
-    if (c >= threshold) {
-      digitalWrite(PIN_OUT, HIGH);
-      digitalWrite(PIN_OUT_, LOW);
-    } else {
-      digitalWrite(PIN_OUT, LOW);
-      digitalWrite(PIN_OUT_, HIGH);
-    }
+    digitalWrite(PIN_OUT, LOW);
+    digitalWrite(PIN_OUT_, HIGH);
   }
 
-  // Delay between readings
-  delay(1000);
+  delay(INTERVAL);
 }
