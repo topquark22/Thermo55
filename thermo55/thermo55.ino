@@ -130,34 +130,34 @@ void loop() {
   
   if (!maxMinMode) { // normal mode
     
-    Serial.print(F("Temp:  "));
+    Serial.print(F("Temperature: "));
     Serial.println(c);
-    Serial.print(F("Alarm: "));
+    Serial.print(F("Threshold:   "));
     Serial.println(threshold);
     Serial.println();
     
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("Temp:  ");
+    lcd.print("Tmprture:");
     lcd.print(c);
     lcd.setCursor(0, 1);
-    lcd.print("Alarm: ");
+    lcd.print("Thrshld:");
     lcd.print(threshold);
     
   } else { // Max/Min mode
     
-    Serial.print(F("Max: "));
+    Serial.print(F("Maximum since reset: "));
     Serial.println(maxTemp);
-    Serial.print(F("Min: "));
+    Serial.print(F("Minimum since reset: "));
     Serial.println(minTemp);
     Serial.println();
     
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("Max: ");
+    lcd.print("Max:");
     lcd.print(maxTemp);
     lcd.setCursor(0, 1);
-    lcd.print("Min: ");
+    lcd.print("Min:");
     lcd.print(minTemp);
   }
 
