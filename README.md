@@ -1,8 +1,8 @@
-# Thermocouple Attachment and Testing
-
-This document is a compiled guide based on a conversation about how to attach and test a Type-K thermocouple, specifically when using an Adafruit MAX31855 thermocouple amplifier breakout board with an Arduino.
+# Temperature Alerting System
 
 ## Attaching a Type-K Thermocouple
+
+Thissection is a compiled guide based on a conversation about how to attach and test a Type-K thermocouple, specifically when using an Adafruit MAX31855 thermocouple amplifier breakout board with an Arduino.
 
 Identify the wires:
 - Type-K thermocouple wires are typically color-coded.
@@ -33,10 +33,8 @@ Testing for open circuits:
 Not yet connected
 
 ![Breakout board 1](thermo1.jpg)
-![Breakout board 2](thermo2.jpg)
 
 Connected to Arduino, breakout board working without thermocouple attached. Correctly displays open circuit error condition
-
 
 ![incomplete 1](open-circuit-test-working.jpg)
 
