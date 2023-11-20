@@ -19,11 +19,18 @@ const int PIN_DS3 = A2;
 const int PIN_DS2 = A3;
 const int PIN_DS1 = A4;
 
+// Alarm direction: If wired to ground, alarm on low temp. Else alarm on high temp.
+const int PIN_ALARM_DIR = 4;
+
+bool highAlarm;
+
 LiquidCrystal lcd(PIN_RS, PIN_E, PIN_DS4, PIN_DS3, PIN_DS2, PIN_DS1);
 
+// analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
 
-// alarm threshold range in degrees C
+// alarm threshold supported range in degrees C
+// (Note: Type K thermocouple actually supports -200 to +1300)
 const float TEMP_LOW = -20;
 const float TEMP_HIGH = 200;
 
@@ -39,17 +46,31 @@ const int INTERVAL = 1000;
 
 const int BAUD_RATE = 9600;
 
+void doOutput(bool value) {
+  digitalWrite(PIN_OUT, value);
+  digitalWrite(PIN_OUT_, !value);
+}
 void setup() {
 
+  Serial.begin(BAUD_RATE);
+  
   pinMode(PIN_OUT, OUTPUT);
   pinMode(PIN_OUT_, OUTPUT);
-  digitalWrite(PIN_OUT,LOW);
-  digitalWrite(PIN_OUT_, HIGH);
   pinMode(PIN_THRESHOLD, INPUT);
+  pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
+    
+  doOutput(LOW);
 
-  lcd.begin(16,2);
+  highAlarm = digitalRead(PIN_ALARM_DIR);
+  Serial.print("Will alarm on ");
+  if (highAlarm) {
+    Serial.println("high temperature");
+  } else {
+    Serial.println("low temperature");
+  }
+  Serial.println();
   
-  Serial.begin(BAUD_RATE);
+  lcd.begin(16, 2);
 
   // wait for MAX31855 to stabilize
   delay(500);
@@ -63,8 +84,7 @@ void loop() {
 
   if (error) {
     
-    digitalWrite(PIN_OUT, LOW);
-    digitalWrite(PIN_OUT_, HIGH);
+    doOutput(LOW);
     
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -104,12 +124,10 @@ void loop() {
   lcd.print("Alarm: ");
   lcd.print(threshold);
 
-  if (c >= threshold) {
-    digitalWrite(PIN_OUT, HIGH);
-    digitalWrite(PIN_OUT_, LOW);
+  if ((highAlarm && c >= threshold) || (!highAlarm && c <= threshold)) {
+    doOutput(HIGH);
   } else {
-    digitalWrite(PIN_OUT, LOW);
-    digitalWrite(PIN_OUT_, HIGH);
+    doOutput(LOW);
   }
 
   delay(INTERVAL);
