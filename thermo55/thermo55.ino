@@ -6,14 +6,14 @@ const int PIN_OUT_ = 3;
 
 // SPI hardware configuration
 const int thermoDO = 12; // MISO
-const int thermoCS = A5; // Chip select
+const int thermoCS = 8; // Chip select
 const int thermoCLK = 13; // SPI serial clock
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
 // LCD1602 pins
-const int PIN_RS = 7;
-const int PIN_E = 6;
+const int PIN_RS = 7; // supposedly MISO ?
+const int PIN_E = 6; // supposedly MOSI ?
 const int PIN_DS4 = A1;
 const int PIN_DS3 = A2;
 const int PIN_DS2 = A3;
