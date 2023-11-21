@@ -22,7 +22,7 @@ const int PIN_DS1 = A4;
 // switch lcd display mode (normal or max/min)
 const int PIN_SCREEN_SEL = 5;
 
-// Alarm direction: If wired to ground, alarm on low temp. Else alarm on high temp.
+// If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;
 
 bool alarmOnHighTemp;
