@@ -12,15 +12,15 @@ const int thermoCLK = 13; // SPI serial clock
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
 // LCD1602 pins
-const int PIN_RS = 7; // supposedly MISO ?
-const int PIN_E = 6; // supposedly MOSI ?
+const int PIN_RS = 7;
+const int PIN_E = 6;
 const int PIN_DS4 = A1;
 const int PIN_DS3 = A2;
 const int PIN_DS2 = A3;
 const int PIN_DS1 = A4;
 
-// for future use, switch lcd display mode (for max/min etc.)
-const int PIN_DISP_SEL = 5;
+// switch lcd display mode (normal or max/min)
+const int PIN_SCREEN_SEL = 5;
 
 // Alarm direction: If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;
@@ -66,7 +66,7 @@ void setup() {
   pinMode(PIN_OUT_, OUTPUT);
   pinMode(PIN_THRESHOLD, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
-  pinMode(PIN_DISP_SEL, INPUT_PULLUP);
+  pinMode(PIN_SCREEN_SEL, INPUT_PULLUP);
     
   setOutput(LOW);
 
@@ -96,22 +96,21 @@ void loop() {
     setOutput(LOW);
     
     lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Error:");
+    lcd.print(F("ERROR"));
     lcd.setCursor(0, 1);
     
     Serial.print("Error: ");
     if (error & MAX31855_FAULT_OPEN) {
       Serial.println(F("Open Circuit!"));
-      lcd.print("Open circuit");
+      lcd.print(F("OPEN CIRCUIT"));
     }
     if (error & MAX31855_FAULT_SHORT_GND) {
       Serial.println(F("Short to GND!"));
-      lcd.print("Short to GND");
+      lcd.print(F("SHORT TO GND"));
     }
     if (error & MAX31855_FAULT_SHORT_VCC) {
       Serial.println(F("Short to VCC!"));
-      lcd.print("Short to VCC");
+      lcd.print(F("SHORT TO VCC"));
     }
     delay(100); // flush serial buffer
     exit(1);
@@ -126,7 +125,7 @@ void loop() {
   
   float threshold = alarmTemperature();
 
-  bool maxMinMode = !digitalRead(PIN_DISP_SEL);
+  bool maxMinMode = !digitalRead(PIN_SCREEN_SEL);
   
   if (!maxMinMode) { // normal mode
     
@@ -138,10 +137,10 @@ void loop() {
     
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("Tmprture:");
+    lcd.print(F("TEMP "));
     lcd.print(c);
     lcd.setCursor(0, 1);
-    lcd.print("Thrshld:");
+    lcd.print(F("THRESHOLD "));
     lcd.print(threshold);
     
   } else { // Max/Min mode
@@ -154,10 +153,10 @@ void loop() {
     
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print("Max:");
+    lcd.print(F("MAX "));
     lcd.print(maxTemp);
     lcd.setCursor(0, 1);
-    lcd.print("Min:");
+    lcd.print(F("MIN "));
     lcd.print(minTemp);
   }
 
