@@ -21,7 +21,6 @@ bool alarmOnHighTemp;
 
 // Connect LCD I2C pin SDA to A4
 // Connect LCD I2C pin SCL to A5
-// (I guess this is coded somehow in the value 0x27)?
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // analog input to set alarm threshold
@@ -133,10 +132,10 @@ void loop() {
     
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print(F("TEMP "));
+    lcd.print(F("TEMPERATURE"));
     lcd.print(c);
     lcd.setCursor(0, 1);
-    lcd.print(F("THRESHOLD "));
+    lcd.print(F("THRESHOLD  "));
     lcd.print(threshold);
     
   } else { // Max/Min mode
