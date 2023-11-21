@@ -1,5 +1,5 @@
 #include "Adafruit_MAX31855.h"
-#include "LiquidCrystal.h"
+#include "LiquidCrystal_I2C.h"
 
 const int PIN_OUT = 2;
 const int PIN_OUT_ = 3;
@@ -11,14 +11,6 @@ const int thermoCLK = 13; // SPI serial clock
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
-// LCD1602 pins
-const int PIN_RS = 7;
-const int PIN_E = 6;
-const int PIN_DS4 = A1;
-const int PIN_DS3 = A2;
-const int PIN_DS2 = A3;
-const int PIN_DS1 = A4;
-
 // switch lcd display mode (normal or max/min)
 const int PIN_SCREEN_SEL = 5;
 
@@ -27,7 +19,10 @@ const int PIN_ALARM_DIR = 4;
 
 bool alarmOnHighTemp;
 
-LiquidCrystal lcd(PIN_RS, PIN_E, PIN_DS4, PIN_DS3, PIN_DS2, PIN_DS1);
+// Connect LCD I2C pin SDA to A4
+// Connect LCD I2C pin SCL to A5
+// (I guess this is coded somehow in the value 0x27)?
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
@@ -79,7 +74,8 @@ void setup() {
   }
   Serial.println();
   
-  lcd.begin(16, 2);
+  lcd.init();
+  lcd.backlight();
 
   // wait for MAX31855 to stabilize
   delay(500);
