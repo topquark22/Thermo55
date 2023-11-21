@@ -14,7 +14,7 @@ Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 // LCD1602 pins
 const int PIN_RS = 7;
 const int PIN_E = 6;
-const int PIN_DS4 = A1;
+const int PIN_DS4 = A5;
 const int PIN_DS3 = A2;
 const int PIN_DS2 = A3;
 const int PIN_DS1 = A4;
