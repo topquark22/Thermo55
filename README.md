@@ -41,3 +41,9 @@ Connected to Arduino, breakout board working without thermocouple attached. Corr
 Soldered up and attached to the thermocouple. It is working as expected.
 
 ![prototype](thermo3.jpg)
+
+## I2C interface
+
+Successfully implemented using the I2C interface. Note the board is wired up for the parallel interface, but it just so happens that the same pins required for I2C are available on the parallel interface pin header, so I just repurposed those. SDA is connected to A4 (purple on board, yellow on the Dupont wire). SCL is connected to A5 (green on the board, orange on the Dupont wire).
+
+![I2C working](working-I2C.jpg)
