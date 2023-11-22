@@ -12,12 +12,12 @@ const int thermoCLK = 13; // SPI serial clock
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
 // LCD1602 pins
-const int PIN_RS = 7;
-const int PIN_E = 6;
-const int PIN_DS4 = A5;
-const int PIN_DS3 = A2;
-const int PIN_DS2 = A3;
-const int PIN_DS1 = A4;
+const int PIN_RS = 6;
+const int PIN_E = 7;
+const int PIN_DS4 = A5; // orange
+const int PIN_DS5 = A2; // blue
+const int PIN_DS6 = A3; // brown
+const int PIN_DS7 = A4; // yellow
 
 // switch lcd display mode (normal or max/min)
 const int PIN_SCREEN_SEL = 5;
@@ -27,7 +27,7 @@ const int PIN_ALARM_DIR = 4;
 
 bool alarmOnHighTemp;
 
-LiquidCrystal lcd(PIN_RS, PIN_E, PIN_DS4, PIN_DS3, PIN_DS2, PIN_DS1);
+LiquidCrystal lcd(PIN_RS, PIN_E, PIN_DS4, PIN_DS5, PIN_DS6, PIN_DS7);
 
 // analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
