@@ -11,7 +11,7 @@ const int thermoCLK = 13; // SPI serial clock
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
-// LCD1602 pins
+// LCD1602 pins for parallel interface
 const int PIN_RS = 6;
 const int PIN_E = 7;
 const int PIN_DS4 = A5; // orange
@@ -137,7 +137,7 @@ void loop() {
     
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print(F("TEMP "));
+    lcd.print(F("TEMPERATURE"));
     lcd.print(c);
     lcd.setCursor(0, 1);
     lcd.print(F("THRESHOLD "));
