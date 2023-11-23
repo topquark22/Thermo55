@@ -28,7 +28,7 @@ Note: These are the pin assignments when using the parallel interface to the LCD
 You will need:
 - Type K thermocouple wire
 - AdaFruit MAX31855 thermocouple amplifier breakout board
-- LCD 1602 display with I2C capability
+- LCD 1602 display
 
 If you don't have an LCD display, the output is also printed to the serial monitor.
 
