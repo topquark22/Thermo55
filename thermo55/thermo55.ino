@@ -1,5 +1,5 @@
 #include "Adafruit_MAX31855.h"
-#include "LiquidCrystal.h"
+#include "LiquidCrystal_I2C.h"
 
 const int PIN_OUT = 2;
 const int PIN_OUT_ = 3;
@@ -11,14 +11,6 @@ const int thermoCLK = 13; // SPI serial clock
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
-// LCD1602 pins for parallel interface
-const int PIN_RS = 6;
-const int PIN_E = 7;
-const int PIN_DS4 = A5; // orange
-const int PIN_DS5 = A2; // blue
-const int PIN_DS6 = A3; // brown
-const int PIN_DS7 = A4; // yellow
-
 // switch lcd display mode (normal or max/min)
 const int PIN_SCREEN_SEL = 5;
 
@@ -27,15 +19,17 @@ const int PIN_ALARM_DIR = 4;
 
 bool alarmOnHighTemp;
 
-LiquidCrystal lcd(PIN_RS, PIN_E, PIN_DS4, PIN_DS5, PIN_DS6, PIN_DS7);
+// Connect LCD I2C pin SDA to A4
+// Connect LCD I2C pin SCL to A5
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
 
 // alarm threshold supported range in degrees C
 // (Note: Type K thermocouple actually supports -200 to +1300)
-const float TEMP_LOW = -20;
-const float TEMP_HIGH = 200;
+const float TEMP_LOW = -40;
+const float TEMP_HIGH = 110;
 
 // track max and min temp since reset
 float maxTemp = -200; // lowest reading for thermocouple
@@ -79,7 +73,8 @@ void setup() {
   }
   Serial.println();
   
-  lcd.begin(16, 2);
+  lcd.init();
+  lcd.backlight();
 
   // wait for MAX31855 to stabilize
   delay(500);
@@ -140,7 +135,7 @@ void loop() {
     lcd.print(F("TEMPERATURE"));
     lcd.print(c);
     lcd.setCursor(0, 1);
-    lcd.print(F("THRESHOLD "));
+    lcd.print(F("THRESHOLD  "));
     lcd.print(threshold);
     
   } else { // Max/Min mode
@@ -160,11 +155,7 @@ void loop() {
     lcd.print(minTemp);
   }
 
-  if ((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold)) {
-    setOutput(HIGH);
-  } else {
-    setOutput(LOW);
-  }
+  setOutput((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold));
 
   delay(INTERVAL);
 }
