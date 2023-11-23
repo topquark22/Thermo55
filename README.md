@@ -2,22 +2,22 @@
 
 ## Arduino pin assignments
 
-pin  | pinMode      | description
-------------------------
-D2   | OUTPUT       | alert output
-D3   | OUTPUT       | inverted alert output
-D4   | INPUT_PULLUP | threshold direction\*
-D5   | INPUT_PULLUP | show MAX/MIN on display
-D6   | OUTPUT       | (parallel interface only)
-D7   | OUTPUT       | (parallel interface only)
-D8   |              | managed by LiquidCrystal_I2C driver
-D12  |              | SPI MISO
-D13  |              | SPI SCK
-A0   | INPUT        | analog threshold setting (POT)
-A2   |              | (parallel interface only)
-A3   |              | (parallel interface only)
-A4   |              | managed by LiquidCrystal_I2C driver
-A5   |              | managed by LiquidCrystal I2C driver
+| pin  | pinMode      | description                         |
+|------|--------------|-------------------------------------|
+| D2   | OUTPUT       | alert output                        |
+| D3   | OUTPUT       | inverted alert output               |
+| D4   | INPUT_PULLUP | threshold direction\*                |
+| D5   | INPUT_PULLUP | show MAX/MIN on display             |
+| D6   | OUTPUT       | (parallel interface only)           |
+| D7   | OUTPUT       | (parallel interface only)           |
+| D8   |              | managed by LiquidCrystal_I2C driver |
+| D12  |              | SPI MISO                            |
+| D13  |              | SPI SCK                             |
+| A0   | INPUT        | analog threshold setting (POT)      |
+| A2   |              | (parallel interface only)           |
+| A3   |              | (parallel interface only)           |
+| A4   |              | managed by LiquidCrystal_I2C driver |
+| A5   |              | managed by LiquidCrystal I2C driver |
 
 \* To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
