@@ -23,7 +23,7 @@ bool alarmOnHighTemp;
 
 // Connect LCD I2C pin SDA to A4
 // Connect LCD I2C pin SCL to A5
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+LiquidCrystal_I2C lcd(LCD_I2C_ID, LCD_WIDTH, LCD_HEIGHT);
 
 // analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
@@ -38,9 +38,6 @@ float alarmTemperature() {
   float alarmTemp = TEMP_LOW + (TEMP_HIGH - TEMP_LOW) * reading / 1023;
   return alarmTemp;
 }
-
-// Delay between readings
-const int INTERVAL = 1000;
 
 const int BAUD_RATE = 9600;
 
