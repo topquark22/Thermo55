@@ -8,7 +8,7 @@ An alerting system that sounds an alarm when the temperature rises above (or fal
 |------|--------------|-------------------------------------|
 | D2   | OUTPUT       | alert output                        |
 | D3   | OUTPUT       | inverted alert output               |
-| D4   | INPUT_PULLUP | threshold direction\*                |
+| D4   | INPUT_PULLUP | threshold direction \*               |
 | D5   | INPUT_PULLUP | display mode                        |
 | D8   |              | CS (managed by 31855 driver)        |
 | D12  |              | MISO (managed by 31855 driver)      |
