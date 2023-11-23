@@ -155,11 +155,7 @@ void loop() {
     lcd.print(minTemp);
   }
 
-  if ((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold)) {
-    setOutput(HIGH);
-  } else {
-    setOutput(LOW);
-  }
+  setOutput((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold));
 
   delay(INTERVAL);
 }
