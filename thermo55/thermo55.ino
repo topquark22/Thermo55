@@ -1,7 +1,7 @@
 #include "Adafruit_MAX31855.h"
 #include "LiquidCrystal_I2C.h"
 
-#include "thermo_custom.h"
+#include "thermo55_custom.h"
 
 const int PIN_OUT = 2;
 const int PIN_OUT_ = 3;
