@@ -1,8 +1,57 @@
 # Temperature Alerting System
 
-## Attaching a Type-K Thermocouple
+An alerting system that sounds an alarm when the temperature rises above (or falls below) a certain threshold. 
 
-Thissection is a compiled guide based on a conversation about how to attach and test a Type-K thermocouple, specifically when using an Adafruit MAX31855 thermocouple amplifier breakout board with an Arduino.
+## Arduino pin assignments
+
+| pin  | pinMode      | description                          |
+|------|--------------|--------------------------------------|
+| D2   | OUTPUT       | alert output                         |
+| D3   | OUTPUT       | inverted alert output                |
+| D4   | INPUT_PULLUP | threshold direction                  |
+| D5   | INPUT_PULLUP | display mode                         |
+| D6   |              | to LCD pin RS                        |
+| D7   |              | to LCD pin E                         |
+| D8   |              | CS (managed by 31855 driver)         |
+| D12  |              | MISO (managed by 31855 driver)       |
+| D13  |              | SCK (managed by 31855 driver)        |
+| A0   | INPUT        | analog threshold setting             |
+| A2   |              | to LCD pin DS5                       |
+| A3   |              | to LCD pin DS6                       |
+| A4   |              | to LCD pin DS7                       |
+| A5   |              | to LCD pin DS4                       |
+
+## Hardware considerations
+
+You will need:
+- Type K thermocouple wire
+- AdaFruit MAX31855 thermocouple amplifier breakout board
+- LCD 1602 display with I2C capability
+
+If you don't have an LCD display, the output is also printed to the serial monitor.
+
+Connect the six LCD pins as listed in the above table.
+
+Connect D5 to a normally-open pushbutton switch. This changes the display from **temperature/threshold** to **max/min** mode.
+
+Connect pin A0 to a POT configured as a voltage divider.
+
+To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
+
+Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
+
+### connection the MAX31855 Breakout Board
+
+On the Arduino Nano, MISO (DO) is pin 12 and SCK (CLK) is pin 13.
+
+Connecting the Adafruit breakout board:
+- Connect +5V to Vin
+- Connect GND to ground
+- Connect CLK to pin 13
+- Connect DO to pin 12
+- Connect CS to pin 8
+
+## Attaching a Type-K Thermocouple
 
 Identify the wires:
 - Type-K thermocouple wires are typically color-coded.
@@ -20,8 +69,12 @@ Securing the thermocouple:
 
 ## Testing the MAX31855 Breakout Board
 
+On the Arduino Nano, MISO is pin 12 and SCK is pin 13.
+
+Any digital pin can be used for CS. In this project we use D8.
+
 Connecting the Adafruit breakout board:
-- Connect +5V to Vin if the board is 5V compliant.
+- Connect +5V to Vin
 - Connect GND to ground.
 - Connect the SPI pins (CS, SCK, MISO) to the corresponding pins on the Arduino.
 
@@ -30,14 +83,11 @@ Testing for open circuits:
 
 ## Some components
 
-Not yet connected
+The breakout board (back)
 
 ![Breakout board 1](thermo1.jpg)
-
-Connected to Arduino, breakout board working without thermocouple attached. Correctly displays open circuit error condition
-
-![incomplete 1](open-circuit-test-working.jpg)
 
 Soldered up and attached to the thermocouple. It is working as expected.
 
 ![prototype](thermo3.jpg)
+
