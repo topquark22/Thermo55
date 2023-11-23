@@ -1,5 +1,5 @@
-#ifndef THRESH
-#define THRESH
+#ifndef T
+#define T
 
 // alarm threshold supported range in degrees C
 // (Note: Type K thermocouple actually supports -200 to +1300)
