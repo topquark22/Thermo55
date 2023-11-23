@@ -28,8 +28,8 @@ const int PIN_THRESHOLD = A0;
 
 // alarm threshold supported range in degrees C
 // (Note: Type K thermocouple actually supports -200 to +1300)
-const float TEMP_LOW = -20;
-const float TEMP_HIGH = 200;
+const float TEMP_LOW = -40;
+const float TEMP_HIGH = 110;
 
 // track max and min temp since reset
 float maxTemp = -200; // lowest reading for thermocouple
