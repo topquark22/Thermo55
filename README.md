@@ -1,8 +1,12 @@
 # Temperature Alerting System
 
-## Attaching a Type-K Thermocouple
+## Hardware requirements
 
-Thissection is a compiled guide based on a conversation about how to attach and test a Type-K thermocouple, specifically when using an Adafruit MAX31855 thermocouple amplifier breakout board with an Arduino.
+- Type K thermocouple wire
+- AdaFruit MAX31855 thermocouple amplifier breakout board
+- LCD 1602 display with I2C capability
+
+## Attaching a Type-K Thermocouple
 
 Identify the wires:
 - Type-K thermocouple wires are typically color-coded.
@@ -20,8 +24,12 @@ Securing the thermocouple:
 
 ## Testing the MAX31855 Breakout Board
 
+On the Arduino Nano, MISO is pin 12 and SCK is pin 13.
+
+Any digital pin can be used for CS. In this project we use D8.
+
 Connecting the Adafruit breakout board:
-- Connect +5V to Vin if the board is 5V compliant.
+- Connect +5V to Vin
 - Connect GND to ground.
 - Connect the SPI pins (CS, SCK, MISO) to the corresponding pins on the Arduino.
 
