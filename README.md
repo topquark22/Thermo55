@@ -1,5 +1,26 @@
 # Temperature Alerting System
 
+## Arduino pin assignments
+
+pin  | pinMode      | description
+------------------------
+D2   | OUTPUT       | alert output
+D3   | OUTPUT       | inverted alert output
+D4   | INPUT_PULLUP | threshold direction\*
+D5   | INPUT_PULLUP | show MAX/MIN on display
+D6   | OUTPUT       | (parallel interface only)
+D7   | OUTPUT       | (parallel interface only)
+D8   |              | managed by LiquidCrystal_I2C driver
+D12  |              | SPI MISO
+D13  |              | SPI SCK
+A0   | INPUT        | analog threshold setting (POT)
+A2   |              | (parallel interface only)
+A3   |              | (parallel interface only)
+A4   |              | managed by LiquidCrystal_I2C driver
+A5   |              | managed by LiquidCrystal I2C driver
+
+\* To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
+
 ## Hardware requirements
 
 - Type K thermocouple wire
@@ -51,6 +72,10 @@ Soldered up and attached to the thermocouple. It is working as expected.
 ![prototype](thermo3.jpg)
 
 ## I2C interface
+
+The LCD 1602 display has 4 wires: GND, VDD, SDA, and SCL.
+
+Attach SDA to Arduino pin A4. Attach SCL to Arduino pin A5. Attach VDD (+5V) and GND.
 
 Successfully implemented using the I2C interface. Note the board is wired up for the parallel interface, but it just so happens that the same pins required for I2C are available on the parallel interface pin header, so I just repurposed those. SDA is connected to A4 (purple on board, yellow Dupont wire). SCL is connected to A5 (green on the board, orange Dupont wire).
 
