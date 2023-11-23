@@ -17,11 +17,25 @@
 
 \* To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
-## Hardware requirements
+## Hardware considerations
 
+You will need:
 - Type K thermocouple wire
 - AdaFruit MAX31855 thermocouple amplifier breakout board
 - LCD 1602 display with I2C capability
+
+Connect D5 to a normally-open pushbutton switch. This changes the display from **temperature/threshold** to **max/min** mode.
+
+### connection the MAX31855 Breakout Board
+
+On the Arduino Nano, MISO (DO) is pin 12 and SCK (CLK) is pin 13.
+
+Connecting the Adafruit breakout board:
+- Connect +5V to Vin
+- Connect GND to ground.
+- Connect CLK to pin 13
+- Connect DO to pin 12
+- Connect CS to pin 8
 
 ## Attaching a Type-K Thermocouple
 
@@ -55,13 +69,9 @@ Testing for open circuits:
 
 ## Some components
 
-Not yet connected
+The breakout board (back)
 
 ![Breakout board 1](thermo1.jpg)
-
-Connected to Arduino, breakout board working without thermocouple attached. Correctly displays open circuit error condition
-
-![incomplete 1](open-circuit-test-working.jpg)
 
 Soldered up and attached to the thermocouple. It is working as expected.
 
@@ -73,7 +83,7 @@ The LCD 1602 display has 4 wires: GND, VDD, SDA, and SCL.
 
 Attach SDA to Arduino pin A4. Attach SCL to Arduino pin A5. Attach VDD (+5V) and GND.
 
-Successfully implemented using the I2C interface. Note the board is wired up for the parallel interface, but it just so happens that the same pins required for I2C are available on the parallel interface pin header, so I just repurposed those. SDA is connected to A4 (purple on board, yellow Dupont wire). SCL is connected to A5 (green on the board, orange Dupont wire).
+Successfully implemented using the I2C interface. Note the board was wired up for the parallel interface, but it just so happens that the same pins required for I2C are available on the parallel interface pin header, so I just repurposed those. SDA is connected to A4 (purple on board, yellow Dupont wire). SCL is connected to A5 (green on the board, orange Dupont wire).
 
 ![I2C working](working-I2C.jpg)
 
