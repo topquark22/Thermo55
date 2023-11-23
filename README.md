@@ -10,7 +10,7 @@ An alerting system that sounds an alarm when the temperature rises above (or fal
 | D3   | OUTPUT       | inverted alert output               |
 | D4   | INPUT_PULLUP | threshold direction\*                |
 | D5   | INPUT_PULLUP | display mode                        |
-| D8   |              | managed by LiquidCrystal_I2C driver |
+| D8   |              | managed by 31855 driver             |
 | D12  |              | SPI MISO                            |
 | D13  |              | SPI SCK                             |
 | A0   | INPUT        | analog threshold setting (POT)      |
