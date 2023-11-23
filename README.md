@@ -1,5 +1,7 @@
 # Temperature Alerting System
 
+An alerting system that sounds an alarm when the temperature rises above (or falls below) a certain threshold. 
+
 ## Arduino pin assignments
 
 | pin  | pinMode      | description                         |
