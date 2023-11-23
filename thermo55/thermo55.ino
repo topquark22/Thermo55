@@ -1,6 +1,8 @@
 #include "Adafruit_MAX31855.h"
 #include "LiquidCrystal_I2C.h"
 
+#include "thresholds.h"
+
 const int PIN_OUT = 2;
 const int PIN_OUT_ = 3;
 
@@ -25,11 +27,6 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
-
-// alarm threshold supported range in degrees C
-// (Note: Type K thermocouple actually supports -200 to +1300)
-const float TEMP_LOW = -40;
-const float TEMP_HIGH = 110;
 
 // track max and min temp since reset
 float maxTemp = -200; // lowest reading for thermocouple
