@@ -8,14 +8,10 @@
 | D3   | OUTPUT       | inverted alert output               |
 | D4   | INPUT_PULLUP | threshold direction\*                |
 | D5   | INPUT_PULLUP | show MAX/MIN on display             |
-| D6   |              | (parallel interface only)           |
-| D7   |              | (parallel interface only)           |
 | D8   |              | managed by LiquidCrystal_I2C driver |
 | D12  |              | SPI MISO                            |
 | D13  |              | SPI SCK                             |
 | A0   | INPUT        | analog threshold setting (POT)      |
-| A2   |              | (parallel interface only)           |
-| A3   |              | (parallel interface only)           |
 | A4   |              | managed by LiquidCrystal_I2C driver |
 | A5   |              | managed by LiquidCrystal I2C driver |
 
