@@ -25,6 +25,8 @@ You will need:
 - AdaFruit MAX31855 thermocouple amplifier breakout board
 - LCD 1602 display with I2C capability
 
+If you don't have an LCD display, the output is also printed to the serial monitor.
+
 Connect D5 to a normally-open pushbutton switch. This changes the display from **temperature/threshold** to **max/min** mode.
 
 Connect pin A0 to a POT configured as a voltage divider.
