@@ -6,7 +6,7 @@
 const float TEMP_LOW = -40;
 const float TEMP_HIGH = 110;
 
-// LCD IIS id and size
+// LCD I2C id and size
 const int LCD_I2C_ID = 0x27;
 const int LCD_WIDTH = 16;
 const int LCD_HEIGHT = 2;
