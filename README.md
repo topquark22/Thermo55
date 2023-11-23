@@ -8,7 +8,7 @@ An alerting system that sounds an alarm when the temperature rises above (or fal
 |------|--------------|-------------------------------------|
 | D2   | OUTPUT       | alert output                        |
 | D3   | OUTPUT       | inverted alert output               |
-| D4   | INPUT_PULLUP | threshold direction \*               |
+| D4   | INPUT_PULLUP | threshold direction                 |
 | D5   | INPUT_PULLUP | display mode                        |
 | D8   |              | CS (managed by 31855 driver)        |
 | D12  |              | MISO (managed by 31855 driver)      |
@@ -17,7 +17,6 @@ An alerting system that sounds an alarm when the temperature rises above (or fal
 | A4   |              | managed by LiquidCrystal_I2C driver |
 | A5   |              | managed by LiquidCrystal I2C driver |
 
-\* To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
 ## Hardware considerations
 
@@ -29,6 +28,8 @@ You will need:
 Connect D5 to a normally-open pushbutton switch. This changes the display from **temperature/threshold** to **max/min** mode.
 
 Connect pin A0 to a POT configured as a voltage divider.
+
+To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
 ### connection the MAX31855 Breakout Board
 
