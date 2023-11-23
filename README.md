@@ -36,7 +36,7 @@ On the Arduino Nano, MISO (DO) is pin 12 and SCK (CLK) is pin 13.
 
 Connecting the Adafruit breakout board:
 - Connect +5V to Vin
-- Connect GND to ground.
+- Connect GND to ground
 - Connect CLK to pin 13
 - Connect DO to pin 12
 - Connect CS to pin 8
