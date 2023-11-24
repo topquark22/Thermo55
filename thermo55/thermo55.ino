@@ -59,7 +59,7 @@ int prevThresholdReading = 0;
 float alarmTemperature() {
   int reading = analogRead(PIN_THRESHOLD);
   if (reading != prevThresholdReading) {
-    lcd.backlight();
+    lcd.display();
     backlightCountdown = BACKLIGHT_TIME;
     prevThresholdReading = reading;
   }
