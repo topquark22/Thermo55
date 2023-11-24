@@ -48,18 +48,21 @@ int maxMinCtr = 0;
 
 int sampleCt = 0;
 
-int prevThresholdReading = 0;
+float prevThreshold = -1;
 
-float alarmTemperature() {
+float getThreshold() {
   int reading = analogRead(PIN_THRESHOLD);
-  if (reading != prevThresholdReading) {
+
+  // interpolate
+  float threshold = TEMP_LOW + (TEMP_HIGH - TEMP_LOW) * reading / 1023;
+
+  if (abs(threshold - prevThreshold) > 0.25) {
     lcd.backlight();
     backlightCountdown = BACKLIGHT_TIME;
-    prevThresholdReading = reading;
   }
-  // interpolate
-  float alarmTemp = TEMP_LOW + (TEMP_HIGH - TEMP_LOW) * reading / 1023;
-  return alarmTemp;
+  prevThreshold = threshold;
+      
+  return threshold;
 }
 
 const int BAUD_RATE = 9600;
@@ -188,7 +191,7 @@ void loop() {
     maxMinCtr = (maxMinCtr + 1) % MAXMIN_HOLD_CT;
   }
 
-  float threshold = alarmTemperature();
+  float threshold = getThreshold();
 
   setOutput((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold));
 
