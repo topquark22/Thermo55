@@ -18,4 +18,7 @@ const int INTERVAL = 1000;
 // Must be > 0. If you don't want to skip any samples, put 1 here
 #define MAXMIN_HOLD_CT 60
 
+// time backlight stays on
+#define BACKLIGHT_TIME 7
+
 #endif
