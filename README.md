@@ -4,8 +4,6 @@ An alerting system that sounds an alarm when the temperature rises above (or fal
 
 ## Arduino pin assignments
 
-Note: These are the pin assignments when using the I2C interface to the LCD display. You are on the main branch of this repository. If using the parallel interface, refer to the `parallel_interface` branch.
-
 | pin  | pinMode      | description                         |
 |------|--------------|-------------------------------------|
 | D2   | OUTPUT       | alert output                        |
