@@ -46,7 +46,7 @@ Connecting the Adafruit breakout board:
 - Connect DO to pin 12
 - Connect CS to pin 8
 
-## Attaching a Type-K Thermocouple
+### Attaching a Type-K Thermocouple
 
 Identify the wires:
 - Type-K thermocouple wires are typically color-coded.
@@ -62,7 +62,7 @@ Securing the thermocouple:
 - Use Kapton tape for attaching the thermocouple to a surface like a transistor. It's heat resistant and leaves minimal residue.
 - The adhesive used in Kapton tape is typically a silicone adhesive which can withstand high temperatures.
 
-## Testing the MAX31855 Breakout Board
+### Testing the MAX31855 Breakout Board
 
 On the Arduino Nano, MISO is pin 12 and SCK is pin 13.
 
@@ -76,7 +76,7 @@ Connecting the Adafruit breakout board:
 Testing for open circuits:
 - Use the `readError()` method from the Adafruit MAX31855 library to check for any faults with the thermocouple connections.
 
-## Some components
+### Some components
 
 The breakout board (back)
 
@@ -97,3 +97,9 @@ Successfully implemented using the I2C interface. Note the board was wired up fo
 ![I2C working](working-I2C.jpg)
 
 ![I2C working2](working2-I2C.jpg)
+
+## Max/Min hold
+
+The max-min values displayed are not real-time. They are the values from a number of samples in the past, determined by the definition of `MAXMIN_HOLD_CT` defined in **thermo55.h**. 
+
+Furthermore, max/min is not stored for the first `MAXMIN_HOLD_CT` samples since the last time the MAX-MIN was displayed. Consequently, no MAX-MIN data is available for the first two `MAXMIN_HOLD_CT` periods.

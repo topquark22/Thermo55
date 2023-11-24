@@ -68,6 +68,7 @@ void resetMaxMin() {
     maxTemps[i] = MIN_TEMP;
     minTemps[i] = MAX_TEMP;
   }
+  sampleCt = 0;
 }
 
 void setup() {
