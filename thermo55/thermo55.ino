@@ -1,7 +1,7 @@
 #include "Adafruit_MAX31855.h"
 #include "LiquidCrystal_I2C.h"
 
-#include "thermo55_custom.h"
+#include "thermo55.h"
 
 const int PIN_OUT = 2;
 const int PIN_OUT_ = 3;
@@ -28,9 +28,18 @@ LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
 // analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
 
-// track max and min temp since reset
-float maxTemp = -200; // lowest reading for thermocouple
-float minTemp = 1350; // highest reading for thermocouple
+ // highest reading for thermocouple
+#define MAX_TEMP 1350
+ // lowest reading for thermocouple
+#define MIN_TEMP -200
+
+//// track max and min temp since reset
+float maxTemp[MAXMIN_HOLD_CT];
+float minTemp[MAXMIN_HOLD_CT];
+
+int maxMinCtr = 0;
+
+int sampleCt = 0;
 
 float alarmTemperature() {
   int reading = analogRead(PIN_THRESHOLD);
@@ -41,13 +50,26 @@ float alarmTemperature() {
 
 const int BAUD_RATE = 9600;
 
+bool floatEquals(float a, float b) {
+  return abs(a - b) < 0.001;
+}
+
 void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
 }
 
+void resetMaxMin() {
+  for (int i = 0; i < MAXMIN_HOLD_CT; i++) {
+    maxTemp[i] = MIN_TEMP;
+    minTemp[i] = MAX_TEMP;
+  }
+}
+
 void setup() {
 
+  resetMaxMin();
+  
   Serial.begin(BAUD_RATE);
   
   pinMode(PIN_OUT, OUTPUT);
@@ -75,6 +97,9 @@ void setup() {
 }
 
 void loop() {
+
+  lcd.clear();
+  
   // Read temperature in Celsius
   double c = thermocouple.readCelsius();
   // Check for errors
@@ -84,7 +109,6 @@ void loop() {
     
     setOutput(LOW);
     
-    lcd.clear();
     lcd.print(F("ERROR"));
     lcd.setCursor(0, 1);
     
@@ -105,13 +129,20 @@ void loop() {
     exit(1);
   }
 
-  if (c > maxTemp) {
-    maxTemp = c;
+  sampleCt++;
+
+  // skip first few samples
+  if (sampleCt >= MAXMIN_HOLD_CT) {
+    if (c > maxTemp[maxMinCtr]) {
+      maxTemp[maxMinCtr] = c;
+    }
+    if (c < minTemp[maxMinCtr]) {
+      minTemp[maxMinCtr] = c;
+    }
+    maxMinCtr = (maxMinCtr + 1) % MAXMIN_HOLD_CT;
   }
-  if (c < minTemp) {
-    minTemp = c;
-  }
-  
+
+
   float threshold = alarmTemperature();
 
   setOutput((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold));
@@ -135,28 +166,36 @@ void loop() {
     lcd.print(threshold);
     
   } else { // Max/Min mode
-    
-    Serial.print(F("Maximum since last display: "));
-    Serial.println(maxTemp);
-    Serial.print(F("Minimum since last displayt: "));
-    Serial.println(minTemp);
-    Serial.println();
-    
-    lcd.clear();
+
+    float min = minTemp[maxMinCtr];
     lcd.setCursor(0, 0);
-    lcd.print(F("MAX "));
-    lcd.print(maxTemp);
-    lcd.setCursor(0, 1);
     lcd.print(F("MIN "));
-    lcd.print(minTemp);
+    Serial.print(F("Minimum since last display: "));
+    if (min + 1 > MAX_TEMP) {
+      Serial.println(F("-"));
+      lcd.print(F("-"));
+    } else {
+      Serial.println(min);
+      lcd.print(min);
+    }
+    
+    float max = maxTemp[maxMinCtr];
+    lcd.setCursor(0, 1);
+    lcd.print(F("MAX "));
+    Serial.print(F("Maximum since last display: "));
+    if (max - 1 < MIN_TEMP) {
+      Serial.println(F("-"));
+      lcd.print(F("-"));
+    } else {
+      Serial.println(max);
+      lcd.print(max);
+    }
 
     // hold display until button released
     while (!digitalRead(PIN_SCREEN_SEL)) {
       delay(100);
     }
-    // reset max/min
-    maxTemp = -200;
-    minTemp = 1350;
+    resetMaxMin();
   }
 
   delay(INTERVAL);
