@@ -34,8 +34,10 @@ const int PIN_THRESHOLD = A0;
 #define MIN_TEMP -200
 
 //// track max and min temp since reset
-float maxTemp[MAXMIN_HOLD_CT];
-float minTemp[MAXMIN_HOLD_CT];
+float maxTemp = MIN_TEMP;
+float minTemp = MAX_TEMP;
+float maxTemps[MAXMIN_HOLD_CT];
+float minTemps[MAXMIN_HOLD_CT];
 
 int maxMinCtr = 0;
 
@@ -60,9 +62,11 @@ void setOutput(bool value) {
 }
 
 void resetMaxMin() {
+  maxTemp = MIN_TEMP;
+  minTemp = MAX_TEMP;
   for (int i = 0; i < MAXMIN_HOLD_CT; i++) {
-    maxTemp[i] = MIN_TEMP;
-    minTemp[i] = MAX_TEMP;
+    maxTemps[i] = MIN_TEMP;
+    minTemps[i] = MAX_TEMP;
   }
 }
 
@@ -131,17 +135,19 @@ void loop() {
 
   sampleCt++;
 
+  if (c > maxTemp) {
+    maxTemp = c;
+  }
+  if (c < minTemp) {
+    minTemp = c;
+  }
+  
   // skip first few samples
   if (sampleCt >= MAXMIN_HOLD_CT) {
-    if (c > maxTemp[maxMinCtr]) {
-      maxTemp[maxMinCtr] = c;
-    }
-    if (c < minTemp[maxMinCtr]) {
-      minTemp[maxMinCtr] = c;
-    }
+    maxTemps[maxMinCtr] = maxTemp;
+    minTemps[maxMinCtr] = minTemp;
     maxMinCtr = (maxMinCtr + 1) % MAXMIN_HOLD_CT;
   }
-
 
   float threshold = alarmTemperature();
 
@@ -167,7 +173,7 @@ void loop() {
     
   } else { // Max/Min mode
 
-    float min = minTemp[maxMinCtr];
+    float min = minTemps[maxMinCtr];
     lcd.setCursor(0, 0);
     lcd.print(F("MIN "));
     Serial.print(F("Minimum since last display: "));
@@ -179,7 +185,7 @@ void loop() {
       lcd.print(min);
     }
     
-    float max = maxTemp[maxMinCtr];
+    float max = maxTemps[maxMinCtr];
     lcd.setCursor(0, 1);
     lcd.print(F("MAX "));
     Serial.print(F("Maximum since last display: "));
