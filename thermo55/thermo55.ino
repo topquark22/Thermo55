@@ -23,7 +23,7 @@ bool alarmOnHighTemp;
 
 // Connect LCD I2C pin SDA to A4
 // Connect LCD I2C pin SCL to A5
-LiquidCrystal_I2C lcd(LCD_I2C_ID, LCD_WIDTH, LCD_HEIGHT);
+LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
 
 // analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
