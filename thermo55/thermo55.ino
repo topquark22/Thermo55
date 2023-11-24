@@ -136,9 +136,9 @@ void loop() {
     
   } else { // Max/Min mode
     
-    Serial.print(F("Maximum since reset: "));
+    Serial.print(F("Maximum since last display: "));
     Serial.println(maxTemp);
-    Serial.print(F("Minimum since reset: "));
+    Serial.print(F("Minimum since last displayt: "));
     Serial.println(minTemp);
     Serial.println();
     
