@@ -54,8 +54,15 @@ int maxMinCtr = 0;
 
 int sampleCt = 0;
 
+int prevThresholdReading = 0;
+
 float alarmTemperature() {
   int reading = analogRead(PIN_THRESHOLD);
+  if (reading != prevThresholdReading) {
+    lcd.backlight();
+    backlightCountdown = BACKLIGHT_TIME;
+    prevThresholdReading = reading;
+  }
   // interpolate
   float alarmTemp = TEMP_LOW + (TEMP_HIGH - TEMP_LOW) * reading / 1023;
   return alarmTemp;
@@ -239,7 +246,9 @@ void loop() {
     while (!digitalRead(PIN_BUTTON)) {
       delay(100);
     }
-    resetMaxMin();
+    if (backlightCountdown <= 1) {
+      resetMaxMin();
+    }
   }
 
   delay(INTERVAL);
