@@ -114,6 +114,8 @@ void loop() {
   
   float threshold = alarmTemperature();
 
+  setOutput((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold));
+  
   bool maxMinMode = !digitalRead(PIN_SCREEN_SEL);
   
   if (!maxMinMode) { // normal mode
@@ -147,9 +149,15 @@ void loop() {
     lcd.setCursor(0, 1);
     lcd.print(F("MIN "));
     lcd.print(minTemp);
-  }
 
-  setOutput((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold));
+    // hold display until button released
+    while (!digitalRead(PIN_SCREEN_SEL)) {
+      delay(100);
+    }
+    // reset max/min
+    maxTemp = -200;
+    minTemp = 1350;
+  }
 
   delay(INTERVAL);
 }
