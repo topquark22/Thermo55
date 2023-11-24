@@ -1,6 +1,8 @@
 #include "Adafruit_MAX31855.h"
 #include "LiquidCrystal.h"
 
+#include "thermo55_custom.h"
+
 const int PIN_OUT = 2;
 const int PIN_OUT_ = 3;
 
@@ -32,11 +34,6 @@ LiquidCrystal lcd(PIN_RS, PIN_E, PIN_DS4, PIN_DS5, PIN_DS6, PIN_DS7);
 // analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
 
-// alarm threshold supported range in degrees C
-// (Note: Type K thermocouple actually supports -200 to +1300)
-const float TEMP_LOW = -20;
-const float TEMP_HIGH = 200;
-
 // track max and min temp since reset
 float maxTemp = -200; // lowest reading for thermocouple
 float minTemp = 1350; // highest reading for thermocouple
@@ -47,9 +44,6 @@ float alarmTemperature() {
   float alarmTemp = TEMP_LOW + (TEMP_HIGH - TEMP_LOW) * reading / 1023;
   return alarmTemp;
 }
-
-// Delay between readings
-const int INTERVAL = 1000;
 
 const int BAUD_RATE = 9600;
 
@@ -79,7 +73,7 @@ void setup() {
   }
   Serial.println();
   
-  lcd.begin(16, 2);
+  lcd.begin(LCD_WIDTH, LCD_HEIGHT);
 
   // wait for MAX31855 to stabilize
   delay(500);
@@ -125,6 +119,8 @@ void loop() {
   
   float threshold = alarmTemperature();
 
+  setOutput((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold));
+  
   bool maxMinMode = !digitalRead(PIN_SCREEN_SEL);
   
   if (!maxMinMode) { // normal mode
@@ -140,7 +136,7 @@ void loop() {
     lcd.print(F("TEMPERATURE"));
     lcd.print(c);
     lcd.setCursor(0, 1);
-    lcd.print(F("THRESHOLD "));
+    lcd.print(F("THRESHOLD  "));
     lcd.print(threshold);
     
   } else { // Max/Min mode
@@ -158,12 +154,14 @@ void loop() {
     lcd.setCursor(0, 1);
     lcd.print(F("MIN "));
     lcd.print(minTemp);
-  }
 
-  if ((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold)) {
-    setOutput(HIGH);
-  } else {
-    setOutput(LOW);
+    // hold display until button released
+    while (!digitalRead(PIN_SCREEN_SEL)) {
+      delay(100);
+    }
+    // reset max/min
+    maxTemp = -200;
+    minTemp = 1350;
   }
 
   delay(INTERVAL);

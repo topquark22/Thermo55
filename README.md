@@ -4,8 +4,6 @@ An alerting system that sounds an alarm when the temperature rises above (or fal
 
 ## Arduino pin assignments
 
-Note: These are the pin assignments when using the parallel interface to the LCD display. You are on the `parallel_interface` branch of this repository. If using the I2C interface, refer to the main branch.
-
 | pin  | pinMode      | description                          |
 |------|--------------|--------------------------------------|
 | D2   | OUTPUT       | alert output                         |
@@ -33,6 +31,8 @@ You will need:
 If you don't have an LCD display, the output is also printed to the serial monitor.
 
 Connect the six LCD pins as listed in the above table.
+
+If you don't have an LCD display, the output is also printed to the serial monitor.
 
 Connect D5 to a normally-open pushbutton switch. This changes the display from **temperature/threshold** to **max/min** mode.
 
@@ -92,4 +92,3 @@ The breakout board (back)
 Soldered up and attached to the thermocouple. It is working as expected.
 
 ![prototype](thermo3.jpg)
-
