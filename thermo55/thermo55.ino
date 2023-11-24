@@ -14,7 +14,7 @@ const int thermoCLK = 13; // SPI serial clock
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
 // switch lcd display mode (normal or max/min)
-const int PIN_SCREEN_SEL = 5;
+const int PIN_BUTTON = 5;
 
 // If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;
@@ -38,6 +38,11 @@ float maxTemp = MIN_TEMP;
 float minTemp = MAX_TEMP;
 float maxTemps[MAXMIN_HOLD_CT];
 float minTemps[MAXMIN_HOLD_CT];
+
+// countdown time for backlight
+int backlightCountdown;
+ 
+int prevButton = HIGH;
 
 int maxMinCtr = 0;
 
@@ -81,7 +86,7 @@ void setup() {
   pinMode(PIN_OUT_, OUTPUT);
   pinMode(PIN_THRESHOLD, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
-  pinMode(PIN_SCREEN_SEL, INPUT_PULLUP);
+  pinMode(PIN_BUTTON, INPUT_PULLUP);
     
   setOutput(LOW);
 
@@ -96,13 +101,39 @@ void setup() {
   
   lcd.init();
   lcd.backlight();
+  backlightCountdown = BACKLIGHT_TIME;
 
   // wait for MAX31855 to stabilize
   delay(500);
 }
 
+bool maxMinMode = false;
+
 void loop() {
 
+  bool button = !digitalRead(PIN_BUTTON);
+
+  if ((button && prevButton) || (backlightCountdown > 0 && maxMinMode)) {
+    // button held down for 2 samples; switch to max/min
+    maxMinMode = true;
+  }
+  
+  prevButton = button;
+    
+  if (button) {
+    backlightCountdown = BACKLIGHT_TIME;
+    lcd.backlight();
+
+  }
+
+  if (backlightCountdown > 0) {
+    backlightCountdown--;
+    if (backlightCountdown == 0) {
+      lcd.noBacklight();
+      maxMinMode = false;
+    }
+  }
+  
   lcd.clear();
   
   // Read temperature in Celsius
@@ -153,8 +184,7 @@ void loop() {
   float threshold = alarmTemperature();
 
   setOutput((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold));
-  
-  bool maxMinMode = !digitalRead(PIN_SCREEN_SEL);
+
   
   if (!maxMinMode) { // normal mode
     
@@ -199,7 +229,7 @@ void loop() {
     }
 
     // hold display until button released
-    while (!digitalRead(PIN_SCREEN_SEL)) {
+    while (!digitalRead(PIN_BUTTON)) {
       delay(100);
     }
     resetMaxMin();
