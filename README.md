@@ -98,8 +98,14 @@ Successfully implemented using the I2C interface. Note the board was wired up fo
 
 ![I2C working2](working2-I2C.jpg)
 
-## Max/Min hold
+## Operation
 
-The max-min values displayed are not real-time. They are the values from a number of samples in the past, determined by the definition of `MAXMIN_HOLD_CT` defined in **thermo55.h**. 
+The LCD will dim after 7 seconds. To turn on the **temperature-threshold** display, press the button for 1 sample interval.
 
-Furthermore, max/min is not stored for the first `MAXMIN_HOLD_CT` samples since the last time the MAX-MIN was displayed. Consequently, no MAX-MIN data is available for the first two `MAXMIN_HOLD_CT` periods.
+To activate the **max-min** display, press and hold the button for 2 sample intervals.
+
+### Max/Min hold
+
+The max-min values displayed are not real-time. They are the values from a number of samples in the past.The standard value is 10 samples. To change this, edit the value of `MAXMIN_HOLD_CT`defined in **thermo55.h**.
+
+Furthermore, max/min is not stored for the first `MAXMIN_HOLD_CT` samples since the last time the MAX-MIN was displayed. Consequently, no MAX-MIN data is available for the first two `MAXMIN_HOLD_CT`periods.
