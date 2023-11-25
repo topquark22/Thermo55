@@ -184,15 +184,13 @@ void loop() {
 
   sampleCt++;
 
-  if (c > maxTemp) {
-    maxTemp = c;
-  }
-  if (c < minTemp) {
-    minTemp = c;
-  }
-  
-  // skip first few samples
-  if (sampleCt >= MAXMIN_HOLD_CT) {
+  if (sampleCt >= MAXMIN_HOLD_CT) { // skip first few samples
+    if (c > maxTemp) {
+      maxTemp = c;
+    }
+    if (c < minTemp) {
+      minTemp = c;
+    }
     maxTemps[maxMinCtr] = maxTemp;
     minTemps[maxMinCtr] = minTemp;
     maxMinCtr = (maxMinCtr + 1) % MAXMIN_HOLD_CT;
