@@ -93,8 +93,26 @@ Soldered up and attached to the thermocouple. It is working as expected.
 
 ![prototype](thermo3.jpg)
 
-## Max/Min hold
+### I2C interface
 
-The max-min values displayed are not real-time. They are the values from a number of samples in the past, determined by the definition of `MAXMIN_HOLD_CT` defined in **thermo55.h**. 
+The LCD 1602 display has 4 wires: GND, VDD, SDA, and SCL.
 
-Furthermore, max/min is not stored for the first `MAXMIN_HOLD_CT` samples since the last time the MAX-MIN was displayed. Consequently, no MAX-MIN data is available for the first two `MAXMIN_HOLD_CT` periods.
+Attach SDA to Arduino pin A4. Attach SCL to Arduino pin A5. Attach VDD (+5V) and GND.
+
+Successfully implemented using the I2C interface. Note the board was wired up for the parallel interface, but it just so happens that the same pins required for I2C are available on the parallel interface pin header, so I just repurposed those. SDA is connected to A4 (purple on board, yellow Dupont wire). SCL is connected to A5 (green on the board, orange Dupont wire).
+
+![I2C working](working-I2C.jpg)
+
+![I2C working2](working2-I2C.jpg)
+
+## Operation
+
+The LCD will dim after 7 seconds. To turn on the **temperature-threshold** display, press the button for 1 sample interval.
+
+To activate the **max-min** display, press and hold the button for 2 sample intervals.
+
+### Max/Min hold
+
+The max-min values displayed are not real-time. They are the values from a number of samples in the past.The standard value is 10 samples. To change this, edit the value of `MAXMIN_HOLD_CT`defined in **thermo55.h**.
+
+Furthermore, max/min is not stored for the first `MAXMIN_HOLD_CT` samples since the last time the MAX-MIN was displayed. Consequently, no MAX-MIN data is available for the first two `MAXMIN_HOLD_CT`periods.

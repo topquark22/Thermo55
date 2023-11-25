@@ -221,20 +221,8 @@ void loop() {
     
   } else { // Max/Min mode
 
-    float min = minTemps[maxMinCtr];
-    lcd.setCursor(0, 0);
-    lcd.print(F("MIN "));
-    Serial.print(F("Minimum since last display: "));
-    if (min + 1 > MAX_TEMP) {
-      Serial.println(F("-"));
-      lcd.print(F("-"));
-    } else {
-      Serial.println(min);
-      lcd.print(min);
-    }
-    
     float max = maxTemps[maxMinCtr];
-    lcd.setCursor(0, 1);
+    lcd.setCursor(0, 0);
     lcd.print(F("MAX "));
     Serial.print(F("Maximum since last display: "));
     if (max - 1 < MIN_TEMP) {
@@ -243,6 +231,18 @@ void loop() {
     } else {
       Serial.println(max);
       lcd.print(max);
+    }
+    
+    float min = minTemps[maxMinCtr];
+    lcd.setCursor(0, 1);
+    lcd.print(F("MIN "));
+    Serial.print(F("Minimum since last display: "));
+    if (min + 1 > MAX_TEMP) {
+      Serial.println(F("-"));
+      lcd.print(F("-"));
+    } else {
+      Serial.println(min);
+      lcd.print(min);
     }
 
     // hold display until button released
