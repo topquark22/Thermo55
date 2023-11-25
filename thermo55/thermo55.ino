@@ -129,7 +129,7 @@ void loop() {
   }
   
   prevButton = button;
-    
+  
   if (button) {
     backlightCountdown = BACKLIGHT_TIME;
     lcd.backlight();
@@ -193,9 +193,15 @@ void loop() {
 
   float threshold = getThreshold();
 
-  setOutput((alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold));
+  bool alarm = (alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold);
+  setOutput(alarm);
 
-  
+  if (alarm) {
+    Serial.println(F("ALARM ON"));
+  } else {
+    Serial.println(F("ALARM OFF"));
+  }
+
   if (!maxMinMode) { // normal mode
     
     Serial.print(F("Temperature: "));
