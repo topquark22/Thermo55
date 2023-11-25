@@ -67,10 +67,6 @@ float getThreshold() {
 
 const int BAUD_RATE = 9600;
 
-bool floatEquals(float a, float b) {
-  return abs(a - b) < 0.001;
-}
-
 void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
