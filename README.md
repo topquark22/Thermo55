@@ -86,7 +86,7 @@ Soldered up and attached to the thermocouple. It is working as expected.
 
 ![prototype](thermo3.jpg)
 
-## I2C interface
+### I2C interface
 
 The LCD 1602 display has 4 wires: GND, VDD, SDA, and SCL.
 
