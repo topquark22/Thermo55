@@ -107,15 +107,17 @@ void setup() {
   pinMode(PIN_LPM1, INPUT_PULLUP);
   pinMode(PIN_LPM0, INPUT_PULLUP);
 
+  Serial.begin(BAUD_RATE);
+
   leadTime = LEAD_TIME[
       (!digitalRead(PIN_LPM2) << 2) |
       (!digitalRead(PIN_LPM1) << 1) |
        !digitalRead(PIN_LPM0)
   ];
+  Serial.print(F("Lead time (s): "));
+  Serial.println(leadTime);
 
   setOutput(LOW);
-
-  Serial.begin(BAUD_RATE);
 
   resetMaxMin();
 
@@ -262,6 +264,8 @@ void loop() {
       lcd.print(min);
     }
 
+    Serial.println();
+    
     if (!maxMinUndefined && backlightCountdown <= 1) {
       resetMaxMin();
     }
