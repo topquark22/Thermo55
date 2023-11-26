@@ -4,7 +4,7 @@ An alerting system that sounds an alarm when the temperature rises above (or fal
 
 ## Operation
 
-The LCD will dim after 7 seconds. To turn on the **temperature-threshold** display, press the button for 1 second.
+The LCD will dim after 7 seconds. To turn on the TEMPERATURE/THRESHOLD display, press the button for 1 second.
 
 To activate the MAX/MIN display, press and hold the button for 2 seconds.
 
