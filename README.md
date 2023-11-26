@@ -49,13 +49,7 @@ To alert when temperature is below the threshold, wire D4 to GND. To alert when 
 
 Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
 
-### Backlight control
-
-With the parallel interface, do not connect pin K on the LCD directly to ground. Instead, do the following:
-
-- Connect pin K to the collector of an NPN transistor Q1 type 2N2222
-- Connect the emitter of Q1 to ground
-- Connect pin A1 through a 1K resistor to the base of Q1
+Connect output pin A1 to pin A (backlight anode) of the LCD. Connect pin K (backlight cathode) to GND via a 220 ohm resistor.
 
 ### connection the MAX31855 Breakout Board
 
