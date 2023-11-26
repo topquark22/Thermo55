@@ -82,6 +82,11 @@ float getThreshold() {
 void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
+  if (value) {
+    lcd.backlight();
+  } else {
+    lcd.noBacklight();
+  }
 }
 
 const int BAUD_RATE = 9600;
