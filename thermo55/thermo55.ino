@@ -36,8 +36,8 @@ const int PIN_THRESHOLD = A0;
 //// track max and min temp since reset
 float maxTemp = MIN_TEMP;
 float minTemp = MAX_TEMP;
-float maxTemps[MAXMIN_HOLD_CT];
-float minTemps[MAXMIN_HOLD_CT];
+float maxTemps[LAG_TIME];
+float minTemps[LAG_TIME];
 
 // countdown time for backlight
 int backlightCountdown;
@@ -46,6 +46,10 @@ int prevButton = HIGH;
 
 int maxMinCtr = 0;
 
+// Number of passes through the loop. A sample is not taken every pass.
+int loopCt = 0;
+
+// Number of samples taken (loopCt / LOOPS_PER_SAMPLE)
 int sampleCt = 0;
 
 float prevThreshold = -1;
@@ -73,28 +77,36 @@ void setOutput(bool value) {
 }
 
 void resetMaxMin() {
+  Serial.println(F("Resetting MAX/MIN"));
   maxTemp = MIN_TEMP;
   minTemp = MAX_TEMP;
-  for (int i = 0; i < MAXMIN_HOLD_CT; i++) {
+  for (int i = 0; i < LAG_TIME; i++) {
     maxTemps[i] = MIN_TEMP;
     minTemps[i] = MAX_TEMP;
   }
   sampleCt = 0;
 }
 
-void setup() {
+int leadTime;
 
-  resetMaxMin();
-  
-  Serial.begin(BAUD_RATE);
+const int lagTime = LAG_TIME;
+
+void setup() {
   
   pinMode(PIN_OUT, OUTPUT);
   pinMode(PIN_OUT_, OUTPUT);
   pinMode(PIN_THRESHOLD, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
-    
+
+  // parallel interface has no pins available to set this with jumpers, so it is unsupported
+  leadTime = 1;
+
   setOutput(LOW);
+
+  Serial.begin(BAUD_RATE);
+
+  resetMaxMin();
 
   alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
   Serial.print(F("Will alarm on "));
@@ -126,10 +138,11 @@ void loop() {
   
   prevButton = button;
   
+  lcd.clear();
+
   if (button) {
     backlightCountdown = BACKLIGHT_TIME;
     lcd.backlight();
-
   }
 
   if (backlightCountdown > 0) {
@@ -139,8 +152,6 @@ void loop() {
       maxMinMode = false;
     }
   }
-  
-  lcd.clear();
   
   // Read temperature in Celsius
   double c = thermocouple.readCelsius();
@@ -171,19 +182,18 @@ void loop() {
     exit(1);
   }
 
-  sampleCt++;
-
-  if (sampleCt >= MAXMIN_HOLD_CT) { // skip first few samples
-    if (c > maxTemp) {
-      maxTemp = c;
-    }
-    if (c < minTemp) {
-      minTemp = c;
-    }
-    maxTemps[maxMinCtr] = maxTemp;
-    minTemps[maxMinCtr] = minTemp;
-    maxMinCtr = (maxMinCtr + 1) % MAXMIN_HOLD_CT;
+  if (loopCt >= leadTime) { // skip first few samples
+      if (c > maxTemp) {
+        maxTemp = c;
+      }
+      if (c < minTemp) {
+        minTemp = c;
+      }
   }
+
+  maxTemps[loopCt % lagTime] = maxTemp;
+  minTemps[loopCt % lagTime] = minTemp;
+  loopCt++;
 
   float threshold = getThreshold();
 
@@ -214,11 +224,15 @@ void loop() {
     
   } else { // Max/Min mode
 
-    float max = maxTemps[maxMinCtr];
+    float max = maxTemps[loopCt % lagTime];
+    float min = minTemps[loopCt % lagTime];
+
+    bool maxMinUndefined = (max - 1 < MIN_TEMP);
+
     lcd.setCursor(0, 0);
     lcd.print(F("MAX "));
     Serial.print(F("Maximum since last display: "));
-    if (max - 1 < MIN_TEMP) {
+    if (maxMinUndefined) {
       Serial.println(F("-"));
       lcd.print(F("-"));
     } else {
@@ -226,11 +240,10 @@ void loop() {
       lcd.print(max);
     }
     
-    float min = minTemps[maxMinCtr];
     lcd.setCursor(0, 1);
     lcd.print(F("MIN "));
     Serial.print(F("Minimum since last display: "));
-    if (min + 1 > MAX_TEMP) {
+    if (maxMinUndefined) {
       Serial.println(F("-"));
       lcd.print(F("-"));
     } else {
@@ -238,11 +251,7 @@ void loop() {
       lcd.print(min);
     }
 
-    // hold display until button released
-    while (!digitalRead(PIN_BUTTON)) {
-      delay(100);
-    }
-    if (backlightCountdown <= 1) {
+    if (!maxMinUndefined && backlightCountdown <= 1) {
       resetMaxMin();
     }
   }
