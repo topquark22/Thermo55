@@ -11,12 +11,10 @@ const int LCD_WIDTH = 16;
 const int LCD_HEIGHT = 2;
 
 // interval between readings
-
 const int INTERVAL = 1000;
 
-// number of samples to skip after reset. Also number of samples to read backwards.
-// Must be > 0. If you don't want to skip any samples, put 1 here
-#define MAXMIN_HOLD_CT 10
+// return the max/min from this many seconds earlier
+#define LAG_TIME 15
 
 // time backlight stays on
 #define BACKLIGHT_TIME 7
