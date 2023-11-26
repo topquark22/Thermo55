@@ -156,6 +156,8 @@ void loop() {
 
   checkErrors();
 
+  lcd.clear();
+  
   bool button = !digitalRead(PIN_BUTTON);
 
   if (button) {
@@ -199,8 +201,6 @@ void loop() {
   if (maxMinCountdown > 0) {
     maxMinCountdown--;
   }
-
-  lcd.clear();
 
   if (maxMinCountdown == 0) { // normal mode
     
