@@ -82,7 +82,6 @@ void setOutput(bool value) {
 }
 
 void resetMaxMin() {
-  Serial.println(F("Resetting MAX/MIN"));
   maxTemp = MIN_TEMP;
   minTemp = MAX_TEMP;
   for (int i = 0; i < LAG_TIME; i++) {
@@ -263,7 +262,7 @@ void loop() {
       Serial.println(min);
       lcd.print(min);
     }
-
+    
     Serial.println();
 
     // preserve display while button pressed
@@ -271,9 +270,8 @@ void loop() {
       delay(100);
     }
 
-    if (!maxMinUndefined && backlightCountdown <= 1) {
-      resetMaxMin();
-    }
+    maxTemp = MIN_TEMP;
+    minTemp = MAX_TEMP;
   }
 
   delay(INTERVAL);
