@@ -265,7 +265,12 @@ void loop() {
     }
 
     Serial.println();
-    
+
+    // preserve display while button pressed
+    while (!digitalRead(PIN_BUTTON)) {
+      delay(100);
+    }
+
     if (!maxMinUndefined && backlightCountdown <= 1) {
       resetMaxMin();
     }
