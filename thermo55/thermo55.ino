@@ -52,9 +52,10 @@ const int  BACKLIGHT_TIME = 7;
 // countdown time for backlight
 int backlightCountdown;
  
-int prevButton = HIGH;
+// countdown time for max/min mode
+int maxMinCountdown = 0;
 
-int maxMinCtr = 0;
+int prevButton = HIGH;
 
 // Number of passes through the loop. A sample is not taken every pass.
 int loopCt = 0;
@@ -113,22 +114,20 @@ void setup() {
   lcd.init();
   lcd.backlight();
   backlightCountdown = BACKLIGHT_TIME;
+  maxMinCountdown = 0;
 
   // wait for MAX31855 to stabilize
   delay(500);
 }
 
-bool maxMinMode = false;
-
 void loop() {
 
   bool button = !digitalRead(PIN_BUTTON);
 
-  if ((button && prevButton) || (backlightCountdown > 0 && maxMinMode)) {
+  if (button && prevButton) {
     // button held down for 2 samples; switch to max/min
-    maxMinMode = true;
+    maxMinCountdown = BACKLIGHT_TIME;
   }
-  
   prevButton = button;
   
   lcd.clear();
@@ -142,8 +141,11 @@ void loop() {
     backlightCountdown--;
     if (backlightCountdown == 0) {
       lcd.noBacklight();
-      maxMinMode = false;
     }
+  }
+
+  if (maxMinCountdown > 0) {
+    maxMinCountdown--;
   }
   
   // Check for errors
@@ -196,7 +198,7 @@ void loop() {
     Serial.println(F("ALARM OFF"));
   }
 
-  if (!maxMinMode) { // normal mode
+  if (maxMinCountdown == 0) { // normal mode
     
     Serial.print(F("Temperature: "));
     Serial.println(c);
@@ -233,7 +235,8 @@ void loop() {
       delay(100);
     }
 
-    if (backlightCountdown == 0) {
+    // reset MAX/MIN for next measurement
+    if (maxMinCountdown <= 1) {
       maxTemp = MIN_TEMP;
       minTemp = MAX_TEMP;
     }
