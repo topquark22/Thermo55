@@ -53,7 +53,8 @@ Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with you
 
 With the parallel interface, do not connect pin K on the LCD directly to ground. Instead, do the following:
 
-- Connect pin K to the collector of an NPN transistor Q1 type 2N2222
+- Connect pin A (backlight anode) to +5V through a 220 ohm resistor.
+- Connect pin K (backlight cathode) to the collector of an NPN transistor Q1 type 2N2222
 - Connect the emitter of Q1 to ground
 - Connect pin A1 through a 1K resistor to the base of Q1
 
