@@ -17,9 +17,6 @@ const int INTERVAL = 1000;
 // return the max/min from this many seconds earlier
 #define LAG_TIME 15
 
-// lead time before gathering max/min(selectable by pins A1,A2,A3)
-const int LEAD_TIME[8] = { 1, 5, 10, 30, 60, 120, 300, 600 };
-
 // time backlight stays on
 #define BACKLIGHT_TIME 7
 

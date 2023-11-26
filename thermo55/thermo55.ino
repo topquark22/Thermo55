@@ -91,8 +91,6 @@ void resetMaxMin() {
   sampleCt = 0;
 }
 
-int leadTime;
-
 const int lagTime = LAG_TIME;
 
 void setup() {
@@ -102,19 +100,8 @@ void setup() {
   pinMode(PIN_THRESHOLD, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
-  pinMode(PIN_LPM2, INPUT_PULLUP);
-  pinMode(PIN_LPM1, INPUT_PULLUP);
-  pinMode(PIN_LPM0, INPUT_PULLUP);
 
   Serial.begin(BAUD_RATE);
-
-  leadTime = LEAD_TIME[
-      (!digitalRead(PIN_LPM2) << 2) |
-      (!digitalRead(PIN_LPM1) << 1) |
-       !digitalRead(PIN_LPM0)
-  ];
-  Serial.print(F("Lead time (s): "));
-  Serial.println(leadTime);
 
   setOutput(LOW);
 
@@ -194,13 +181,11 @@ void loop() {
     exit(1);
   }
 
-  if (loopCt >= leadTime) { // skip first few samples
-      if (c > maxTemp) {
-        maxTemp = c;
-      }
-      if (c < minTemp) {
-        minTemp = c;
-      }
+  if (c > maxTemp) {
+    maxTemp = c;
+  }
+  if (c < minTemp) {
+    minTemp = c;
   }
 
   maxTemps[loopCt % lagTime] = maxTemp;

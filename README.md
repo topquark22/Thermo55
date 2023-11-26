@@ -12,13 +12,11 @@ To activate the MAX/MIN display, press and hold the button for 2 seconds.
 
 The max-min values displayed are not real-time. They are the values from 15 seconds in the past (the "lag time").To change this, edit the value of `LAG_TIME` defined in **thermo55.h**.
 
-Furthermore, MAX/MIN is not stored for the first few samples (the "lead time"). This is set by jumpers (see Table 2).
+MAX/MIN is calculated from the time of the last measurement.
 
-Because of the lead and lag times, MAX/MIN data is not available for 15 + leadTime seconds since the device was reset.
+Because of the lag time, MAX/MIN data is not available for 15 seconds since the device was reset.
 
 ## Arduino pin assignments
-
-### Table 1
 
 | pin  | pinMode      | description                               |
 |------|--------------|-------------------------------------------|
@@ -30,26 +28,8 @@ Because of the lead and lag times, MAX/MIN data is not available for 15 + leadTi
 | D12  |              | MISO (managed by 31855 driver)            |
 | D13  |              | SCK (managed by 31855 driver)             |
 | A0   | INPUT        | analog threshold setting                  |
-| A1   | INPUT_PULLUP | See Table 2                               |
-| A2   | INPUT_PULLUP | See Table 2                               |
-| A3   | INPUT_PULLUP | See Table 2                               |
 | A4   |              | SDA (managed by LiquidCrystal_I2C driver) |
 | A5   |              | SCL (managed by LiquidCrystal I2C driver) |
-
-### Table 2
-
-*All of the inputs are pullup, so 1 means not connected and 0 means jumpered to ground.*
-
-| A1 | A2 | A3 | Max/Min lead time (s) |
-|----|----|----|-----------------------|
-| 1  | 1  | 1  | 1                     |
-| 1  | 1  | 0  | 5                     | 
-| 1  | 0  | 1  | 10                    |
-| 1  | 0  | 0  | 30                    |
-| 0  | 1  | 1  | 60                    |
-| 0  | 1  | 0  | 120                   |
-| 0  | 0  | 1  | 300                   |
-| 0  | 0  | 0  | 600                   |
 
 ## Hardware considerations
 
