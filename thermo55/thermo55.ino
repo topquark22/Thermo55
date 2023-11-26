@@ -233,8 +233,10 @@ void loop() {
       delay(100);
     }
 
-    maxTemp = MIN_TEMP;
-    minTemp = MAX_TEMP;
+    if (backlightCountdown == 0) {
+      maxTemp = MIN_TEMP;
+      minTemp = MAX_TEMP;
+    }
   }
 
   delay(1000);
