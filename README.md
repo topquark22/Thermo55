@@ -6,15 +6,7 @@ An alerting system that sounds an alarm when the temperature rises above (or fal
 
 The LCD will dim after 7 seconds. To turn on the TEMPERATURE/THRESHOLD display, press the button for 1 second.
 
-To activate the MAX/MIN display, press and hold the button for 2 seconds.
-
-### MAX/MIN hold
-
-The max-min values displayed are not real-time. They are the values from 15 seconds in the past (the "lag time").To change this, edit the value of `LAG_TIME` defined in **thermo55.h**.
-
-MAX/MIN is calculated from the time of the last measurement.
-
-Because of the lag time, MAX/MIN data is not available for 15 seconds since the device was reset.
+To activate the MAX/MIN display, press and hold the button for 2 seconds. MAX/MIN is calculated from the time of the last measurement.
 
 ## Arduino pin assignments
 
