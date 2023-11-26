@@ -28,7 +28,7 @@ LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
 // analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
 
-// pins to set loops-per-maxmin
+// pins to set lead time
 const int PIN_LPM2 = A1;
 const int PIN_LPM1 = A2;
 const int PIN_LPM0 = A3;
