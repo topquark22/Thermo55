@@ -213,9 +213,15 @@ void loop() {
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print(F("TEMPERATURE"));
+    if (c >= 0 && c < 10.0) {
+      lcd.print(F(" "));
+    }
     lcd.print(c);
     lcd.setCursor(0, 1);
     lcd.print(F("THRESHOLD  "));
+    if (threshold >= 0 && threshold < 10.0) {
+      lcd.print(F(" "));
+    }
     lcd.print(threshold);
     
   } else { // Max/Min mode
