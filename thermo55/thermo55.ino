@@ -75,8 +75,7 @@ float getThreshold() {
   // interpolate
   float threshold = TEMP_LOW + (TEMP_HIGH - TEMP_LOW) * reading / 1023;
 
-  if (abs(threshold - prevThreshold) > 1.0) {
-    lcd.display();
+  if (abs(threshold - prevThreshold) > 0.5) {
     backlightCountdown = BACKLIGHT_TIME;
   }
   prevThreshold = threshold;
