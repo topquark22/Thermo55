@@ -84,7 +84,6 @@ void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
   if (value) {
-    lcd.backlight();
     backlightCountdown = BACKLIGHT_TIME;
   }
 }
@@ -124,35 +123,8 @@ void setup() {
   delay(500);
 }
 
-void loop() {
+void checkErrors() {
 
-  bool button = !digitalRead(PIN_BUTTON);
-
-  if (button && prevButton) {
-    // button held down for 2 samples; switch to max/min
-    maxMinCountdown = BACKLIGHT_TIME;
-  }
-  prevButton = button;
-  
-  lcd.clear();
-
-  if (button) {
-    backlightCountdown = BACKLIGHT_TIME;
-    lcd.backlight();
-  }
-
-  if (backlightCountdown > 0) {
-    backlightCountdown--;
-    if (backlightCountdown == 0) {
-      lcd.noBacklight();
-    }
-  }
-
-  if (maxMinCountdown > 0) {
-    maxMinCountdown--;
-  }
-  
-  // Check for errors
   uint8_t error = thermocouple.readError();
 
   if (error) {
@@ -180,6 +152,10 @@ void loop() {
       delay(200);
     }
   }
+}
+void loop() {
+
+  checkErrors();
 
   // Read temperature in Celsius
   double c = thermocouple.readCelsius();
@@ -200,6 +176,32 @@ void loop() {
     Serial.println(F("ALARM ON"));
   } else {
     Serial.println(F("ALARM OFF"));
+  }
+
+  bool button = !digitalRead(PIN_BUTTON);
+
+  if (button && prevButton) {
+    // button held down for 2 samples; switch to max/min
+    maxMinCountdown = BACKLIGHT_TIME;
+  }
+  prevButton = button;
+  
+  lcd.clear();
+
+  if (button) {
+    backlightCountdown = BACKLIGHT_TIME;
+    lcd.backlight();
+  }
+
+  if (backlightCountdown > 0) {
+    backlightCountdown--;
+    if (backlightCountdown == 0) {
+      lcd.noBacklight();
+    }
+  }
+
+  if (maxMinCountdown > 0) {
+    maxMinCountdown--;
   }
 
   if (maxMinCountdown == 0) { // normal mode
