@@ -6,7 +6,12 @@
 const float TEMP_LOW = -40;
 const float TEMP_HIGH = 110;
 
+<<<<<<< HEAD
 // LCD size
+=======
+// LCD I2C address and size
+const int LCD_I2C_ADDR = 0x27;
+>>>>>>> dev
 const int LCD_WIDTH = 16;
 const int LCD_HEIGHT = 2;
 

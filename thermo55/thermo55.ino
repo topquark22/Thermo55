@@ -29,10 +29,21 @@ const int PIN_ALARM_DIR = 4;
 
 bool alarmOnHighTemp;
 
+<<<<<<< HEAD
 LiquidCrystal lcd(PIN_RS, PIN_E, PIN_DS4, PIN_DS5, PIN_DS6, PIN_DS7);
+=======
+// Connect LCD I2C pin SDA to A4
+// Connect LCD I2C pin SCL to A5
+LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
+>>>>>>> dev
 
 // analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
+
+// pins to set lead time
+const int PIN_LPM2 = A1;
+const int PIN_LPM1 = A2;
+const int PIN_LPM0 = A3;
 
  // highest reading for thermocouple
 #define MAX_TEMP 1350
@@ -92,8 +103,6 @@ void resetMaxMin() {
   sampleCt = 0;
 }
 
-int leadTime;
-
 const int lagTime = LAG_TIME;
 
 void setup() {
@@ -104,12 +113,9 @@ void setup() {
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
 
-  // parallel interface has no pins available to set this with jumpers, so it is unsupported
-  leadTime = 1;
+  Serial.begin(BAUD_RATE);
 
   setOutput(LOW);
-
-  Serial.begin(BAUD_RATE);
 
   resetMaxMin();
 
@@ -188,13 +194,11 @@ void loop() {
     exit(1);
   }
 
-  if (loopCt >= leadTime) { // skip first few samples
-      if (c > maxTemp) {
-        maxTemp = c;
-      }
-      if (c < minTemp) {
-        minTemp = c;
-      }
+  if (c > maxTemp) {
+    maxTemp = c;
+  }
+  if (c < minTemp) {
+    minTemp = c;
   }
 
   maxTemps[loopCt % lagTime] = maxTemp;

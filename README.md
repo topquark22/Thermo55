@@ -12,7 +12,9 @@ To activate the MAX/MIN display, press and hold the button for 2 seconds.
 
 The max-min values displayed are not real-time. They are the values from 15 seconds in the past (the "lag time").To change this, edit the value of `LAG_TIME` defined in **thermo55.h**.
 
-Because of the lead and lag times, MAX/MIN data is not available for 15 seconds since the device was reset.
+MAX/MIN is calculated from the time of the last measurement.
+
+Because of the lag time, MAX/MIN data is not available for 15 seconds since the device was reset.
 
 ## Arduino pin assignments
 
