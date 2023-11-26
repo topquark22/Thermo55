@@ -28,6 +28,11 @@ LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
 // analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
 
+// pins to set loops-per-maxmin
+const int PIN_LPM2 = A1;
+const int PIN_LPM1 = A2;
+const int PIN_LPM0 = A3;
+
  // highest reading for thermocouple
 #define MAX_TEMP 1350
  // lowest reading for thermocouple
@@ -98,9 +103,15 @@ void setup() {
   pinMode(PIN_THRESHOLD, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
+  pinMode(PIN_LPM2, INPUT_PULLUP);
+  pinMode(PIN_LPM1, INPUT_PULLUP);
+  pinMode(PIN_LPM0, INPUT_PULLUP);
 
-  // parallel interface has no pins available to set this with jumpers, so it is unsupported
-  leadTime = 1;
+  leadTime = LEAD_TIME[
+      (!digitalRead(PIN_LPM2) << 2) |
+      (!digitalRead(PIN_LPM1) << 1) |
+       !digitalRead(PIN_LPM0)
+  ];
 
   setOutput(LOW);
 
