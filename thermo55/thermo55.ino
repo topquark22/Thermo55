@@ -202,9 +202,9 @@ void loop() {
 
   if (backlightCountdown > 0) {
     backlightCountdown--;
-      backlight(true);
+    backlight(true);
   } else {
-      backlight(false);
+    backlight(false);
   }
 
   if (maxMinCountdown > 0) {
