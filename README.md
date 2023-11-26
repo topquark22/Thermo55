@@ -4,19 +4,38 @@ An alerting system that sounds an alarm when the temperature rises above (or fal
 
 ## Arduino pin assignments
 
-| pin  | pinMode      | description                         |
-|------|--------------|-------------------------------------|
-| D2   | OUTPUT       | alert output                        |
-| D3   | OUTPUT       | inverted alert output               |
-| D4   | INPUT_PULLUP | threshold direction                 |
-| D5   | INPUT_PULLUP | display mode                        |
-| D8   |              | CS (managed by 31855 driver)        |
-| D12  |              | MISO (managed by 31855 driver)      |
-| D13  |              | SCK (managed by 31855 driver)       |
-| A0   | INPUT        | analog threshold setting            |
-| A4   |              | managed by LiquidCrystal_I2C driver |
-| A5   |              | managed by LiquidCrystal I2C driver |
+### Table 1
 
+| pin  | pinMode      | description                               |
+|------|--------------|-------------------------------------------|
+| D2   | OUTPUT       | alert output                              |
+| D3   | OUTPUT       | inverted alert output                     |
+| D4   | INPUT_PULLUP | threshold direction                       |
+| D5   | INPUT_PULLUP | display pushbutton                        |
+| D8   |              | CS (managed by 31855 driver)              |
+| D12  |              | MISO (managed by 31855 driver)            |
+| D13  |              | SCK (managed by 31855 driver)             |
+| A0   | INPUT        | analog threshold setting                  |
+| A1   | INPUT_PULLUP | See Table 2                               |
+| A2   | INPUT_PULLUP | See Table 2                               |
+| A3   | INPUT_PULLUP | See Table 2                               |
+| A4   |              | SDA (managed by LiquidCrystal_I2C driver) |
+| A5   |              | SCK (managed by LiquidCrystal I2C driver) |
+
+### Table 2
+
+*All of the inputs are pullup, so 1 means not connected and 0 means jumpered to ground.*
+
+| A1 | A2 | A3 | Max/Min lead time (s) |
+|----|----|----|-----------------------|
+| 1  | 1  | 1  | 1                     |
+| 1  | 1  | 0  | 5                     | 
+| 1  | 0  | 1  | 10                    |
+| 1  | 0  | 0  | 30                    |
+| 0  | 1  | 1  | 60                    |
+| 0  | 1  | 0  | 120                   |
+| 0  | 0  | 1  | 300                   |
+| 0  | 0  | 0  | 600                   |
 
 ## Hardware considerations
 
@@ -104,8 +123,10 @@ The LCD will dim after 7 seconds. To turn on the **temperature-threshold** displ
 
 To activate the **max-min** display, press and hold the button for 2 sample intervals.
 
-### Max/Min hold
+### MAX/MIN hold
 
-The max-min values displayed are not real-time. They are the values from a number of samples in the past.The standard value is 10 samples. To change this, edit the value of `MAXMIN_HOLD_CT`defined in **thermo55.h**.
+The max-min values displayed are not real-time. They are the values from 15 seconds in the past (the "lag time").To change this, edit the value of `LAG_TIME` defined in **thermo55.h**.
 
-Furthermore, max/min is not stored for the first `MAXMIN_HOLD_CT` samples since the last time the MAX-MIN was displayed. Consequently, no MAX-MIN data is available for the first two `MAXMIN_HOLD_CT`periods.
+Furthermore, max-min is not stored for the first few samples (the "lead time"). This is set by jumpers (see Table 2).
+
+Because of the lead and lag times, max-min data is not available for 15 + leadTime seconds since the last max-min display.
