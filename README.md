@@ -34,7 +34,7 @@ Because of the lead and lag times, MAX/MIN data is not available for 15 + leadTi
 | A2   | INPUT_PULLUP | See Table 2                               |
 | A3   | INPUT_PULLUP | See Table 2                               |
 | A4   |              | SDA (managed by LiquidCrystal_I2C driver) |
-| A5   |              | SCK (managed by LiquidCrystal I2C driver) |
+| A5   |              | SCL (managed by LiquidCrystal I2C driver) |
 
 ### Table 2
 
