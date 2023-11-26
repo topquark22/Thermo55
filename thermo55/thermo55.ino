@@ -88,7 +88,6 @@ void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
   if (value) {
-    lcd.display();
     backlightCountdown = BACKLIGHT_TIME;
   }
 }
