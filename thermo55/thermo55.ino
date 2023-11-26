@@ -152,9 +152,22 @@ void checkErrors() {
     }
   }
 }
+
 void loop() {
 
   checkErrors();
+
+  bool button = !digitalRead(PIN_BUTTON);
+
+  if (button) {
+    backlightCountdown = BACKLIGHT_TIME;
+  }
+
+  if (button && prevButton) {
+    // button held down for 2 samples; switch to max/min
+    maxMinCountdown = BACKLIGHT_TIME;
+  }
+  prevButton = button;
 
   // Read temperature in Celsius
   double c = thermocouple.readCelsius();
@@ -177,26 +190,11 @@ void loop() {
     Serial.println(F("ALARM OFF"));
   }
 
-  bool button = !digitalRead(PIN_BUTTON);
-
-  if (button && prevButton) {
-    // button held down for 2 samples; switch to max/min
-    maxMinCountdown = BACKLIGHT_TIME;
-  }
-  prevButton = button;
-  
-  lcd.clear();
-
-  if (button) {
-    backlightCountdown = BACKLIGHT_TIME;
-    lcd.backlight();
-  }
-
   if (backlightCountdown > 0) {
     backlightCountdown--;
-    if (backlightCountdown == 0) {
+      lcd.backlight();
+  } else {
       lcd.noBacklight();
-    }
   }
 
   if (maxMinCountdown > 0) {
@@ -211,7 +209,6 @@ void loop() {
     Serial.println(threshold);
     Serial.println();
     
-    lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print(F("TEMPERATURE"));
     if (c >= 0 && c < 10.0) {
