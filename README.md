@@ -22,6 +22,7 @@ To activate the MAX/MIN display, press and hold the button for 2 seconds. MAX/MI
 | D12  |              | MISO (managed by 31855 driver)       |
 | D13  |              | SCK (managed by 31855 driver)        |
 | A0   | INPUT        | analog threshold setting             |
+| A1   | OUTPUT       | backlight control                    |
 | A2   |              | to LCD pin DS5                       |
 | A3   |              | to LCD pin DS6                       |
 | A4   |              | to LCD pin DS7                       |
@@ -47,6 +48,14 @@ Connect pin A0 to a POT configured as a voltage divider.
 To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
 Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
+
+### Backlight control
+
+With the parallel interface, do not connect pin K on the LCD directly to ground. Instead, do the following:
+
+- Connect pin K to the collector of an NPN transistor Q1 type 2N2222
+- Connect the emitter of Q1 to ground
+- Connect pin A1 through a 1K resistor to the base of Q1
 
 ### connection the MAX31855 Breakout Board
 

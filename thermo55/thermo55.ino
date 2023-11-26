@@ -34,6 +34,7 @@ const int PIN_DS4 = A5; // orange
 const int PIN_DS5 = A2; // blue
 const int PIN_DS6 = A3; // brown
 const int PIN_DS7 = A4; // yellow
+const int PIN_BACKLIGHT = A1;
 
 // SPI hardware configuration
 const int thermoDO = 12; // MISO
@@ -83,6 +84,10 @@ float getThreshold() {
   return threshold;
 }
 
+void backlight(bool value) {
+  digitalWrite(PIN_BACKLIGHT, value);
+}
+
 void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
@@ -100,6 +105,7 @@ void setup() {
   pinMode(PIN_THRESHOLD, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
+  pinMode(PIN_BACKLIGHT, OUTPUT);
 
   Serial.begin(BAUD_RATE);
 
@@ -196,9 +202,9 @@ void loop() {
 
   if (backlightCountdown > 0) {
     backlightCountdown--;
-      lcd.display();
+      backlight(true);
   } else {
-      lcd.noDisplay();
+      backlight(false);
   }
 
   if (maxMinCountdown > 0) {
