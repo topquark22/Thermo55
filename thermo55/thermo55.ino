@@ -83,6 +83,9 @@ float getThreshold() {
 void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
+  if (value) {
+    backlightCountdown = BACKLIGHT_TIME;
+  }
 }
 
 const int BAUD_RATE = 9600;
