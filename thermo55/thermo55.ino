@@ -255,11 +255,6 @@ void loop() {
     lcd.print(minTemp);
     
     Serial.println();
-
-    // preserve display while button pressed
-    while (!digitalRead(PIN_BUTTON)) {
-      delay(100);
-    }
   }
 
   delay(1000);

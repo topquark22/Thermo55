@@ -8,7 +8,7 @@ The LCD will dim after 7 seconds. To turn on the TEMPERATURE/THRESHOLD display, 
 
 To activate the MAX/MIN display, press and hold the button for 2 seconds.
 
-Tp reset the MAX/MIN values, press the button again during the MAX/MIN display.
+To reset the MAX/MIN values, continue holding or press the button again during the MAX/MIN display.
 
 ## Arduino pin assignments
 
