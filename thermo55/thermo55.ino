@@ -166,6 +166,11 @@ void loop() {
   }
 
   if (button && prevButton) {
+    if (maxMinCountdown > 0) {
+      // button held down for more than 2 samples; reset values
+      maxTemp = MIN_TEMP;
+      minTemp = MAX_TEMP;
+    }
     // button held down for 2 samples; switch to max/min
     maxMinCountdown = BACKLIGHT_TIME;
   }
@@ -243,12 +248,6 @@ void loop() {
     // preserve display while button pressed
     while (!digitalRead(PIN_BUTTON)) {
       delay(100);
-    }
-
-    // reset MAX/MIN for next measurement
-    if (maxMinCountdown <= 1) {
-      maxTemp = MIN_TEMP;
-      minTemp = MAX_TEMP;
     }
   }
 
