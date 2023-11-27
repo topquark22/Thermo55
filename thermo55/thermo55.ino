@@ -155,10 +155,10 @@ void checkErrors() {
 
 void loop() {
 
+  lcd.clear();
+
   checkErrors();
 
-  lcd.clear();
-  
   bool button = !digitalRead(PIN_BUTTON);
 
   if (button) {
