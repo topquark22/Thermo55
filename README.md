@@ -42,8 +42,6 @@ If you don't have an LCD display, the output is also printed to the serial monit
 
 Connect the six LCD pins as listed in the above table.
 
-If you don't have an LCD display, the output is also printed to the serial monitor.
-
 Connect D5 to a normally-open pushbutton switch. This changes the display from **temperature/threshold** to **max/min** mode.
 
 Connect pin A0 to a POT configured as a voltage divider.
