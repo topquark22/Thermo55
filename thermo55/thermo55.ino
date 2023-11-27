@@ -124,6 +124,7 @@ void setup() {
   Serial.println();
   
   lcd.begin(LCD_WIDTH, LCD_HEIGHT);
+  backlight(true);
   
   backlightCountdown = BACKLIGHT_TIME;
   maxMinCountdown = 0;
