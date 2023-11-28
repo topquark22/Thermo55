@@ -198,6 +198,7 @@ void loop() {
   } else {
       lcd.noDisplay();
       lcd.noBacklight();
+      maxMinMode = false;
   }
 
   if (!maxMinDisplay) { // normal mode
