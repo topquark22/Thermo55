@@ -28,10 +28,11 @@ To reset the MAX/MIN values, continue holding or press the button again during t
 
 ## Hardware considerations
 
-You will need:
+You will need, at least:
 - Type K thermocouple wire
 - AdaFruit MAX31855 thermocouple amplifier breakout board
 - LCD 1602 display with I2C capability
+- Two potentiometers
 
 If you don't have an LCD display, the output is also printed to the serial monitor.
 
