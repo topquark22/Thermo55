@@ -62,13 +62,7 @@ int maxMinCountdown = 0;
 
 int prevButton = HIGH;
 
-// Number of passes through the loop. A sample is not taken every pass.
-int loopCt = 0;
-
-// Number of samples taken (loopCt / LOOPS_PER_SAMPLE)
-int sampleCt = 0;
-
-float prevThreshold = -1;
+float prevThreshold = MIN_TEMP;
 
 float getThreshold() {
   int reading = analogRead(PIN_THRESHOLD);
