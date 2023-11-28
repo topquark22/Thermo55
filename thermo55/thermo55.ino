@@ -47,7 +47,7 @@ float maxTemp = NEGATIVE_INFINITY;
 float minTemp = POSITIVE_INFINITY;
 
 // time display stays on
-const int  DISPLAY_TIME = 7;
+const int  DISPLAY_TIME = 10;
 
 // countdown time for display
 int displayCountdown;
