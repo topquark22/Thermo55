@@ -194,8 +194,10 @@ void loop() {
 
   if (displayCountdown > 0) {
     displayCountdown--;
+      lcd.display();
       lcd.backlight();
   } else {
+      lcd.noDisplay();
       lcd.noBacklight();
   }
 
