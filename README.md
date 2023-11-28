@@ -2,6 +2,8 @@
 
 An alerting system that sounds an alarm when the temperature rises above (or falls below) a certain threshold. 
 
+![prototype](thermo4.jpg)
+
 ## Operation
 
 The LCD will dim after 7 seconds. To turn on the TEMPERATURE/THRESHOLD display, press the button for 1 second.
@@ -33,7 +35,7 @@ You will need, at least:
 - AdaFruit MAX31855 thermocouple amplifier breakout board
 - LCD 1602 display with I2C capability
 - Two potentiometers
-- pushbutton switch
+- pushbutton
 
 If you don't have an LCD display, the output is also printed to the serial monitor.
 
@@ -85,25 +87,3 @@ Connecting the Adafruit breakout board:
 
 Testing for open circuits:
 - Use the `readError()` method from the Adafruit MAX31855 library to check for any faults with the thermocouple connections.
-
-### Some components
-
-The breakout board (back)
-
-![Breakout board 1](thermo1.jpg)
-
-Soldered up and attached to the thermocouple. It is working as expected.
-
-![prototype](thermo3.jpg)
-
-### I2C interface
-
-The LCD 1602 display has 4 wires: GND, VDD, SDA, and SCL.
-
-Attach SDA to Arduino pin A4. Attach SCL to Arduino pin A5. Attach VDD (+5V) and GND.
-
-Successfully implemented using the I2C interface. Note the board was wired up for the parallel interface, but it just so happens that the same pins required for I2C are available on the parallel interface pin header, so I just repurposed those. SDA is connected to A4 (purple on board, yellow Dupont wire). SCL is connected to A5 (green on the board, orange Dupont wire).
-
-![I2C working](working-I2C.jpg)
-
-![I2C working2](working2-I2C.jpg)
