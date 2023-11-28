@@ -78,15 +78,6 @@ float getThreshold() {
   return threshold;
 }
 
-void setDisplay(bool value) {
-  if (value) {
-    lcd.display();
-  } else {
-    lcd.noDisplay();
-  }
-  digitalWrite(PIN_BACKLIGHT, value);
-}
-
 void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
@@ -123,7 +114,8 @@ void setup() {
   Serial.println();
   
   lcd.begin(LCD_WIDTH, LCD_HEIGHT);
-  setDisplay(true);
+  lcd.display();
+  digitalWrite(PIN_BACKLIGHT, true);
   
   displayCountdown = DISPLAY_TIME;
   maxMinCountdown = 0;
@@ -209,10 +201,13 @@ void loop() {
 
   if (displayCountdown > 0) {
     displayCountdown--;
-    setDisplay(true);
+    lcd.display();
+    digitalWrite(PIN_BACKLIGHT, true);
   } else {
-    setDisplay(false);
+    lcd.noDisplay();
+    digitalWrite(PIN_BACKLIGHT, false);
   }
+  
 
   if (maxMinCountdown > 0) {
     maxMinCountdown--;
