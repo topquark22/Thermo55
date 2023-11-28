@@ -55,7 +55,7 @@ const int  DISPLAY_TIME = 7;
 int displayCountdown;
  
 // display max/min mode
-bool maxMinDisplay = false;
+bool maxMinDisplay;
 
 int prevButton = HIGH;
 
@@ -162,7 +162,7 @@ void loop() {
 
   bool button = !digitalRead(PIN_BUTTON);
 
-  if (button) {
+   if (button) {
     displayCountdown = DISPLAY_TIME;
     if (maxMinDisplay) {
       // button pressed during max/min display; reset values
