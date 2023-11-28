@@ -8,8 +8,10 @@
 
 // alarm threshold supported range in degrees C
 // (Note: Type K thermocouple actually supports -200 to +1300)
-const float TEMP_LOW = -40;
-const float TEMP_HIGH = 110;
+const float TEMP_COARSE_LOW = -100;
+const float TEMP_COARSE_HIGH = 300;
+const float TEMP_FINE_LOW = -10;
+const float TEMP_FINE_HIGH = 10;
 
 // LCD I2C address and size
 const int LCD_I2C_ADDR = 0x27;
@@ -26,7 +28,8 @@ const int PIN_BUTTON = 5;
 const int PIN_ALARM_DIR = 4;
 
 // analog input to set alarm threshold
-const int PIN_THRESHOLD = A0;
+const int PIN_THRESHOLD_COARSE = A0;
+const int PIN_THRESHOLD_FINE = A1;
 
 // SPI hardware configuration
 const int thermoDO = 12; // MISO
@@ -34,7 +37,6 @@ const int thermoCS = 8; // Chip select
 const int thermoCLK = 13; // SPI serial clock
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
-
 
 bool alarmOnHighTemp;
 
@@ -60,12 +62,15 @@ int prevButton = HIGH;
 float prevThreshold = NEGATIVE_INFINITY;
 
 float getThreshold() {
-  int reading = analogRead(PIN_THRESHOLD);
+  int reading_coarse = analogRead(PIN_THRESHOLD_COARSE);
+  int reading_fine = analogRead(PIN_THRESHOLD_FINE);
 
   // interpolate
-  float threshold = TEMP_LOW + (TEMP_HIGH - TEMP_LOW) * reading / 1023;
+  float threshold_coarse = TEMP_COARSE_LOW + (TEMP_COARSE_HIGH - TEMP_COARSE_LOW) * reading_coarse / 1023;
+  float delta_fine = TEMP_FINE_LOW + (TEMP_FINE_HIGH - TEMP_FINE_LOW) * reading_fine / 1023;
+  float threshold = threshold_coarse + delta_fine;
 
-  if (abs(threshold - prevThreshold) > 0.5) {
+  if (abs(threshold - prevThreshold) > 0.25) {
     displayCountdown = DISPLAY_TIME;
   }
   prevThreshold = threshold;
@@ -87,7 +92,8 @@ void setup() {
   
   pinMode(PIN_OUT, OUTPUT);
   pinMode(PIN_OUT_, OUTPUT);
-  pinMode(PIN_THRESHOLD, INPUT);
+  pinMode(PIN_THRESHOLD_COARSE, INPUT);
+  pinMode(PIN_THRESHOLD_FINE, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
 
@@ -193,12 +199,12 @@ void loop() {
 
   if (displayCountdown > 0) {
     displayCountdown--;
-      lcd.display();
-      lcd.backlight();
+    lcd.display();
+    lcd.backlight();
   } else {
-      lcd.noDisplay();
-      lcd.noBacklight();
-      maxMinMode = false;
+    lcd.noDisplay();
+    lcd.noBacklight();
+    maxMinDisplay = false;
   }
 
   if (!maxMinDisplay) { // normal mode

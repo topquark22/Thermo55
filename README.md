@@ -21,22 +21,24 @@ To reset the MAX/MIN values, continue holding or press the button again during t
 | D8   |              | CS (managed by 31855 driver)              |
 | D12  |              | MISO (managed by 31855 driver)            |
 | D13  |              | SCK (managed by 31855 driver)             |
-| A0   | INPUT        | analog threshold setting                  |
+| A0   | INPUT        | analog threshold setting (coarse)         |
+| A1   | INPUT        | analog threshold setting (fine)           |
 | A4   |              | SDA (managed by LiquidCrystal_I2C driver) |
 | A5   |              | SCL (managed by LiquidCrystal I2C driver) |
 
 ## Hardware considerations
 
-You will need:
+You will need, at least:
 - Type K thermocouple wire
 - AdaFruit MAX31855 thermocouple amplifier breakout board
 - LCD 1602 display with I2C capability
+- Two potentiometers
 
 If you don't have an LCD display, the output is also printed to the serial monitor.
 
 Connect D5 to a normally-open pushbutton switch. This changes the display from **temperature/threshold** to **max/min** mode.
 
-Connect pin A0 to a POT configured as a voltage divider.
+Connect pins A0, A1 to separate POTs configured as voltage dividers. A0 is coarse and A1 is fine threshold adjustment.
 
 To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
