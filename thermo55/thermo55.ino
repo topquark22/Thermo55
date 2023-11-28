@@ -70,7 +70,7 @@ float getThreshold() {
   float delta_fine = TEMP_FINE_LOW + (TEMP_FINE_HIGH - TEMP_FINE_LOW) * reading_fine / 1023;
   float threshold = threshold_coarse + delta_fine;
 
-  if (abs(threshold - prevThreshold) > 0.5) {
+  if (abs(threshold - prevThreshold) > 0.25) {
     displayCountdown = DISPLAY_TIME;
   }
   prevThreshold = threshold;
