@@ -165,6 +165,10 @@ void loop() {
 
   if (button) {
     displayCountdown = DISPLAY_TIME;
+    if (maxMinCountdown > 0) {
+      // extend max/min display
+      maxMinCountdown = DISPLAY_TIME;
+    }
   }
 
   if (button && prevButton) {
