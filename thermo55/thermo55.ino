@@ -38,7 +38,6 @@ const int thermoCLK = 13; // SPI serial clock
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
-
 bool alarmOnHighTemp;
 
 // Connect LCD I2C pin SDA to A4
@@ -49,22 +48,16 @@ LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
 float maxTemp = MIN_TEMP;
 float minTemp = MAX_TEMP;
 
-// time backlight stays on
-const int  BACKLIGHT_TIME = 7;
+// time display stays on
+const int  DISPLAY_TIME = 7;
 
-// countdown time for backlight
-int backlightCountdown;
+// countdown time for display
+int displayCountdown;
  
 // countdown time for max/min mode
 int maxMinCountdown = 0;
 
 int prevButton = HIGH;
-
-// Number of passes through the loop. A sample is not taken every pass.
-int loopCt = 0;
-
-// Number of samples taken (loopCt / LOOPS_PER_SAMPLE)
-int sampleCt = 0;
 
 float prevThreshold = MIN_TEMP;
 
@@ -78,7 +71,7 @@ float getThreshold() {
   float threshold = threshold_coarse + delta_fine;
 
   if (abs(threshold - prevThreshold) > 0.5) {
-    backlightCountdown = BACKLIGHT_TIME;
+    displayCountdown = DISPLAY_TIME;
   }
   prevThreshold = threshold;
       
@@ -89,7 +82,7 @@ void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
   if (value) {
-    backlightCountdown = BACKLIGHT_TIME;
+    displayCountdown = DISPLAY_TIME;
   }
 }
 
@@ -123,7 +116,7 @@ void setup() {
   lcd.init();
   lcd.backlight();
   
-  backlightCountdown = BACKLIGHT_TIME;
+  displayCountdown = DISPLAY_TIME;
   maxMinCountdown = 0;
 
   // wait for MAX31855 to stabilize
@@ -170,7 +163,7 @@ void loop() {
   bool button = !digitalRead(PIN_BUTTON);
 
   if (button) {
-    backlightCountdown = BACKLIGHT_TIME;
+    displayCountdown = DISPLAY_TIME;
   }
 
   if (button && prevButton) {
@@ -180,7 +173,7 @@ void loop() {
       minTemp = MAX_TEMP;
     }
     // button held down for 2 samples; switch to max/min
-    maxMinCountdown = BACKLIGHT_TIME;
+    maxMinCountdown = DISPLAY_TIME;
   }
   prevButton = button;
 
@@ -205,10 +198,12 @@ void loop() {
     Serial.println(F("ALARM OFF"));
   }
 
-  if (backlightCountdown > 0) {
-    backlightCountdown--;
+  if (displayCountdown > 0) {
+    displayCountdown--;
+      lcd.display();
       lcd.backlight();
   } else {
+      lcd.noDisplay();
       lcd.noBacklight();
   }
 
