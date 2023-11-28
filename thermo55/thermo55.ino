@@ -51,11 +51,11 @@ LiquidCrystal lcd(PIN_RS, PIN_E, PIN_DS4, PIN_DS5, PIN_DS6, PIN_DS7);
 float maxTemp = MIN_TEMP;
 float minTemp = MAX_TEMP;
 
-// time backlight stays on
-const int  BACKLIGHT_TIME = 7;
+// time display stays on
+const int  DISPLAY_TIME = 7;
 
-// countdown time for backlight
-int backlightCountdown;
+// countdown time for display
+int displayCountdown;
  
 // countdown time for max/min mode
 int maxMinCountdown = 0;
@@ -71,14 +71,19 @@ float getThreshold() {
   float threshold = TEMP_LOW + (TEMP_HIGH - TEMP_LOW) * reading / 1023;
 
   if (abs(threshold - prevThreshold) > 0.5) {
-    backlightCountdown = BACKLIGHT_TIME;
+    displayCountdown = DISPLAY_TIME;
   }
   prevThreshold = threshold;
       
   return threshold;
 }
 
-void backlight(bool value) {
+void setDisplay(bool value) {
+  if (value) {
+    lcd.display();
+  } else {
+    lcd.noDisplay();
+  }
   digitalWrite(PIN_BACKLIGHT, value);
 }
 
@@ -86,7 +91,7 @@ void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
   if (value) {
-    backlightCountdown = BACKLIGHT_TIME;
+    displayCountdown = DISPLAY_TIME;
   }
 }
 
@@ -118,10 +123,9 @@ void setup() {
   Serial.println();
   
   lcd.begin(LCD_WIDTH, LCD_HEIGHT);
-  lcd.display();
-  backlight(true);
+  setDisplay(true);
   
-  backlightCountdown = BACKLIGHT_TIME;
+  displayCountdown = DISPLAY_TIME;
   maxMinCountdown = 0;
 
   // wait for MAX31855 to stabilize
@@ -168,7 +172,7 @@ void loop() {
   bool button = !digitalRead(PIN_BUTTON);
 
   if (button) {
-    backlightCountdown = BACKLIGHT_TIME;
+    displayCountdown = DISPLAY_TIME;
   }
 
   if (button && prevButton) {
@@ -178,7 +182,7 @@ void loop() {
       minTemp = MAX_TEMP;
     }
     // button held down for 2 samples; switch to max/min
-    maxMinCountdown = BACKLIGHT_TIME;
+    maxMinCountdown = DISPLAY_TIME;
   }
   prevButton = button;
 
@@ -203,11 +207,11 @@ void loop() {
     Serial.println(F("ALARM OFF"));
   }
 
-  if (backlightCountdown > 0) {
-    backlightCountdown--;
-    backlight(true);
+  if (displayCountdown > 0) {
+    displayCountdown--;
+    setDisplay(true);
   } else {
-    backlight(false);
+    setDisplay(false);
   }
 
   if (maxMinCountdown > 0) {
