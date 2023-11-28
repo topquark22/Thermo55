@@ -54,8 +54,8 @@ const int  DISPLAY_TIME = 7;
 // countdown time for display
 int displayCountdown;
  
-// countdown time for max/min mode
-int maxMinCountdown = 0;
+// display max/min mode
+bool maxMinDisplay = false;
 
 int prevButton = HIGH;
 
@@ -117,7 +117,7 @@ void setup() {
   lcd.backlight();
   
   displayCountdown = DISPLAY_TIME;
-  maxMinCountdown = 0;
+  maxMinDisplay = false;
 
   // wait for MAX31855 to stabilize
   delay(500);
@@ -164,20 +164,15 @@ void loop() {
 
   if (button) {
     displayCountdown = DISPLAY_TIME;
-    if (maxMinCountdown > 0) {
-      // extend max/min display
-      maxMinCountdown = DISPLAY_TIME;
-    }
-  }
-
-  if (button && prevButton) {
-    if (maxMinCountdown > 0) {
-      // button held down for more than 2 samples; reset values
+    if (maxMinDisplay) {
+      // button pressed during max/min display; reset values
       maxTemp = NEGATIVE_INFINITY;
       minTemp = POSITIVE_INFINITY;
     }
+  }
+  if (button && prevButton) {
     // button held down for 2 samples; switch to max/min
-    maxMinCountdown = DISPLAY_TIME;
+    maxMinDisplay = true;
   }
   prevButton = button;
 
@@ -204,18 +199,15 @@ void loop() {
 
   if (displayCountdown > 0) {
     displayCountdown--;
-      lcd.display();
-      lcd.backlight();
+    lcd.display();
+    lcd.backlight();
   } else {
-      lcd.noDisplay();
-      lcd.noBacklight();
+    lcd.noDisplay();
+    lcd.noBacklight();
+    maxMinDisplay = false;
   }
 
-  if (maxMinCountdown > 0) {
-    maxMinCountdown--;
-  }
-
-  if (maxMinCountdown == 0) { // normal mode
+  if (!maxMinDisplay) { // normal mode
     
     Serial.print(F("Temperature: "));
     Serial.println(c);
