@@ -205,9 +205,9 @@ void loop() {
   } else {
     lcd.noDisplay();
     digitalWrite(PIN_BACKLIGHT, false);
+    maxMinDisplay = false;
   }
   
-
   if (!maxMinDisplay) { // normal mode
     
     Serial.print(F("Temperature: "));
