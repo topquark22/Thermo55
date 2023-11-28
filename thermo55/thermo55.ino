@@ -1,10 +1,10 @@
 #include "Adafruit_MAX31855.h"
 #include "LiquidCrystal_I2C.h"
 
- // highest reading for thermocouple
-#define MAX_TEMP 1350
- // lowest reading for thermocouple
-#define MIN_TEMP -200
+ // above highest reading for K-type thermocouple
+#define POSITIVE_INFINITY 1351
+ // below lowest reading for K-type thermocouple
+#define NEGATIVE_INFINITY -201
 
 // alarm threshold supported range in degrees C
 // (Note: Type K thermocouple actually supports -200 to +1300)
@@ -45,8 +45,8 @@ bool alarmOnHighTemp;
 LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
 
 // track max and min temp since last measurement
-float maxTemp = MIN_TEMP;
-float minTemp = MAX_TEMP;
+float maxTemp = NEGATIVE_INFINITY;
+float minTemp = POSITIVE_INFINITY;
 
 // time display stays on
 const int  DISPLAY_TIME = 7;
@@ -59,7 +59,7 @@ int maxMinCountdown = 0;
 
 int prevButton = HIGH;
 
-float prevThreshold = MIN_TEMP;
+float prevThreshold = NEGATIVE_INFINITY;
 
 float getThreshold() {
   int reading_coarse = analogRead(PIN_THRESHOLD_COARSE);
@@ -101,8 +101,8 @@ void setup() {
 
   setOutput(LOW);
 
-  maxTemp = MIN_TEMP;
-  minTemp = MAX_TEMP;
+  maxTemp = NEGATIVE_INFINITY;
+  minTemp = POSITIVE_INFINITY;
 
   alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
   Serial.print(F("Will alarm on "));
@@ -169,8 +169,8 @@ void loop() {
   if (button && prevButton) {
     if (maxMinCountdown > 0) {
       // button held down for more than 2 samples; reset values
-      maxTemp = MIN_TEMP;
-      minTemp = MAX_TEMP;
+      maxTemp = NEGATIVE_INFINITY;
+      minTemp = POSITIVE_INFINITY;
     }
     // button held down for 2 samples; switch to max/min
     maxMinCountdown = DISPLAY_TIME;
