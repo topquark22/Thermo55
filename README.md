@@ -41,7 +41,7 @@ If you don't have an LCD display, the output is also printed to the serial monit
 
 Connect D5 to a normally-open pushbutton switch. This changes the display from **temperature/threshold** to **max/min** mode.
 
-Connect pins A0, A1 to separate POTs configured as voltage dividers. A0 is coarse and A1 is fine threshold adjustment.
+Connect pins A0, A1 to separate POTs configured as voltage dividers. A0 is coarse and A1 is fine threshold adjustment. It is standard to physically locate the coarse knob to the right of the fine knob.
 
 To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
