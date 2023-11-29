@@ -6,13 +6,6 @@
  // below lowest reading for K-type thermocouple
 #define NEGATIVE_INFINITY -201
 
-// alarm threshold supported range in degrees C
-// (Note: Type K thermocouple actually supports -200 to +1300)
-const float TEMP_COARSE_LOW = -100;
-const float TEMP_COARSE_HIGH = 300;
-const float TEMP_FINE_LOW = -10;
-const float TEMP_FINE_HIGH = 10;
-
 // LCD I2C address and size
 const int LCD_I2C_ADDR = 0x27;
 const int LCD_WIDTH = 16;
@@ -61,16 +54,27 @@ int prevButton = HIGH;
 
 float prevThreshold = NEGATIVE_INFINITY;
 
+// alarm threshold supported range in degrees C
+// (Note: Type K thermocouple actually supports -200 to +1300)
+const float TEMP_COARSE_LOW = -100;
+const float TEMP_COARSE_HIGH = 300;
+const float TEMP_FINE_LOW = -10;
+const float TEMP_FINE_HIGH = 10;
+const float POT_NOISE_ALLOWANCE = 0.25;
+
 float getThreshold() {
   int reading_coarse = analogRead(PIN_THRESHOLD_COARSE);
   int reading_fine = analogRead(PIN_THRESHOLD_FINE);
 
-  // interpolate
+  //coarse -> integer -100 - +300 in increments of 10 
+  // (R)ound to multiple of 10 to reduce POT noise)
   float threshold_coarse = TEMP_COARSE_LOW + (TEMP_COARSE_HIGH - TEMP_COARSE_LOW) * reading_coarse / 1023;
-  float delta_fine = TEMP_FINE_LOW + (TEMP_FINE_HIGH - TEMP_FINE_LOW) * reading_fine / 1023;
-  float threshold = threshold_coarse + delta_fine;
+  int threshold_coarse10 = 10 * (int) (threshold_coarse / 10);
 
-  if (abs(threshold - prevThreshold) > 0.5) {
+  float delta_fine = TEMP_FINE_LOW + (TEMP_FINE_HIGH - TEMP_FINE_LOW) * reading_fine / 1023;
+  float threshold = threshold_coarse10 + delta_fine;
+
+  if (abs(threshold - prevThreshold) > POT_NOISE_ALLOWANCE) {
     displayCountdown = DISPLAY_TIME;
   }
   prevThreshold = threshold;
