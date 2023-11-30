@@ -1,5 +1,5 @@
 #include "Adafruit_MAX31855.h"
-#include "LiquidCrystal_I2C.h"
+
 
 #include "thermo55.h"
 #include "thermo55_radio.h"
@@ -168,6 +168,7 @@ void loop() {
   if (xmitMode) {
     checkThermocouple();
     c = thermocouple.readCelsius();
+    c = 20; // DEBUG
     transmitCelsius(c);
   } else {
     // Read temperature in Celsius from remote module

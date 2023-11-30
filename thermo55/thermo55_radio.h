@@ -1,7 +1,10 @@
-#ifndef R
-#define R
+#ifndef THERMO55_RADIO_H
+#define THERMO55_RADIO_H
 
-//#include <Arduino.h>
+#include <SPI.h>
+#include <RF24_config.h>
+#include <nRF24L01.h>
+#include <RF24.h>
 
 // These wirings of CE, CSN are used for integrated Nano3/nRF24l01 boards
 const int PIN_CE = 10;
@@ -19,6 +22,5 @@ void setupRadio();
 float receiveCelsius();
 
 void transmitCelsius(float c);
-
 
 #endif

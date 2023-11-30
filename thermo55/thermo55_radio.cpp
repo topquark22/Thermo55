@@ -1,7 +1,3 @@
-#include <RF24_config.h>
-#include <nRF24L01.h>
-#include <RF24.h>
-
 #include "thermo55.h"
 #include "thermo55_radio.h"
 
@@ -9,14 +5,15 @@ extern bool xmitMode;
 
 byte commBuffer[4];
 
-RF24 radio(PIN_CE, PIN_CSN);
+RF24 radio(PIN_CE, PIN_CSN, SPI_SPEED);
+
+extern LiquidCrystal_I2C lcd;
 
 void setupRadio() {
 
-  // power 0=MIN, 1=LOW, 2=HIGH, 3=MAX;
   // if wired low, use LOW power, else use MAX power
   pinMode(PIN_PWR, INPUT_PULLUP);
-  int power = digitalRead(PIN_PWR) ? 3 : 1;
+  rf24_pa_dbm_e power = digitalRead(PIN_PWR) ? RF24_PA_MAX : RF24_PA_LOW;
 
   pinMode(PIN_CHANNEL, INPUT_PULLUP);
   int channel = CHANNEL_BASE + 5 * digitalRead(PIN_CHANNEL);
@@ -50,9 +47,16 @@ void setupRadio() {
 }
 
 float receiveCelsius() {
+  Serial.println("Waiting for radio data");
+  lcd.setCursor(0, 0);
+  lcd.print("WAITING FOR");
+  lcd.setCursor(0, 1);
+  lcd.print("RADIO DATA");
   while (!radio.available()) {
-    delay(100);
+    delay(1000);
   }
+  Serial.println("Radio data available");
+  lcd.clear();
   radio.read(commBuffer, 4); // Read data from the nRF24L01
   int value = (commBuffer[0] << 24) + (commBuffer[1] << 16) + (commBuffer[2] << 8) + commBuffer[3];
   float c = (float)value / 100;
@@ -60,10 +64,12 @@ float receiveCelsius() {
 }
 
 void transmitCelsius(float c) {
+  Serial.println("Transmitting radio data"); // DEBUG
   int value = 100 * c;
   commBuffer[0] = (value >> 24) & 0xFF;
   commBuffer[1] = (value >> 16) & 0xFF;
   commBuffer[2] = (value >> 8) & 0xFF;
   commBuffer[3] = value & 0xFF;
   radio.write(commBuffer, 4);
+  delay(10); // allow SPI bus to stabilize
 }
