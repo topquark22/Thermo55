@@ -1,6 +1,9 @@
 #include "Adafruit_MAX31855.h"
 #include "LiquidCrystal_I2C.h"
 
+#include "thermo55.h"
+#include "thermo55_radio.h"
+
  // above highest reading for K-type thermocouple
 #define POSITIVE_INFINITY 1351
  // below lowest reading for K-type thermocouple
@@ -16,14 +19,16 @@ const int LCD_I2C_ADDR = 0x27;
 const int LCD_WIDTH = 16;
 const int LCD_HEIGHT = 2;
 
-const int PIN_OUT = 2;
-const int PIN_OUT_ = 3;
-
 // switch lcd display mode (normal or max/min)
 const int PIN_BUTTON = 5;
 
 // If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;
+
+// If wired to ground, receiver mode, else transmit mode
+const int PIN_XMIT = 6;
+
+bool xmitMode;
 
 // analog input to set alarm threshold
 const int PIN_THRESHOLD = A0;
@@ -34,7 +39,6 @@ const int thermoCS = 8; // Chip select
 const int thermoCLK = 13; // SPI serial clock
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
-
 
 bool alarmOnHighTemp;
 
@@ -72,26 +76,26 @@ float getThreshold() {
       
   return threshold;
 }
-
-void setOutput(bool value) {
-  digitalWrite(PIN_OUT, value);
-  digitalWrite(PIN_OUT_, !value);
-  if (value) {
-    displayCountdown = DISPLAY_TIME;
-  }
-}
-
 const int BAUD_RATE = 9600;
 
 void setup() {
   
+  Serial.begin(BAUD_RATE);
+
   pinMode(PIN_OUT, OUTPUT);
   pinMode(PIN_OUT_, OUTPUT);
   pinMode(PIN_THRESHOLD, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
+  pinMode(PIN_XMIT, INPUT_PULLUP);
 
-  Serial.begin(BAUD_RATE);
+  xmitMode = digitalRead(PIN_XMIT);
+  Serial.print(F("Configured as "));
+  if (xmitMode) {
+    Serial.println(F("transmitter"));
+  } else {
+    Serial.println(F("receiver"));
+  }
 
   setOutput(LOW);
 
@@ -117,7 +121,7 @@ void setup() {
   delay(500);
 }
 
-void checkErrors() {
+void checkThermocouple() {
 
   uint8_t error = thermocouple.readError();
 
@@ -129,30 +133,19 @@ void checkErrors() {
     if (error & MAX31855_FAULT_OPEN) {
       Serial.println(F("Open Circuit!"));
       lcd.print(F("OPEN CIRCUIT"));
-    }
-    if (error & MAX31855_FAULT_SHORT_GND) {
+    } else if (error & MAX31855_FAULT_SHORT_GND) {
       Serial.println(F("Short to GND!"));
       lcd.print(F("SHORT TO GND"));
-    }
-    if (error & MAX31855_FAULT_SHORT_VCC) {
+    } else if (error & MAX31855_FAULT_SHORT_VCC) {
       Serial.println(F("Short to VCC!"));
       lcd.print(F("SHORT TO VCC"));
     }
 
-    while (true) {
-      setOutput(HIGH);
-      delay(200);
-      setOutput(LOW);
-      delay(200);
-    }
+    blinkLED(200);
   }
 }
 
 void loop() {
-
-  lcd.clear();
-
-  checkErrors();
 
   bool button = !digitalRead(PIN_BUTTON);
 
@@ -170,8 +163,16 @@ void loop() {
   }
   prevButton = button;
 
-  // Read temperature in Celsius
-  double c = thermocouple.readCelsius();
+  float c;
+
+  if (xmitMode) {
+    checkThermocouple();
+    c = thermocouple.readCelsius();
+    transmitCelsius(c);
+  } else {
+    // Read temperature in Celsius from remote module
+    c = receiveCelsius();
+  }
 
   if (c > maxTemp) {
     maxTemp = c;
@@ -182,32 +183,39 @@ void loop() {
 
   float threshold = getThreshold();
 
-  bool alarm = (alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold);
-  setOutput(alarm);
+  lcd.clear();
 
-  if (alarm) {
-    Serial.println(F("ALARM ON"));
-  } else {
-    Serial.println(F("ALARM OFF"));
+  if (!xmitMode) {
+    bool alarm = (alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold);
+    setOutput(alarm);
+    if (alarm) {
+      Serial.println(F("ALARM ON"));
+      displayCountdown = DISPLAY_TIME;
+    } else {
+      Serial.println(F("ALARM OFF"));
+    }
   }
+
 
   if (displayCountdown > 0) {
     displayCountdown--;
-      lcd.display();
-      lcd.backlight();
+    lcd.display();
+    lcd.backlight();
   } else {
-      lcd.noDisplay();
-      lcd.noBacklight();
-      maxMinMode = false;
+    lcd.noDisplay();
+    lcd.noBacklight();
+    maxMinDisplay = 0;
   }
 
   if (!maxMinDisplay) { // normal mode
     
     Serial.print(F("Temperature: "));
     Serial.println(c);
-    Serial.print(F("Threshold:   "));
-    Serial.println(threshold);
-    Serial.println();
+    if (!xmitMode) {
+      Serial.print(F("Threshold:   "));
+      Serial.println(threshold);
+      Serial.println();
+    }
     
     lcd.setCursor(0, 0);
     lcd.print(F("TEMPERATURE"));
@@ -215,12 +223,15 @@ void loop() {
       lcd.print(F(" "));
     }
     lcd.print(c);
-    lcd.setCursor(0, 1);
-    lcd.print(F("THRESHOLD  "));
-    if (threshold >= 0 && threshold < 10.0) {
-      lcd.print(F(" "));
+
+    if (!xmitMode) {
+      lcd.setCursor(0, 1);
+      lcd.print(F("THRESHOLD  "));
+      if (threshold >= 0 && threshold < 10.0) {
+        lcd.print(F(" "));
+      }
+      lcd.print(threshold);
     }
-    lcd.print(threshold);
     
   } else { // Max/Min mode
 
@@ -239,5 +250,7 @@ void loop() {
     Serial.println();
   }
 
-  delay(1000);
+  if (xmitMode) {
+    delay(1000);
+  }
 }
