@@ -18,44 +18,42 @@ To reset the MAX/MIN values, continue holding or press the button again during t
 | D3   | OUTPUT       | inverted alert output                     |
 | D4   | INPUT_PULLUP | threshold direction                       |
 | D5   | INPUT_PULLUP | display pushbutton                        |
+| D6   | INPUT_PULLUP | transmitter/receiver setting              |
+| D7   | INPUT_PULLUP | unused                                    |
 | D8   |              | CS (managed by 31855 driver)              |
 | D12  |              | MISO (managed by 31855 driver)            |
 | D13  |              | SCK (managed by 31855 driver)             |
 | A0   | INPUT        | analog threshold setting                  |
+| A2   | INPUT_PULLUP | radio power (low or max)                  |
+| A3   | INPUT_PULLUP | radio channel (118 or 113)                |
 | A4   |              | SDA (managed by LiquidCrystal_I2C driver) |
 | A5   |              | SCL (managed by LiquidCrystal I2C driver) |
 
 ## Hardware considerations
 
+### Transmitter module
+
+Connect pin D6 to GND for transmitter mode.
+
 You will need:
 - Type K thermocouple wire
 - AdaFruit MAX31855 thermocouple amplifier breakout board
+
+Optional:
 - LCD 1602 display with I2C capability
 
 If you don't have an LCD display, the output is also printed to the serial monitor.
 
-Connect D5 to a normally-open pushbutton switch. This changes the display from **temperature/threshold** to **max/min** mode.
-
-Connect pin A0 to a POT configured as a voltage divider.
-
-To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
-
-Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
-
-### connection the MAX31855 Breakout Board
-
 On the Arduino Nano, MISO (DO) is pin 12 and SCK (CLK) is pin 13.
 
-Connecting the Adafruit breakout board:
+Connecting the Adafruit thermocouple amplifier breakout board:
 - Connect +5V to Vin
 - Connect GND to ground
 - Connect CLK to pin 13
 - Connect DO to pin 12
 - Connect CS to pin 8
 
-### Attaching a Type-K Thermocouple
-
-Identify the wires:
+Identify the thermocouple wires:
 - Type-K thermocouple wires are typically color-coded.
 - The negative wire is usually red, and the positive wire can be yellow or green, depending on the standard.
 - In a case where there's only one wire visible, it's typically encased with the other in a single insulation.
@@ -69,38 +67,18 @@ Securing the thermocouple:
 - Use Kapton tape for attaching the thermocouple to a surface like a transistor. It's heat resistant and leaves minimal residue.
 - The adhesive used in Kapton tape is typically a silicone adhesive which can withstand high temperatures.
 
-### Testing the MAX31855 Breakout Board
+### Receiver module
 
-On the Arduino Nano, MISO is pin 12 and SCK is pin 13.
+You will need
 
-Any digital pin can be used for CS. In this project we use D8.
+- LCD 1602 display with I2C capability
 
-Connecting the Adafruit breakout board:
-- Connect +5V to Vin
-- Connect GND to ground.
-- Connect the SPI pins (CS, SCK, MISO) to the corresponding pins on the Arduino.
+Leave D6 unconnected for receiver mode.
 
-Testing for open circuits:
-- Use the `readError()` method from the Adafruit MAX31855 library to check for any faults with the thermocouple connections.
+Connect D5 to a normally-open pushbutton switch. This changes the display from **temperature/threshold** to **max/min** mode.
 
-### Some components
+Connect pin A0 to a POT configured as a voltage divider.
 
-The breakout board (back)
+To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
-![Breakout board 1](thermo1.jpg)
-
-Soldered up and attached to the thermocouple. It is working as expected.
-
-![prototype](thermo3.jpg)
-
-### I2C interface
-
-The LCD 1602 display has 4 wires: GND, VDD, SDA, and SCL.
-
-Attach SDA to Arduino pin A4. Attach SCL to Arduino pin A5. Attach VDD (+5V) and GND.
-
-Successfully implemented using the I2C interface. Note the board was wired up for the parallel interface, but it just so happens that the same pins required for I2C are available on the parallel interface pin header, so I just repurposed those. SDA is connected to A4 (purple on board, yellow Dupont wire). SCL is connected to A5 (green on the board, orange Dupont wire).
-
-![I2C working](working-I2C.jpg)
-
-![I2C working2](working2-I2C.jpg)
+Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
