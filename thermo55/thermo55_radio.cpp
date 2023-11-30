@@ -7,6 +7,8 @@
 
 extern bool xmitMode;
 
+byte commBuffer[4];
+
 RF24 radio(PIN_CE, PIN_CSN);
 
 void setupRadio() {
@@ -16,9 +18,12 @@ void setupRadio() {
   pinMode(PIN_PWR, INPUT_PULLUP);
   int power = digitalRead(PIN_PWR) ? 3 : 1;
 
+  pinMode(PIN_CHANNEL, INPUT_PULLUP);
   int channel = CHANNEL_BASE + 5 * digitalRead(PIN_CHANNEL);
 
   int deviceID = DEVICE_ID;
+
+  radio.begin();
 
   if (!radio.isChipConnected()) {
     Serial.println(F("Radio not connected"));
@@ -28,8 +33,6 @@ void setupRadio() {
     Serial.println(channel);
     Serial.print(F("Radio channel set to "));
     Serial.println(channel);
-
-    radio.begin();
 
     // Data rate: Can set to RF24_1MBPS, RF24_2MBPS, RF24_250KBPS (nRF24L01+ only)
     radio.setDataRate(RF24_1MBPS);
@@ -44,15 +47,23 @@ void setupRadio() {
       radio.startListening(); // Listen to see if information received
     }
   }
-
 }
 
 float receiveCelsius() {
-  // TODO
-	delay(1000);
-	return 0.0;
+  while (!radio.available()) {
+    delay(100);
+  }
+  radio.read(commBuffer, 4); // Read data from the nRF24L01
+  int value = (commBuffer[0] << 24) + (commBuffer[1] << 16) + (commBuffer[2] << 8) + commBuffer[3];
+  float c = (float)value / 100;
+  return c;
 }
 
 void transmitCelsius(float c) {
-	// TODO
+  int value = 100 * c;
+  commBuffer[0] = (value >> 24) & 0xFF;
+  commBuffer[1] = (value >> 16) & 0xFF;
+  commBuffer[2] = (value >> 8) & 0xFF;
+  commBuffer[3] = value & 0xFF;
+  radio.write(commBuffer, 4);
 }

@@ -14,10 +14,11 @@ const int CHANNEL_BASE = 113;
 
 const uint64_t DEVICE_ID = 0x7E000E7E00;
 
-void setup_radio();
+void setupRadio();
 
 float receiveCelsius();
 
 void transmitCelsius(float c);
+
 
 #endif

@@ -51,7 +51,7 @@ float maxTemp = NEGATIVE_INFINITY;
 float minTemp = POSITIVE_INFINITY;
 
 // time display stays on
-const int  DISPLAY_TIME = 7;
+const int  DISPLAY_TIME = 10;
 
 // countdown time for display
 int displayCountdown;
@@ -89,12 +89,23 @@ void setup() {
   pinMode(PIN_BUTTON, INPUT_PULLUP);
   pinMode(PIN_XMIT, INPUT_PULLUP);
 
+  setupRadio();
+
   xmitMode = digitalRead(PIN_XMIT);
   Serial.print(F("Configured as "));
   if (xmitMode) {
     Serial.println(F("transmitter"));
   } else {
     Serial.println(F("receiver"));
+
+    alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
+    Serial.print(F("Will alarm on "));
+    if (alarmOnHighTemp) {
+      Serial.println(F("high temperature threshold"));
+    } else {
+      Serial.println(F("low temperature threshold"));
+    }
+    Serial.println();
   }
 
   setOutput(LOW);
@@ -102,15 +113,6 @@ void setup() {
   maxTemp = NEGATIVE_INFINITY;
   minTemp = POSITIVE_INFINITY;
 
-  alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
-  Serial.print(F("Will alarm on "));
-  if (alarmOnHighTemp) {
-    Serial.println(F("high temperature threshold"));
-  } else {
-    Serial.println(F("low temperature threshold"));
-  }
-  Serial.println();
-  
   lcd.init();
   lcd.backlight();
   
@@ -124,8 +126,9 @@ void setup() {
 void checkThermocouple() {
 
   uint8_t error = thermocouple.readError();
-
   if (error) {
+
+    lcd.clear();
     lcd.print(F("ERROR"));
     lcd.setCursor(0, 1);
 
@@ -140,16 +143,13 @@ void checkThermocouple() {
       Serial.println(F("Short to VCC!"));
       lcd.print(F("SHORT TO VCC"));
     }
-
-    blinkLED(200);
   }
 }
 
 void loop() {
 
   bool button = !digitalRead(PIN_BUTTON);
-
-   if (button) {
+  if (button) {
     displayCountdown = DISPLAY_TIME;
     if (maxMinDisplay) {
       // button pressed during max/min display; reset values
@@ -181,21 +181,7 @@ void loop() {
     minTemp = c;
   }
 
-  float threshold = getThreshold();
-
   lcd.clear();
-
-  if (!xmitMode) {
-    bool alarm = (alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold);
-    setOutput(alarm);
-    if (alarm) {
-      Serial.println(F("ALARM ON"));
-      displayCountdown = DISPLAY_TIME;
-    } else {
-      Serial.println(F("ALARM OFF"));
-    }
-  }
-
 
   if (displayCountdown > 0) {
     displayCountdown--;
@@ -204,27 +190,26 @@ void loop() {
   } else {
     lcd.noDisplay();
     lcd.noBacklight();
-    maxMinDisplay = 0;
+    maxMinDisplay = false;
   }
 
-  if (!maxMinDisplay) { // normal mode
-    
-    Serial.print(F("Temperature: "));
-    Serial.println(c);
-    if (!xmitMode) {
+  if (!xmitMode) {
+    float threshold = getThreshold();
+
+    bool alarm = (alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold);
+    setOutput(alarm);
+    if (alarm) {
+      Serial.println(F("ALARM ON"));
+      displayCountdown = DISPLAY_TIME;
+      maxMinDisplay = false;
+    } else {
+      Serial.println(F("ALARM OFF"));
+    }
+
+    if (!maxMinDisplay) {
       Serial.print(F("Threshold:   "));
       Serial.println(threshold);
       Serial.println();
-    }
-    
-    lcd.setCursor(0, 0);
-    lcd.print(F("TEMPERATURE"));
-    if (c >= 0 && c < 10.0) {
-      lcd.print(F(" "));
-    }
-    lcd.print(c);
-
-    if (!xmitMode) {
       lcd.setCursor(0, 1);
       lcd.print(F("THRESHOLD  "));
       if (threshold >= 0 && threshold < 10.0) {
@@ -232,7 +217,19 @@ void loop() {
       }
       lcd.print(threshold);
     }
-    
+  }
+  
+  if (!maxMinDisplay) { // normal mode
+
+    Serial.print(F("Temperature: "));
+    Serial.println(c);
+    lcd.setCursor(0, 0);
+    lcd.print(F("TEMPERATURE"));
+    if (c >= 0 && c < 10.0) {
+      lcd.print(F(" "));
+    }
+    lcd.print(c);
+
   } else { // Max/Min mode
 
     lcd.setCursor(0, 0);
