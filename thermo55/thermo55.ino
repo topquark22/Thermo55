@@ -89,6 +89,10 @@ void setup() {
   pinMode(PIN_BUTTON, INPUT_PULLUP);
   pinMode(PIN_XMIT, INPUT_PULLUP);
 
+  lcd.init();
+  lcd.backlight();
+  lcd.clear();
+
   setupRadio();
 
   xmitMode = digitalRead(PIN_XMIT);
@@ -112,9 +116,6 @@ void setup() {
 
   maxTemp = NEGATIVE_INFINITY;
   minTemp = POSITIVE_INFINITY;
-
-  lcd.init();
-  lcd.backlight();
   
   displayCountdown = DISPLAY_TIME;
   maxMinDisplay = false;
@@ -168,7 +169,6 @@ void loop() {
   if (xmitMode) {
     checkThermocouple();
     c = thermocouple.readCelsius();
-    c = 20; // DEBUG
     transmitCelsius(c);
   } else {
     // Read temperature in Celsius from remote module

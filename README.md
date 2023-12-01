@@ -19,7 +19,6 @@ To reset the MAX/MIN values, continue holding or press the button again during t
 | D4   | INPUT_PULLUP | threshold direction                       |
 | D5   | INPUT_PULLUP | display pushbutton                        |
 | D6   | INPUT_PULLUP | transmitter/receiver setting              |
-| D7   | INPUT_PULLUP | unused                                    |
 | D8   |              | CS (managed by 31855 driver)              |
 | D12  |              | MISO (managed by 31855 driver)            |
 | D13  |              | SCK (managed by 31855 driver)             |
