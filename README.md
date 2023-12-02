@@ -57,6 +57,10 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | A4   | L  | X  | i2c          | SDA (LCD 1602)                 |
 | A5   | L  | X  | i2c          | SCL (LCD 1602)                 |
 
+Radio power defaults to MAX. For LOW power, wire A2 to GND.
+
+Radio channel defaults to 118. For 113, wire A3 to GND.
+
 ### Receiver module
 
 Leave D6 unconnected.
