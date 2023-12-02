@@ -1,40 +1,19 @@
 # Temperature Alerting System
 
-An alerting system that sounds an alarm when the temperature rises above (or falls below) a certain threshold. 
+An alerting system that raises an alarm when the temperature rises above (or falls below) a certain threshold.
 
-## Operation
+There are two modules: transmitter (thermometer) and receiver (monitor), communicating via nRF24L01 radio.
 
-The LCD will dim after 10 seconds. To turn on the TEMPERATURE/THRESHOLD display, press the button for 1 second.
+## Software requirements
 
-To activate the MAX/MIN display, press and hold the button for 2 seconds.
+Install the following libraries into the Arduino IDE:
 
-To reset the MAX/MIN values, continue holding or press the button again during the MAX/MIN display.
+* LiquidCrystal_I2C
+* Adafruit MAX31855 (for thermocouple)
+* RF24 library from TMRh20 version 1.4.7 or greater
 
-## Arduino pin assignments
+## Hardware requirements
 
-| pin  | pinMode      | description                               |
-|------|--------------|-------------------------------------------|
-| D2   | OUTPUT       | alert output                              |
-| D3   | OUTPUT       | inverted alert output                     |
-| D4   | INPUT_PULLUP | threshold direction                       |
-| D5   | INPUT_PULLUP | display pushbutton                        |
-| D6   | INPUT_PULLUP | transmitter/receiver setting              |
-| D8   |              | CS (managed by 31855 driver)              |
-| D7   |              | CLK (managed by 31855 driver)             |
-| D12  |              | MISO/DO (managed by 31855 driver)         |
-| A0   | INPUT        | analog threshold setting                  |
-| A2   | INPUT_PULLUP | radio power (low or max)                  |
-| A3   | INPUT_PULLUP | radio channel (118 or 113)                |
-| A4   |              | SDA (managed by LiquidCrystal_I2C driver) |
-| A5   |              | SCL (managed by LiquidCrystal I2C driver) |
-
-## Hardware considerations
-
-### Transmitter module
-
-Connect pin D6 to GND for transmitter mode.
-
-You will need:
 - Type K thermocouple wire
 - AdaFruit MAX31855 thermocouple amplifier breakout board
 
@@ -43,7 +22,50 @@ Optional:
 
 If you don't have an LCD display, the output is also printed to the serial monitor.
 
-On the Arduino Nano, MISO (DO) is pin 12 and SCK (CLK) is pin 13.
+### Pin assignments
+
+If using an external radio, use the pins marked *E*. If using an integrated Nano3/nRF24L01 board, leave these pins unconnected.
+
+- X  : connection
+- NC : no connection
+- L  : to LCD if used
+- E  : to external radio if used
+
+| pin  | T  | R  | type         | meaning                        |
+|------|----|----|--------------|--------------------------------|
+| D2   | NC | X  | OUTPUT       | alert output                   |
+| D3   | NC | X  | OUTPUT       | alert output (inverted)        |
+| D4   | NC | X  | INPUT_PULLUP | threshold direction            |
+| D5   | L  | X  | INPUT_PULLUP | display pushbutton             |
+| D6   | X  | X  | INPUT_PULLUP | transmitter/receiver selection |
+| D7   | X  | NC | spi          | CLK (MAX31855)                 |
+| D8   | X  | NC | i2c          | CS  (MAX31855)                 |
+| D9   | E  | E  | spi          | CSN (nRF24L01)                 |
+| D10  | E  | E  | spi          | CE  (nRF24L01)                 |
+| D11  | E  | E  | spi          | MOSI (nRF24L01)                |
+| D12  | X  | E  | spi          | MISO (nRF24L01), DO (MAX31855) |
+| D13  | E  | E  | spi          | SCK  (nRF24L01)                |
+| A0   | NC | X  | INPUT        | analog threshold setting       |
+| A2   | X  | X  | INPUT_PULLUP | radio power (LOW/MAX)          |
+| A3   | X  | X  | INPUT_PULLUP | radio channel (118 or 113)     |
+| A4   | L  | X  | i2c          | SDA (LCD 1602)                 |
+| A5   | L  | X  | i2c          | SCL (LCD 1602)                 |
+
+### Receiver module
+
+Leave D6 unconnected.
+
+Connect D5 to a normally-open pushbutton switch.
+
+Connect A0 to a POT configured as a voltage divider.
+
+To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
+
+Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
+
+### Transmitter module
+
+Connect pin D6 to GND.
 
 Connecting the Adafruit thermocouple amplifier breakout board:
 - Connect +5V to Vin
@@ -66,18 +88,14 @@ Securing the thermocouple:
 - Use Kapton tape for attaching the thermocouple to a surface like a transistor. It's heat resistant and leaves minimal residue.
 - The adhesive used in Kapton tape is typically a silicone adhesive which can withstand high temperatures.
 
-### Receiver module
+## Operation
 
-You will need
+*The operation is primarily done on the receiver module, but you can optionally attach an LCD and pushbutton to the transmitter module.*
 
-- LCD 1602 display with I2C capability
+The LCD initially displays the radio settings for 1 second. Then it switches to display of the temperature and threshold.
 
-Leave D6 unconnected for receiver mode.
+The LCD will dim after 10 seconds. To turn on the display, press the button for 1 second.
 
-Connect D5 to a normally-open pushbutton switch. This changes the display from **temperature/threshold** to **max/min** mode.
+To activate the max/min display, press and hold the button for 2 seconds.
 
-Connect pin A0 to a POT configured as a voltage divider.
-
-To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
-
-Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
+To reset the max/min values, continue holding or press the button again during the max/min display.
