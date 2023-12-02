@@ -17,6 +17,9 @@ const int PIN_OUT_ = 3;
 // switch lcd display mode (normal or max/min)
 const int PIN_BUTTON = 5;
 
+// wire to GND to keep display permanently on
+const int PIN_ALWAYS_ON = 7;
+
 // If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;
 
@@ -41,12 +44,12 @@ LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
 float maxTemp = NEGATIVE_INFINITY;
 float minTemp = POSITIVE_INFINITY;
 
-// time display stays on
-const int  DISPLAY_TIME = 10;
+// time display stays on normally
+const int DISPLAY_TIME = 10;
 
 // countdown time for display
-int displayCountdown;
- 
+uint32_t displayCountdown;
+
 // display max/min mode
 bool maxMinDisplay;
 
@@ -75,18 +78,23 @@ float getThreshold() {
   float threshold = threshold_coarse10 + delta_fine;
 
   if (abs(threshold - prevThreshold) > POT_NOISE_ALLOWANCE) {
-    displayCountdown = DISPLAY_TIME;
+    turnOnDisplay();
   }
   prevThreshold = threshold;
       
   return threshold;
 }
 
+void turnOnDisplay() {
+  bool alwaysOnDisplay = !digitalRead(PIN_ALWAYS_ON);
+  displayCountdown = alwaysOnDisplay ? 0xFFFFFFFF : DISPLAY_TIME;
+}
+
 void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
   if (value) {
-    displayCountdown = DISPLAY_TIME;
+    turnOnDisplay();
   }
 }
 
@@ -100,6 +108,7 @@ void setup() {
   pinMode(PIN_THRESHOLD_FINE, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
+  pinMode(PIN_ALWAYS_ON, INPUT_PULLUP);
 
   Serial.begin(BAUD_RATE);
 
@@ -120,7 +129,7 @@ void setup() {
   lcd.init();
   lcd.backlight();
   
-  displayCountdown = DISPLAY_TIME;
+  turnOnDisplay();
   maxMinDisplay = false;
 
   // wait for MAX31855 to stabilize
@@ -159,7 +168,7 @@ void checkErrors() {
 }
 
 void loop() {
-
+  Serial.println(displayCountdown); // DEBUG
   lcd.clear();
 
   checkErrors();
@@ -167,7 +176,7 @@ void loop() {
   bool button = !digitalRead(PIN_BUTTON);
 
    if (button) {
-    displayCountdown = DISPLAY_TIME;
+    turnOnDisplay();
     if (maxMinDisplay) {
       // button pressed during max/min display; reset values
       maxTemp = NEGATIVE_INFINITY;
