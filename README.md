@@ -14,7 +14,7 @@ Install the following libraries into the Arduino IDE:
 
 ## Hardware requirements
 
-You will need
+Required:
 - Type K thermocouple wire
 - AdaFruit MAX31855 thermocouple amplifier breakout board
 
