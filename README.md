@@ -26,6 +26,8 @@ If you don't have an LCD display, the output is also printed to the serial monit
 
 If using an external radio, use the pins marked *E*. If using an integrated Nano3/nRF24L01 board, leave these pins unconnected.
 
+There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 for the thermocouple.
+
 - X  : connection
 - NC : no connection
 - L  : connect if LCD used
@@ -38,12 +40,12 @@ If using an external radio, use the pins marked *E*. If using an integrated Nano
 | D4   | NC | X  | INPUT_PULLUP | threshold direction            |
 | D5   | L  | X  | INPUT_PULLUP | display pushbutton             |
 | D6   | X  | X  | INPUT_PULLUP | transmitter/receiver selection |
-| D7   | X  | NC | spi          | CLK (MAX31855)                 |
-| D8   | X  | NC | i2c          | CS  (MAX31855)                 |
+| D7   | X  | NC | spi1         | CLK (MAX31855)                 |
+| D8   | X  | NC | spi1         | CS  (MAX31855)                 |
 | D9   | E  | E  | spi          | CSN (nRF24L01)                 |
 | D10  | E  | E  | spi          | CE  (nRF24L01)                 |
 | D11  | E  | E  | spi          | MOSI (nRF24L01)                |
-| D12  | X  | E  | spi          | MISO (nRF24L01), DO (MAX31855) |
+| D12  | X  | E  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
 | D13  | E  | E  | spi          | SCK  (nRF24L01)                |
 | A0   | NC | X  | INPUT        | analog threshold setting       |
 | A2   | X  | X  | INPUT_PULLUP | radio power (LOW/MAX)          |
@@ -89,8 +91,6 @@ Securing the thermocouple:
 - The adhesive used in Kapton tape is typically a silicone adhesive which can withstand high temperatures.
 
 ## Operation
-
-*The operation is primarily done on the receiver module, but you can optionally attach an LCD and pushbutton to the transmitter module.*
 
 The LCD initially displays the radio settings for 1 second. Then it switches to display of the temperature and threshold.
 
