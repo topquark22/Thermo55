@@ -18,8 +18,11 @@ Required:
 - Type K thermocouple wire
 - AdaFruit MAX31855 thermocouple amplifier breakout board
 
+Recommended:
+- LCD 1602 display with I2C capability (for receiver)
+
 Optional:
-- LCD 1602 display with I2C capability
+- A second LCD 1602 display (for transmitter)
 
 If you don't have an LCD display, the output is also printed to the serial monitor.
 
