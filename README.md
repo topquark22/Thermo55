@@ -61,6 +61,8 @@ Radio power defaults to MAX. For LOW power, wire A2 to GND.
 
 Radio channel defaults to 118. For 113, wire A3 to GND.
 
+Connect GND, +5V, A4, A5 to the LCD display.
+
 ### Receiver module
 
 Leave D6 unconnected.
@@ -76,6 +78,8 @@ Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with you
 ### Transmitter module
 
 Connect pin D6 to GND.
+
+If using an LCD display, connect D5 to a normally-open pushbutton switch.
 
 Connecting the Adafruit thermocouple amplifier breakout board:
 - Connect +5V to Vin
