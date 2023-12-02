@@ -198,7 +198,7 @@ void loop() {
   if (!xmitMode) {
     float threshold = getThreshold();
 
-    bool alarm = (alarmOnHighTemp && c >= threshold) || (!alarmOnHighTemp && c <= threshold);
+    bool alarm = (alarmOnHighTemp && c >= threshold && c < INFINITY) || (!alarmOnHighTemp && c <= threshold);
     setOutput(alarm);
     if (alarm) {
       Serial.println(F("ALARM ON"));
@@ -222,15 +222,17 @@ void loop() {
   }
   
   if (!maxMinDisplay) { // normal mode
-
-    Serial.print(F("Temperature: "));
-    Serial.println(c);
-    lcd.setCursor(0, 0);
-    lcd.print(F("TEMPERATURE"));
-    if (c >= 0 && c < 10.0) {
-      lcd.print(F(" "));
+  
+    if (c < INFINITY) {
+      Serial.print(F("Temperature: "));
+      Serial.println(c);
+      lcd.setCursor(0, 0);
+      lcd.print(F("TEMPERATURE"));
+      if (c >= 0 && c < 10.0) {
+        lcd.print(F(" "));
+      }
+      lcd.print(c);
     }
-    lcd.print(c);
 
   } else { // Max/Min mode
 
