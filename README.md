@@ -28,7 +28,7 @@ If using an external radio, use the pins marked *E*. If using an integrated Nano
 
 - X  : connection
 - NC : no connection
-- L  : to LCD if used
+- L  : connect if LCD used
 - E  : to external radio if used
 
 | pin  | T  | R  | type         | meaning                        |
