@@ -4,13 +4,13 @@
 #include "thermo55.h"
 #include "thermo55_radio.h"
 
-// // above highest reading for K-type thermocouple
+// above highest reading for K-type thermocouple
 #define POSITIVE_INFINITY 1351
-// // below lowest reading for K-type thermocouple
+// below lowest reading for K-type thermocouple
 #define NEGATIVE_INFINITY -201
 
 // alarm threshold supported range in degrees C
-//// (Note: Type K thermocouple actually supports -200 to +1300)
+// (Note: Type K thermocouple actually supports -200 to +1300)
 const float TEMP_LOW = -40;
 const float TEMP_HIGH = 110;
 
@@ -39,7 +39,7 @@ const int thermoDO = 12; // MISO
 const int thermoCS = 8; // Chip select
 const int thermoCLK = 13; // SPI serial clock
 
-//Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
+Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
 bool alarmOnHighTemp;
 
@@ -128,7 +128,7 @@ void setup() {
 }
 
 void checkThermocouple() {
-/*
+
   uint8_t error = thermocouple.readError();
   if (error) {
 
@@ -148,7 +148,7 @@ void checkThermocouple() {
       lcd.print(F("SHORT TO VCC"));
     }
   }
-*/}
+}
 
 void loop() {
 
@@ -171,8 +171,7 @@ void loop() {
 
   if (xmitMode) {
     checkThermocouple();
-//    c = thermocouple.readCelsius();
-    c = 21.0; //DEBUG
+    c = thermocouple.readCelsius();
     transmitCelsius(c);
   } else {
     // Read temperature in Celsius from remote module
