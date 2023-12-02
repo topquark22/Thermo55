@@ -1,6 +1,6 @@
-# Temperature Alerting System
+# thermo55
 
-An alerting system that raises an alarm when the temperature rises above (or falls below) a certain threshold.
+An alerting system that raises an alarm when the temperature rises above or falls below a set threshold.
 
 There are two modules: transmitter (thermometer) and receiver (monitor), communicating via nRF24L01 radio.
 
