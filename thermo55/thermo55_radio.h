@@ -16,7 +16,7 @@ const int CHANNEL_BASE = 113;
 
 const uint64_t DEVICE_ID = 0x7E0000A700LL;
 
-void setupRadio();
+void setupRadio(bool xmitMode);
 
 float receiveCelsius();
 
