@@ -1,7 +1,6 @@
 #ifndef THERMO55_RADIO_H
 #define THERMO55_RADIO_H
 
-#include <SPI.h>
 #include <RF24_config.h>
 #include <nRF24L01.h>
 #include <RF24.h>
@@ -15,7 +14,7 @@ const int PIN_CHANNEL = A3;
 
 const int CHANNEL_BASE = 113;
 
-const uint64_t DEVICE_ID = 0x7E000E7E00;
+const uint64_t DEVICE_ID = 0x7E0000A700LL;
 
 void setupRadio();
 

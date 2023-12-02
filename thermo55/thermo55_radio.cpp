@@ -25,13 +25,12 @@ void setupRadio() {
   lcd.print(F("STARTING RADIO"));
   radio.begin();
   lcd.clear();
-  lcd.print(F("CHECKING RADIO"));
 
   if (!radio.isChipConnected()) {
     Serial.println(F("Radio not connected"));
     lcd.clear();
     lcd.print(F("NO RADIO"));
-    blinkLED(250); // never returns
+    delay(100);
     exit(1);
   }
 
@@ -44,7 +43,6 @@ void setupRadio() {
 
   Serial.print(F("Radio power set to "));
   Serial.println(power);
-  lcd.setCursor(0, 0);
   lcd.print(F("POWER"));
   lcd.setCursor(8, 0);
   lcd.print(power);
@@ -55,7 +53,7 @@ void setupRadio() {
   lcd.print(F("CHANNEL"));
   lcd.setCursor(8, 1);
   lcd.print(channel);
-
+  
   delay(2000);
 
   if (xmitMode) {
@@ -68,16 +66,9 @@ void setupRadio() {
 }
 
 float receiveCelsius() {
-  Serial.println("Waiting for radio data");
-  lcd.setCursor(0, 0);
-  lcd.print("WAITING FOR");
-  lcd.setCursor(0, 1);
-  lcd.print("RADIO DATA");
   while (!radio.available()) {
     delay(1000);
   }
-  Serial.println("Radio data available");
-  lcd.clear();
   radio.read(commBuffer, 4); // Read data from the nRF24L01
   int value = (commBuffer[0] << 24) + (commBuffer[1] << 16) + (commBuffer[2] << 8) + commBuffer[3];
   float c = (float)value / 100;
@@ -85,7 +76,6 @@ float receiveCelsius() {
 }
 
 void transmitCelsius(float c) {
-  Serial.println("Transmitting radio data"); // DEBUG
   int value = 100 * c;
   commBuffer[0] = (value >> 24) & 0xFF;
   commBuffer[1] = (value >> 16) & 0xFF;
