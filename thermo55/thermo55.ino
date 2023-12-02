@@ -4,11 +4,6 @@
 #include "thermo55.h"
 #include "thermo55_radio.h"
 
-// above highest reading for K-type thermocouple
-#define POSITIVE_INFINITY 1351
-// below lowest reading for K-type thermocouple
-#define NEGATIVE_INFINITY -201
-
 // alarm threshold supported range in degrees C
 // (Note: Type K thermocouple actually supports -200 to +1300)
 const float TEMP_LOW = -40;
@@ -18,7 +13,6 @@ const float TEMP_HIGH = 110;
 const int LCD_I2C_ADDR = 0x27;
 const int LCD_WIDTH = 16;
 const int LCD_HEIGHT = 2;
-
 
 // switch lcd display mode (normal or max/min)
 const int PIN_BUTTON = 5;
@@ -49,7 +43,7 @@ LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
 
 // track max and min temp since last measurement
 float maxTemp = NEGATIVE_INFINITY;
-float minTemp = POSITIVE_INFINITY;
+float minTemp = INFINITY;
 
 // time display stays on
 const int  DISPLAY_TIME = 10;
@@ -117,7 +111,7 @@ void setup() {
   setOutput(LOW);
 
   maxTemp = NEGATIVE_INFINITY;
-  minTemp = POSITIVE_INFINITY;
+  minTemp = INFINITY;
   
   displayCountdown = DISPLAY_TIME;
   maxMinDisplay = false;
@@ -159,7 +153,7 @@ void loop() {
     if (maxMinDisplay) {
       // button pressed during max/min display; reset values
       maxTemp = NEGATIVE_INFINITY;
-      minTemp = POSITIVE_INFINITY;
+      minTemp = INFINITY;
     }
   }
   if (button && prevButton) {
@@ -168,7 +162,7 @@ void loop() {
   }
   prevButton = button;
 
-  float c;
+  float c = INFINITY;
 
   if (xmitMode) {
     checkThermocouple();
@@ -176,10 +170,13 @@ void loop() {
     transmitCelsius(c);
   } else {
     // Read temperature in Celsius from remote module
-    c = receiveCelsius();
+    float cc = receiveCelsius();
+    if (cc < INFINITY) { // data available
+      c = cc;
+    }
   }
 
-  if (c > maxTemp) {
+  if (c > maxTemp && c < INFINITY) {
     maxTemp = c;
   }
   if (c < minTemp) {
@@ -251,8 +248,6 @@ void loop() {
     
     Serial.println();
   }
-
-  if (xmitMode) {
-    delay(1000);
-  }
+  
+  delay(1000);
 }

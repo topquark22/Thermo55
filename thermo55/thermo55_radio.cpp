@@ -52,7 +52,7 @@ void setupRadio(bool xmitMode) {
   lcd.setCursor(8, 1);
   lcd.print(channel);
   
-  delay(2000);
+  delay(1000);
 
   if (xmitMode) {
     radio.openWritingPipe(deviceID); // Get NRF24L01 ready to transmit
@@ -64,8 +64,8 @@ void setupRadio(bool xmitMode) {
 }
 
 float receiveCelsius() {
-  while (!radio.available()) {
-    delay(1000);
+  if (!radio.available()) {
+    return INFINITY;
   }
   radio.read(commBuffer, 4); // Read data from the nRF24L01
   int value = (commBuffer[0] << 24) + (commBuffer[1] << 16) + (commBuffer[2] << 8) + commBuffer[3];
