@@ -37,7 +37,7 @@ const int PIN_THRESHOLD = A0;
 // SPI hardware configuration
 const int thermoDO = 12; // MISO
 const int thermoCS = 8; // Chip select
-const int thermoCLK = 13; // SPI serial clock
+const int thermoCLK = 7; // SPI serial clock (NOTE must not be the same as the nRF24L01 clock)
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 

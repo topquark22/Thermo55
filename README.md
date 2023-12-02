@@ -20,8 +20,8 @@ To reset the MAX/MIN values, continue holding or press the button again during t
 | D5   | INPUT_PULLUP | display pushbutton                        |
 | D6   | INPUT_PULLUP | transmitter/receiver setting              |
 | D8   |              | CS (managed by 31855 driver)              |
-| D12  |              | MISO (managed by 31855 driver)            |
-| D13  |              | SCK (managed by 31855 driver)             |
+| D7   |              | CLK (managed by 31855 driver)             |
+| D12  |              | MISO/DO (managed by 31855 driver)         |
 | A0   | INPUT        | analog threshold setting                  |
 | A2   | INPUT_PULLUP | radio power (low or max)                  |
 | A3   | INPUT_PULLUP | radio channel (118 or 113)                |
@@ -48,9 +48,9 @@ On the Arduino Nano, MISO (DO) is pin 12 and SCK (CLK) is pin 13.
 Connecting the Adafruit thermocouple amplifier breakout board:
 - Connect +5V to Vin
 - Connect GND to ground
-- Connect CLK to pin 13
-- Connect DO to pin 12
+- Connect CLK to pin 7
 - Connect CS to pin 8
+- Connect DO to pin 12
 
 Identify the thermocouple wires:
 - Type-K thermocouple wires are typically color-coded.
