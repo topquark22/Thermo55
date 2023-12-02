@@ -46,6 +46,8 @@ Connect pins A0, A1 to separate POTs configured as voltage dividers. A0 is coars
 
 To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
+To keep the display permanently on, switch D7 to GND. Unlike other jumpers, this setting has effect in the loop real-time.
+
 Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
 
 ### connection the MAX31855 Breakout Board
