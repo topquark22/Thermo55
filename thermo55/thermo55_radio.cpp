@@ -1,8 +1,6 @@
 #include "thermo55.h"
 #include "thermo55_radio.h"
 
-extern bool xmitMode;
-
 byte commBuffer[4];
 
 // match default SPI clock speed used by MAX31855
@@ -10,7 +8,7 @@ RF24 radio(PIN_CE, PIN_CSN, SPI_CLOCK_DIV4);
 
 extern LiquidCrystal_I2C lcd;
 
-void setupRadio() {
+void setupRadio(bool xmitMode) {
 
   // if wired low, use LOW power, else use MAX power
   pinMode(PIN_PWR, INPUT_PULLUP);

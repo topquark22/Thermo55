@@ -96,9 +96,8 @@ void setup() {
   lcd.backlight();
   lcd.clear();
 
-  setupRadio();
-
   xmitMode = digitalRead(PIN_XMIT);
+
   Serial.print(F("Configured as "));
   if (xmitMode) {
     Serial.println(F("transmitter"));
@@ -125,6 +124,8 @@ void setup() {
 
   // wait for MAX31855 to stabilize
   delay(500);
+
+  setupRadio(xmitMode);
 }
 
 void checkThermocouple() {
