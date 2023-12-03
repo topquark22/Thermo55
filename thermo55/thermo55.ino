@@ -18,7 +18,7 @@ const int PIN_OUT_ = 3;
 const int PIN_BUTTON = 5;
 
 // wire to GND to keep display permanently on
-const int PIN_ALWAYS_ON = 7;
+const int PIN_ALWAYS_ON = 6;
 
 // If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;

@@ -20,7 +20,7 @@ To reset the MAX/MIN values, continue holding or press the button again during t
 | D3   | OUTPUT       | inverted alert output                     |
 | D4   | INPUT_PULLUP | threshold direction                       |
 | D5   | INPUT_PULLUP | display pushbutton                        |
-| D7   | INPUT_PULLUP | always-on display                         |
+| D6   | INPUT_PULLUP | always-on display                         |
 | D8   |              | CS (managed by 31855 driver)              |
 | D12  |              | MISO (managed by 31855 driver)            |
 | D13  |              | SCK (managed by 31855 driver)             |
@@ -46,7 +46,7 @@ Connect pins A0, A1 to separate POTs configured as voltage dividers. A0 is coars
 
 To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
-To keep the display permanently on, switch D7 to GND. Unlike other jumpers, this setting has effect in the loop real-time.
+To keep the display permanently on, switch D6 to GND. Unlike other jumpers, this setting has effect in the loop real-time.
 
 Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
 
