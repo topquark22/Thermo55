@@ -21,11 +21,15 @@ const int PIN_OUT_ = 3;
 // switch lcd display mode (normal or max/min)
 const int PIN_BUTTON = 5;
 
+// wire to GND to keep display permanently on
+const int PIN_ALWAYS_ON = 7;
+
 // If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;
 
 // analog input to set alarm threshold
-const int PIN_THRESHOLD = A0;
+const int PIN_THRESHOLD_COARSE = A0;
+const int PIN_THRESHOLD_FINE = A1;
 
 // LCD1602 pins for parallel interface
 const int PIN_RS = 6;
@@ -51,12 +55,12 @@ LiquidCrystal lcd(PIN_RS, PIN_E, PIN_DS4, PIN_DS5, PIN_DS6, PIN_DS7);
 float maxTemp = NEGATIVE_INFINITY;
 float minTemp = POSITIVE_INFINITY;
 
-// time display stays on
-const int  DISPLAY_TIME = 10;
+// time display stays on normally
+const int DISPLAY_TIME = 10;
 
 // countdown time for display
-int displayCountdown;
- 
+uint32_t displayCountdown;
+
 // display max/min mode
 bool maxMinDisplay;
 
@@ -64,25 +68,44 @@ int prevButton = HIGH;
 
 float prevThreshold = NEGATIVE_INFINITY;
 
+// alarm threshold supported range in degrees C
+// (Note: Type K thermocouple actually supports -200 to +1300)
+const float TEMP_COARSE_LOW = -100;
+const float TEMP_COARSE_HIGH = 300;
+const float TEMP_FINE_LOW = -10;
+const float TEMP_FINE_HIGH = 10;
+const float POT_NOISE_ALLOWANCE = 0.25;
+
 float getThreshold() {
-  int reading = analogRead(PIN_THRESHOLD);
+  int reading_coarse = analogRead(PIN_THRESHOLD_COARSE);
+  int reading_fine = analogRead(PIN_THRESHOLD_FINE);
 
-  // interpolate
-  float threshold = TEMP_LOW + (TEMP_HIGH - TEMP_LOW) * reading / 1023;
+  //coarse -> integer -100 - +300 in increments of 10 
+  // (R)ound to multiple of 10 to reduce POT noise)
+  float threshold_coarse = TEMP_COARSE_LOW + (TEMP_COARSE_HIGH - TEMP_COARSE_LOW) * reading_coarse / 1023;
+  int threshold_coarse10 = 10 * (int) (threshold_coarse / 10);
 
-  if (abs(threshold - prevThreshold) > 0.5) {
-    displayCountdown = DISPLAY_TIME;
+  float delta_fine = TEMP_FINE_LOW + (TEMP_FINE_HIGH - TEMP_FINE_LOW) * reading_fine / 1023;
+  float threshold = threshold_coarse10 + delta_fine;
+
+  if (abs(threshold - prevThreshold) > POT_NOISE_ALLOWANCE) {
+    turnOnDisplay();
   }
   prevThreshold = threshold;
       
   return threshold;
 }
 
+void turnOnDisplay() {
+  bool alwaysOnDisplay = !digitalRead(PIN_ALWAYS_ON);
+  displayCountdown = alwaysOnDisplay ? 0xFFFFFFFF : DISPLAY_TIME;
+}
+
 void setOutput(bool value) {
   digitalWrite(PIN_OUT, value);
   digitalWrite(PIN_OUT_, !value);
   if (value) {
-    displayCountdown = DISPLAY_TIME;
+    turnOnDisplay();
   }
 }
 
@@ -92,7 +115,8 @@ void setup() {
   
   pinMode(PIN_OUT, OUTPUT);
   pinMode(PIN_OUT_, OUTPUT);
-  pinMode(PIN_THRESHOLD, INPUT);
+  pinMode(PIN_THRESHOLD_COARSE, INPUT);
+  pinMode(PIN_THRESHOLD_FINE, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
   pinMode(PIN_BACKLIGHT, OUTPUT);
@@ -112,12 +136,12 @@ void setup() {
     Serial.println(F("low temperature threshold"));
   }
   Serial.println();
-  
+
   lcd.begin(LCD_WIDTH, LCD_HEIGHT);
   lcd.display();
   digitalWrite(PIN_BACKLIGHT, true);
   
-  displayCountdown = DISPLAY_TIME;
+  turnOnDisplay();
   maxMinDisplay = false;
 
   // wait for MAX31855 to stabilize
@@ -156,7 +180,7 @@ void checkErrors() {
 }
 
 void loop() {
-
+  Serial.println(displayCountdown); // DEBUG
   lcd.clear();
 
   checkErrors();
@@ -164,7 +188,7 @@ void loop() {
   bool button = !digitalRead(PIN_BUTTON);
 
    if (button) {
-    displayCountdown = DISPLAY_TIME;
+    turnOnDisplay();
     if (maxMinDisplay) {
       // button pressed during max/min display; reset values
       maxTemp = NEGATIVE_INFINITY;

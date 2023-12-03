@@ -2,6 +2,8 @@
 
 An alerting system that raises an alarm when the temperature rises above or falls below a set threshold.
 
+![prototype](thermo4.jpg)
+
 ## Operation
 
 The LCD will dim after 10 seconds. To turn on the TEMPERATURE/THRESHOLD display, press the button for 1 second.
@@ -30,9 +32,10 @@ To reset the MAX/MIN values, continue holding or press the button again during t
 | A4   |              | to LCD pin DS7                       |
 | A5   |              | to LCD pin DS4                       |
 
+
 ## Hardware considerations
 
-You will need:
+You will need, at least:
 - Type K thermocouple wire
 - AdaFruit MAX31855 thermocouple amplifier breakout board
 - LCD 1602 display
@@ -44,9 +47,11 @@ Connect the six LCD pins as listed in the above table.
 
 Connect D5 to a normally-open pushbutton switch. This changes the display from **temperature/threshold** to **max/min** mode.
 
-Connect pin A0 to a POT configured as a voltage divider.
+Connect pins A0, A1 to separate POTs configured as voltage dividers. A0 is coarse and A1 is fine threshold adjustment. It is standard to physically locate the coarse knob to the right of the fine knob.
 
 To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
+
+To keep the display permanently on, switch D7 to GND. Unlike other jumpers, this setting has effect in the loop real-time.
 
 Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
 
@@ -99,25 +104,3 @@ Connecting the Adafruit breakout board:
 
 Testing for open circuits:
 - Use the `readError()` method from the Adafruit MAX31855 library to check for any faults with the thermocouple connections.
-
-### Some components
-
-The breakout board (back)
-
-![Breakout board 1](thermo1.jpg)
-
-Soldered up and attached to the thermocouple. It is working as expected.
-
-![prototype](thermo3.jpg)
-
-### I2C interface
-
-The LCD 1602 display has 4 wires: GND, VDD, SDA, and SCL.
-
-Attach SDA to Arduino pin A4. Attach SCL to Arduino pin A5. Attach VDD (+5V) and GND.
-
-Successfully implemented using the I2C interface. Note the board was wired up for the parallel interface, but it just so happens that the same pins required for I2C are available on the parallel interface pin header, so I just repurposed those. SDA is connected to A4 (purple on board, yellow Dupont wire). SCL is connected to A5 (green on the board, orange Dupont wire).
-
-![I2C working](working-I2C.jpg)
-
-![I2C working2](working2-I2C.jpg)
