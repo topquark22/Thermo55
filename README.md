@@ -35,26 +35,26 @@ If using an external radio, use the pins marked *E*. If using an integrated Nano
 
 There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 for the thermocouple.
 
-- X  : connection
-- NC : no connection
-- L  : connect if LCD used
-- E  : to external radio if used
+- X : connection
+- N : no connection
+- L : connect if LCD used
+- E : to external radio if used
 
 | pin  | T  | R  | type         | meaning                        |
 |------|----|----|--------------|--------------------------------|
-| D2   | NC | X  | OUTPUT       | alert output                   |
-| D3   | NC | X  | OUTPUT       | alert output (inverted)        |
-| D4   | NC | X  | INPUT_PULLUP | threshold direction            |
+| D2   | N  | X  | OUTPUT       | alert output                   |
+| D3   | N  | X  | OUTPUT       | alert output (inverted)        |
+| D4   | N  | X  | INPUT_PULLUP | threshold direction            |
 | D5   | L  | X  | INPUT_PULLUP | display pushbutton             |
 | D6   | L  | X  | INPUT_PULLUP | always-on display              |
-| D7   | X  | NC | spi1         | CLK (MAX31855)                 |
-| D8   | X  | NC | spi1         | CS  (MAX31855)                 |
+| D7   | X  | N  | spi1         | CLK (MAX31855)                 |
+| D8   | X  | N  | spi1         | CS  (MAX31855)                 |
 | D9   | E  | E  | spi          | CSN (nRF24L01)                 |
 | D10  | E  | E  | spi          | CE  (nRF24L01)                 |
 | D11  | E  | E  | spi          | MOSI (nRF24L01)                |
-| D12  | X  | E  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
+| D12  | EX | E  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
 | D13  | E  | E  | spi          | SCK  (nRF24L01)                |
-| A0   | NC | X  | INPUT        | analog threshold setting       |
+| A0   | N  | X  | INPUT        | analog threshold setting       |
 | A1   | X  | X  | INPUT_PULLUP | transmitter/receiver selection |
 | A2   | X  | X  | INPUT_PULLUP | radio power (LOW/MAX)          |
 | A3   | X  | X  | INPUT_PULLUP | radio channel (118 or 113)     |
