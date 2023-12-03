@@ -2,9 +2,9 @@
 #include "LiquidCrystal_I2C.h"
 
  // above highest reading for K-type thermocouple
-#define POSITIVE_INFINITY 1351
+#define INFINITY 99999
  // below lowest reading for K-type thermocouple
-#define NEGATIVE_INFINITY -201
+#define NEGATIVE_INFINITY -99999
 
 // LCD I2C address and size
 const int LCD_I2C_ADDR = 0x27;
@@ -42,7 +42,7 @@ LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
 
 // track max and min temp since last measurement
 float maxTemp = NEGATIVE_INFINITY;
-float minTemp = POSITIVE_INFINITY;
+float minTemp = INFINITY;
 
 // time display stays on normally
 const int DISPLAY_TIME = 10;
@@ -115,7 +115,7 @@ void setup() {
   setOutput(LOW);
 
   maxTemp = NEGATIVE_INFINITY;
-  minTemp = POSITIVE_INFINITY;
+  minTemp = INFINITY;
 
   alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
   Serial.print(F("Will alarm on "));
@@ -180,7 +180,7 @@ void loop() {
     if (maxMinDisplay) {
       // button pressed during max/min display; reset values
       maxTemp = NEGATIVE_INFINITY;
-      minTemp = POSITIVE_INFINITY;
+      minTemp = INFINITY;
     }
   }
   if (button && prevButton) {
