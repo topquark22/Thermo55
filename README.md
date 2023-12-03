@@ -52,7 +52,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | D9   | E  | E  | spi          | CSN (nRF24L01)                 |
 | D10  | E  | E  | spi          | CE  (nRF24L01)                 |
 | D11  | E  | E  | spi          | MOSI (nRF24L01)                |
-| D12  | EX | E  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
+| D12  | XE | E  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
 | D13  | E  | E  | spi          | SCK  (nRF24L01)                |
 | A0   | N  | X  | INPUT        | analog threshold setting       |
 | A1   | X  | X  | INPUT_PULLUP | transmitter/receiver selection |
