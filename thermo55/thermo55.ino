@@ -21,7 +21,7 @@ const int PIN_BUTTON = 5;
 const int PIN_ALARM_DIR = 4;
 
 // If wired to ground, receiver mode, else transmit mode
-const int PIN_XMIT = 6;
+const int PIN_XMIT = A1;
 
 bool xmitMode;
 

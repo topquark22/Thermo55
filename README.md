@@ -46,7 +46,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | D3   | NC | X  | OUTPUT       | alert output (inverted)        |
 | D4   | NC | X  | INPUT_PULLUP | threshold direction            |
 | D5   | L  | X  | INPUT_PULLUP | display pushbutton             |
-| D6   | X  | X  | INPUT_PULLUP | transmitter/receiver selection |
+| D6   | X  | X  | INPUT_PULLUP | always-on display              |
 | D7   | X  | NC | spi1         | CLK (MAX31855)                 |
 | D8   | X  | NC | spi1         | CS  (MAX31855)                 |
 | D9   | E  | E  | spi          | CSN (nRF24L01)                 |
@@ -55,6 +55,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | D12  | X  | E  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
 | D13  | E  | E  | spi          | SCK  (nRF24L01)                |
 | A0   | NC | X  | INPUT        | analog threshold setting       |
+| A1   | X  | X  | INPUT_PULLUP | transmitter/receiver selection |
 | A2   | X  | X  | INPUT_PULLUP | radio power (LOW/MAX)          |
 | A3   | X  | X  | INPUT_PULLUP | radio channel (118 or 113)     |
 | A4   | L  | X  | i2c          | SDA (LCD 1602)                 |
@@ -68,7 +69,7 @@ Connect GND, +5V, A4, A5 to the LCD display.
 
 ### Receiver module
 
-Connect pin D6 to GND (designates as receiver.)
+Connect pin A1 to GND (designates as receiver.)
 
 Connect D5 to a normally-open pushbutton switch.
 
@@ -80,7 +81,7 @@ Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with you
 
 ### Transmitter module
 
-Leave D6 unconnected (designates as transmitter.)
+Leave A1 unconnected (designates as transmitter.)
 
 If using an LCD display, connect D5 to a normally-open pushbutton switch.
 
