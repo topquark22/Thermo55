@@ -35,8 +35,7 @@ If using an external radio, use the pins marked *E*. If using an integrated Nano
 
 There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 for the thermocouple.
 
-**T**: connections for transmitter (thermometer)
-
+**T**: connections for transmitter (thermometer)  
 **R**: connections for receiver (monitor)
 
 - X : connection
