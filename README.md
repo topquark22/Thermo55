@@ -46,7 +46,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | D3   | NC | X  | OUTPUT       | alert output (inverted)        |
 | D4   | NC | X  | INPUT_PULLUP | threshold direction            |
 | D5   | L  | X  | INPUT_PULLUP | display pushbutton             |
-| D6   | X  | X  | INPUT_PULLUP | always-on display              |
+| D6   | L  | X  | INPUT_PULLUP | always-on display              |
 | D7   | X  | NC | spi1         | CLK (MAX31855)                 |
 | D8   | X  | NC | spi1         | CS  (MAX31855)                 |
 | D9   | E  | E  | spi          | CSN (nRF24L01)                 |
