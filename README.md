@@ -1,10 +1,10 @@
 # thermo55
 
+![radio boards](radio_boards.jpg)
+
 An alerting system that raises an alarm when the temperature rises above or falls below a set threshold.
 
 There are two modules: transmitter (thermometer) and receiver (monitor), communicating via nRF24L01 radio.
-
-![radio boards](radio_boards.jpg)
 
 ## Software requirements
 
