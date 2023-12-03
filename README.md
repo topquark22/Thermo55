@@ -20,7 +20,7 @@ To reset the MAX/MIN values, continue holding or press the button again during t
 | D3   | OUTPUT       | inverted alert output                     |
 | D4   | INPUT_PULLUP | threshold direction                       |
 | D5   | INPUT_PULLUP | display pushbutton                        |
-| D7   | INPUT_PULLUP | always-on display                         |
+| D6   | INPUT_PULLUP | always-on display                         |
 | D8   |              | CS (managed by 31855 driver)              |
 | D12  |              | MISO (managed by 31855 driver)            |
 | D13  |              | SCK (managed by 31855 driver)             |
