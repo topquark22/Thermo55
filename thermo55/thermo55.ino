@@ -1,13 +1,17 @@
-#include "Adafruit_MAX31855.h"
-#include "LiquidCrystal_I2C.h"
+#include <Adafruit_MAX31855.h>
 
 #include "thermo55.h"
 #include "thermo55_radio.h"
 
 // alarm threshold supported range in degrees C
-// (Note: Type K thermocouple actually supports -200 to +1300)
+// (Note: Type K thermocouple actually supports -200 to +1350)
 const float TEMP_LOW = -40;
 const float TEMP_HIGH = 110;
+
+ // above highest reading for K-type thermocouple
+#define INFINITY 99999
+ // below lowest reading for K-type thermocouple
+#define NEGATIVE_INFINITY -99999
 
 // LCD I2C address and size
 const int LCD_I2C_ADDR = 0x27;
@@ -16,6 +20,9 @@ const int LCD_HEIGHT = 2;
 
 // switch lcd display mode (normal or max/min)
 const int PIN_BUTTON = 5;
+
+// wire to GND to keep display permanently on
+const int PIN_ALWAYS_ON = 6;
 
 // If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;
@@ -45,34 +52,37 @@ LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
 float maxTemp = NEGATIVE_INFINITY;
 float minTemp = INFINITY;
 
-// time display stays on
-const int  DISPLAY_TIME = 10;
+// time display stays on normally
+const int DISPLAY_TIME = 10;
 
 // countdown time for display
-int displayCountdown;
- 
+uint32_t displayCountdown;
+
 // display max/min mode
 bool maxMinDisplay;
 
 int prevButton = HIGH;
 
+
+void turnOnDisplay() {
+  bool alwaysOnDisplay = !digitalRead(PIN_ALWAYS_ON);
+  displayCountdown = alwaysOnDisplay ? 0xFFFFFFFF : DISPLAY_TIME;
+}
+
 float prevThreshold = NEGATIVE_INFINITY;
+
+const float POT_NOISE_ALLOWANCE = 0.25;
 
 float getThreshold() {
   int reading = analogRead(PIN_THRESHOLD);
-
-  // interpolate
   float threshold = TEMP_LOW + (TEMP_HIGH - TEMP_LOW) * reading / 1023;
-
-  if (abs(threshold - prevThreshold) > 0.5) {
-    displayCountdown = DISPLAY_TIME;
+  if (abs(threshold - prevThreshold) > POT_NOISE_ALLOWANCE) {
+    turnOnDisplay();
   }
   prevThreshold = threshold;
-      
   return threshold;
 }
 
-// for Serial comms
 const int BAUD_RATE = 9600;
 
 void setup() {
@@ -85,6 +95,7 @@ void setup() {
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
   pinMode(PIN_XMIT, INPUT_PULLUP);
+  pinMode(PIN_ALWAYS_ON, INPUT_PULLUP);
 
   lcd.init();
   lcd.backlight();
@@ -113,7 +124,7 @@ void setup() {
   maxTemp = NEGATIVE_INFINITY;
   minTemp = INFINITY;
   
-  displayCountdown = DISPLAY_TIME;
+  turnOnDisplay();
   maxMinDisplay = false;
 
   // wait for MAX31855 to stabilize
@@ -147,9 +158,12 @@ void checkThermocouple() {
 
 void loop() {
 
+  lcd.clear();
+
   bool button = !digitalRead(PIN_BUTTON);
-  if (button) {
-    displayCountdown = DISPLAY_TIME;
+
+   if (button) {
+    turnOnDisplay();
     if (maxMinDisplay) {
       // button pressed during max/min display; reset values
       maxTemp = NEGATIVE_INFINITY;
