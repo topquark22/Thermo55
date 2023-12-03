@@ -4,6 +4,8 @@ An alerting system that raises an alarm when the temperature rises above or fall
 
 There are two modules: transmitter (thermometer) and receiver (monitor), communicating via nRF24L01 radio.
 
+![radio boards](radio_boards.jpg)
+
 ## Software requirements
 
 Install the following libraries into the Arduino IDE:
@@ -15,14 +17,15 @@ Install the following libraries into the Arduino IDE:
 ## Hardware requirements
 
 Required:
+- 2x Arduino (pref. Nano 3)
+- 2x nRF24L01 radio modules (or preferably use 2x Arduino Nano 3 + nRF24L01 integrated boards, as shown)
+- AdaFruit MAX31855 thermocouple amplifier breakout board (for transmitter)
 - Type K thermocouple wire
-- AdaFruit MAX31855 thermocouple amplifier breakout board
-
-Recommended:
 - LCD 1602 display with I2C capability (for receiver)
+- pushbutton switch (for receiver)
 
 Optional:
-- A second LCD 1602 display (for transmitter)
+- 2nd LCD 1602 display and pushbutton switch (for transmitter)
 
 If you don't have an LCD display, the output is also printed to the serial monitor.
 
@@ -65,7 +68,7 @@ Connect GND, +5V, A4, A5 to the LCD display.
 
 ### Receiver module
 
-Leave D6 unconnected.
+Connect pin D6 to GND (designates as receiver.)
 
 Connect D5 to a normally-open pushbutton switch.
 
@@ -77,7 +80,7 @@ Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with you
 
 ### Transmitter module
 
-Connect pin D6 to GND.
+Leave D6 unconnected (designates as transmitter.)
 
 If using an LCD display, connect D5 to a normally-open pushbutton switch.
 
