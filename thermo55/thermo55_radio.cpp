@@ -10,9 +10,12 @@ extern LiquidCrystal_I2C lcd;
 
 void setupRadio(bool xmitMode) {
 
-  // if wired low, use LOW power, else use MAX power
-  pinMode(PIN_PWR, INPUT_PULLUP);
-  rf24_pa_dbm_e power = digitalRead(PIN_PWR) ? RF24_PA_MAX : RF24_PA_LOW;
+// power level jumpers
+  pinMode(PIN_PWR2, INPUT_PULLUP);
+  pinMode(PIN_PWR1, INPUT_PULLUP);
+  // power 0=MIN, 1=LOW, 2=HIGH, 3=MAX
+  rf24_pa_dbm_e power = 2 * digitalRead(PIN_PWR2) + digitalRead(PIN_PWR1);
+  Serial.print(F("Power set to ")); Serial.println(power);
 
   pinMode(PIN_CHANNEL, INPUT_PULLUP);
   int channel = CHANNEL_BASE + 5 * digitalRead(PIN_CHANNEL);

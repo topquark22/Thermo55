@@ -57,16 +57,18 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | D11  | E  | E  | spi          | MOSI (nRF24L01)                |
 | D12  | XE | E  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
 | D13  | E  | E  | spi          | SCK  (nRF24L01)                |
-| A0   | N  | X  | INPUT        | analog threshold setting       |
+| A0   | X  | X  | INPUT_PULLUP | radio channel selection        |
 | A1   | X  | X  | INPUT_PULLUP | transmitter/receiver selection |
-| A2   | X  | X  | INPUT_PULLUP | radio power (LOW/MAX)          |
-| A3   | X  | X  | INPUT_PULLUP | radio channel (118 or 113)     |
+| A2   | X  | X  | INPUT_PULLUP | radio power, 2's bit           |
+| A3   | X  | X  | INPUT_PULLUP | radio power, 1's bit           |
 | A4   | L  | X  | i2c          | SDA (LCD 1602)                 |
 | A5   | L  | X  | i2c          | SCL (LCD 1602)                 |
+| A6   | N  | X  | INPUT        | threshold POT (fine)           |
+| A7   | N  | X  | INPUT        | threshold POT (coarse)         |
 
-Radio power defaults to MAX. For LOW power, wire A2 to GND.
+Radio power (MIN=0, LOW=1, HIGH=2, MAX=3) defaults to MAX. Wire A2, A3 to GND to subtract 2 or 1 respectively.
 
-Radio channel defaults to 118. For 113, wire A3 to GND.
+Radio channel defaults to 118. For channel 113, wire pin A0 to GND.
 
 Connect GND, +5V, A4, A5 to the LCD display.
 
@@ -76,11 +78,11 @@ Connect pin A1 to GND (designates as receiver.)
 
 Connect D5 to a normally-open pushbutton switch.
 
-Connect A0 to a POT configured as a voltage divider.
+To keep the display permanently on, switch D6 to GND. Unlike other jumpers, this setting has effect in the loop real-time.
+
+Connect A6, A7 to two POTs configured as voltage dividers. A6 is fine, A7 is coarse adjustment. It is standard to put the coarse knob to the right of the fine knob.
 
 To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
-
-To keep the display permanently on, switch D6 to GND. Unlike other jumpers, this setting has effect in the loop real-time.
 
 Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
 

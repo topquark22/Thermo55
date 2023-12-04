@@ -1,12 +1,7 @@
-#include <Adafruit_MAX31855.h>
+#include "Adafruit_MAX31855.h"
 
 #include "thermo55.h"
 #include "thermo55_radio.h"
-
-// alarm threshold supported range in degrees C
-// (Note: Type K thermocouple actually supports -200 to +1350)
-const float TEMP_LOW = -40;
-const float TEMP_HIGH = 110;
 
  // above highest reading for K-type thermocouple
 #define INFINITY 99999
@@ -33,7 +28,8 @@ const int PIN_XMIT = A1;
 bool xmitMode;
 
 // analog input to set alarm threshold
-const int PIN_THRESHOLD = A0;
+const int PIN_THRESHOLD_COARSE = A7;
+const int PIN_THRESHOLD_FINE = A6;
 
 // SPI hardware configuration
 const int thermoDO = 12; // MISO
@@ -71,15 +67,31 @@ void turnOnDisplay() {
 
 float prevThreshold = NEGATIVE_INFINITY;
 
+// alarm threshold supported range in degrees C
+// (Note: Type K thermocouple actually supports -200 to +1300)
+const float THRESHOLD_COARSE_LOW = -100;
+const float THRESHOLD_COARSE_HIGH = 300;
+const float THRESHOLD_FINE_LOW = -10;
+const float THRESHOLD_FINE_HIGH = 10;
 const float POT_NOISE_ALLOWANCE = 0.25;
 
 float getThreshold() {
-  int reading = analogRead(PIN_THRESHOLD);
-  float threshold = TEMP_LOW + (TEMP_HIGH - TEMP_LOW) * reading / 1023;
+  int reading_coarse = analogRead(PIN_THRESHOLD_COARSE);
+  int reading_fine = analogRead(PIN_THRESHOLD_FINE);
+
+  //coarse -> integer -100 - +300 in increments of 10
+  // (R)ound to multiple of 10 to reduce POT noise)
+  float threshold_coarse = THRESHOLD_COARSE_LOW + (THRESHOLD_COARSE_HIGH - THRESHOLD_COARSE_LOW) * reading_coarse / 1023;
+  int threshold_coarse10 = 10 * (int) (threshold_coarse / 10);
+
+  float delta_fine = THRESHOLD_FINE_LOW + (THRESHOLD_FINE_HIGH - THRESHOLD_FINE_LOW) * reading_fine / 1023;
+  float threshold = threshold_coarse10 + delta_fine;
+
   if (abs(threshold - prevThreshold) > POT_NOISE_ALLOWANCE) {
     turnOnDisplay();
   }
   prevThreshold = threshold;
+
   return threshold;
 }
 
@@ -91,7 +103,8 @@ void setup() {
 
   pinMode(PIN_OUT, OUTPUT);
   pinMode(PIN_OUT_, OUTPUT);
-  pinMode(PIN_THRESHOLD, INPUT);
+  pinMode(PIN_THRESHOLD_FINE, INPUT);
+  pinMode(PIN_THRESHOLD_COARSE, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
   pinMode(PIN_XMIT, INPUT_PULLUP);

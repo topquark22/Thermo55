@@ -9,9 +9,14 @@
 const int PIN_CE = 10;
 const int PIN_CSN = 9;
 
-const uint8_t PIN_PWR = A2;
-const int PIN_CHANNEL = A3;
+// radio channel
+const int PIN_CHANNEL = A0;
 
+// radio power level jumpers
+const uint8_t PIN_PWR2 = A2;
+const uint8_t PIN_PWR1 = A3;
+
+// radio channel
 const int CHANNEL_BASE = 113;
 
 const uint64_t DEVICE_ID = 0x7E0000A700LL;
