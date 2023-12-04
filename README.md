@@ -1,4 +1,4 @@
-# thermo55
+#Thermo55
 
 ![prototype](thermo4.jpg)
 
