@@ -1,8 +1,8 @@
-# thermo55
-
-![radio boards](radio_boards.jpg)
+#Thermo55
 
 An alerting system that raises an alarm when the temperature rises above or falls below a set threshold.
+
+![radio boards](radio_boards.jpg)
 
 There are two modules: transmitter (thermometer) and receiver (monitor), communicating via nRF24L01 radio.
 
@@ -12,13 +12,13 @@ Install the following libraries into the Arduino IDE:
 
 * LiquidCrystal_I2C
 * Adafruit MAX31855 (for thermocouple)
-* RF24 library from TMRh20 version 1.4.7 or greater
+* RF24 library from TMRh20 version 1.4.7 or later
 
 ## Hardware requirements
 
-Required:
+You will need:
 - 2x Arduino (pref. Nano 3)
-- 2x nRF24L01 radio modules (or preferably use 2x Arduino Nano 3 + nRF24L01 integrated boards, as shown)
+- 2x nRF24L01 radio modules (or preferably use 2x Arduino Nano 3 + nRF24L01 integrated boards, as illustrated)
 - AdaFruit MAX31855 thermocouple amplifier breakout board (for transmitter)
 - Type K thermocouple wire
 - LCD 1602 display with I2C capability (for receiver)
@@ -29,7 +29,7 @@ Optional:
 
 If you don't have an LCD display, the output is also printed to the serial monitor.
 
-### Pin assignments
+## Pin assignments
 
 If using an external radio, use the pins marked *E*. If using an integrated Nano3/nRF24L01 board, leave these pins unconnected.
 
@@ -79,6 +79,8 @@ Connect D5 to a normally-open pushbutton switch.
 Connect A0 to a POT configured as a voltage divider.
 
 To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
+
+To keep the display permanently on, switch D6 to GND. Unlike other jumpers, this setting has effect in the loop real-time.
 
 Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
 
