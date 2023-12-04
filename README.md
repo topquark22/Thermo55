@@ -1,8 +1,8 @@
 #Thermo55
 
-![prototype](thermo4.jpg)
-
 An alerting system that raises an alarm when the temperature rises above or falls below a set threshold.
+
+![prototype](thermo4.jpg)
 
 ## Operation
 
