@@ -1,9 +1,8 @@
-# thermo55
+# Thermo55
 
 ![parallel LCD](parallel_lcd.jpg)
 
 An alerting system that raises an alarm when the temperature rises above or falls below a set threshold.
-
 
 ## Operation
 
@@ -33,7 +32,6 @@ To reset the MAX/MIN values, continue holding or press the button again during t
 | A4   |              | to LCD pin DS7                       |
 | A5   |              | to LCD pin DS4                       |
 
-
 ## Hardware considerations
 
 You will need, at least:
@@ -52,7 +50,7 @@ Connect pins A0, A1 to separate POTs configured as voltage dividers. A0 is coars
 
 To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
-To keep the display permanently on, switch D7 to GND. Unlike other jumpers, this setting has effect in the loop real-time.
+To keep the display permanently on, switch D6 to GND. Unlike other jumpers, this setting has effect in the loop real-time.
 
 Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
 

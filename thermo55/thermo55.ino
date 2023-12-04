@@ -2,9 +2,9 @@
 #include "LiquidCrystal.h"
 
  // above highest reading for K-type thermocouple
-#define POSITIVE_INFINITY 1351
+#define INFINITY 99999
  // below lowest reading for K-type thermocouple
-#define NEGATIVE_INFINITY -201
+#define NEGATIVE_INFINITY -99999
 
 // alarm threshold supported range in degrees C
 // (Note: Type K thermocouple actually supports -200 to +1300)
@@ -22,7 +22,7 @@ const int PIN_OUT_ = 3;
 const int PIN_BUTTON = 5;
 
 // wire to GND to keep display permanently on
-const int PIN_ALWAYS_ON = 7;
+const int PIN_ALWAYS_ON = 6;
 
 // If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;
@@ -53,7 +53,7 @@ LiquidCrystal lcd(PIN_RS, PIN_E, PIN_DS4, PIN_DS5, PIN_DS6, PIN_DS7);
 
 // track max and min temp since last measurement
 float maxTemp = NEGATIVE_INFINITY;
-float minTemp = POSITIVE_INFINITY;
+float minTemp = INFINITY;
 
 // time display stays on normally
 const int DISPLAY_TIME = 10;
@@ -126,7 +126,7 @@ void setup() {
   setOutput(LOW);
 
   maxTemp = NEGATIVE_INFINITY;
-  minTemp = POSITIVE_INFINITY;
+  minTemp = INFINITY;
 
   alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
   Serial.print(F("Will alarm on "));
@@ -192,7 +192,7 @@ void loop() {
     if (maxMinDisplay) {
       // button pressed during max/min display; reset values
       maxTemp = NEGATIVE_INFINITY;
-      minTemp = POSITIVE_INFINITY;
+      minTemp = INFINITY;
     }
   }
   if (button && prevButton) {
