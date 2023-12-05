@@ -22,7 +22,7 @@ Install the following libraries into the Arduino IDE:
 
 You will need:
 - 2x Arduino (pref. Nano 3)
-- 2x nRF24L01 radio modules (or preferably use 2x Arduino Nano 3 + nRF24L01 integrated boards, as illustrated)
+- 2x nRF24L01 radio modules (or preferably 2x Arduino Nano 3 + nRF24L01 integrated boards, as illustrated)
 - AdaFruit MAX31855 thermocouple amplifier breakout board (for transmitter)
 - Type K thermocouple wire
 - LCD 1602 display with I2C capability (for receiver)
