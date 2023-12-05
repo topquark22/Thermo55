@@ -3,7 +3,6 @@
 
 byte commBuffer[4];
 
-// match default SPI clock speed used by MAX31855
 RF24 radio(PIN_CE, PIN_CSN, SPI_CLOCK_DIV4);
 
 extern LiquidCrystal_I2C lcd;

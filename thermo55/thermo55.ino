@@ -67,7 +67,7 @@ void turnOnDisplay() {
 float prevThreshold = NEGATIVE_INFINITY;
 
 // alarm threshold supported range in degrees C
-// (Note: Type K thermocouple actually supports -200 to +1300)
+// (Note: Type K thermocouple actually supports -200 to +1350)
 const float THRESHOLD_COARSE_LOW = -100;
 const float THRESHOLD_COARSE_HIGH = 300;
 const float THRESHOLD_FINE_LOW = -10;
