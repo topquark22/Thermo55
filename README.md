@@ -31,6 +31,8 @@ If you don't have an LCD display, the output is also printed to the serial monit
 
 ## Pin assignments
 
+INPUT_PULLUP pins are active low according to the function described.
+
 If using an external radio, use the pins marked *E*. If using an integrated Nano3/nRF24L01 board, leave these pins unconnected.
 
 There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 for the thermocouple.
