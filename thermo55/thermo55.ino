@@ -195,7 +195,9 @@ void loop() {
   if (xmitMode) {
     checkThermocouple();
     c = thermocouple.readCelsius();
-    transmitCelsius(c);
+    if (isRadioEnabled()) {
+      transmitCelsius(c);
+    }
   } else {
     // Read temperature in Celsius from remote module
     float cc = receiveCelsius();
