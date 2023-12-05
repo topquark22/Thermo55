@@ -109,6 +109,8 @@ void setup() {
   pinMode(PIN_XMIT, INPUT_PULLUP);
   pinMode(PIN_ALWAYS_ON, INPUT_PULLUP);
 
+  setOutput(LOW);
+  
   lcd.init();
   lcd.backlight();
   lcd.clear();
@@ -120,18 +122,18 @@ void setup() {
     Serial.println(F("transmitter"));
   } else {
     Serial.println(F("receiver"));
-
-    alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
-    Serial.print(F("Will alarm on "));
-    if (alarmOnHighTemp) {
-      Serial.println(F("high temperature threshold"));
-    } else {
-      Serial.println(F("low temperature threshold"));
-    }
-    Serial.println();
   }
 
-  setOutput(LOW);
+  alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
+  Serial.print(F("Will alarm on "));
+  if (alarmOnHighTemp) {
+    Serial.println(F("high temperature threshold"));
+  } else {
+    Serial.println(F("low temperature threshold"));
+  }
+  Serial.println();
+
+
 
   maxTemp = NEGATIVE_INFINITY;
   minTemp = INFINITY;
@@ -225,7 +227,7 @@ void loop() {
     maxMinDisplay = false;
   }
 
-  if (!xmitMode) {
+  if (!xmitMode || !isRadioEnabled()) {
     float threshold = getThreshold();
 
     bool alarm = (alarmOnHighTemp && c >= threshold && c < INFINITY) || (!alarmOnHighTemp && c <= threshold);
