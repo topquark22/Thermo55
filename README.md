@@ -6,7 +6,7 @@ An alerting system that raises an alarm when the temperature rises above or fall
 insert photos here
 --->
 
-*Standalone mode is supported, as in version 2.x. However, some pin assignments have changed, so the hardware is not compatible. In particular, with an Arduino Nano3, v2.x will fit on a 30-row breadboard, but v3.x may not.*
+*Standalone mode is supported, as in version 2.x. However, some pin assignments have changed, so the hardware is not compatible.*
 
 Additionally, remote monitoring of a separate thermometer module is supported via nRF24L01 radio.
 
