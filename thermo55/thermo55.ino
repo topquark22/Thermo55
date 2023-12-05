@@ -59,7 +59,6 @@ bool maxMinDisplay;
 
 int prevButton = HIGH;
 
-
 void turnOnDisplay() {
   bool alwaysOnDisplay = !digitalRead(PIN_ALWAYS_ON);
   displayCountdown = alwaysOnDisplay ? 0xFFFFFFFF : DISPLAY_TIME;
@@ -171,6 +170,8 @@ void checkThermocouple() {
 
 void loop() {
 
+  Serial.println(displayCountdown); // DEBUG
+
   lcd.clear();
 
   bool button = !digitalRead(PIN_BUTTON);
@@ -229,7 +230,7 @@ void loop() {
     setOutput(alarm);
     if (alarm) {
       Serial.println(F("ALARM ON"));
-      displayCountdown = DISPLAY_TIME;
+      turnOnDisplay();
       maxMinDisplay = false;
     } else {
       Serial.println(F("ALARM OFF"));

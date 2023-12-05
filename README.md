@@ -38,7 +38,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 **T**: connections for transmitter (thermometer)  
 **R**: connections for receiver (monitor)
 
-- X : connection
+- X : relevant connection
 - N : no connection
 - L : connect if LCD used
 - E : to external radio if used
@@ -57,20 +57,22 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | D11  | E  | E  | spi          | MOSI (nRF24L01)                |
 | D12  | XE | E  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
 | D13  | E  | E  | spi          | SCK  (nRF24L01)                |
-| A0   | X  | X  | INPUT_PULLUP | radio channel selection        |
-| A1   | X  | X  | INPUT_PULLUP | transmitter/receiver selection |
-| A2   | X  | X  | INPUT_PULLUP | radio power, 2's bit           |
-| A3   | X  | X  | INPUT_PULLUP | radio power, 1's bit           |
+| A0   | X  | X  | INPUT_PULLUP | disable radio                  |
+| A1   | X  | X  | INPUT_PULLUP | receiver mode                  |
+| A2   | X  | X  | INPUT_PULLUP | radio power, -2's bit          |
+| A3   | X  | X  | INPUT_PULLUP | radio power, -1's bit          |
 | A4   | L  | X  | i2c          | SDA (LCD 1602)                 |
 | A5   | L  | X  | i2c          | SCL (LCD 1602)                 |
 | A6   | N  | X  | INPUT        | threshold POT (fine)           |
 | A7   | N  | X  | INPUT        | threshold POT (coarse)         |
 
-Radio power (MIN=0, LOW=1, HIGH=2, MAX=3) defaults to MAX. Wire A2, A3 to GND to subtract 2 or 1 respectively.
+Radio power (MIN=0, LOW=1, HIGH=2, MAX=3) defaults to 3. Wire A2, A3 to GND to subtract 2 and/or 1 respectively.
 
-Radio channel defaults to 118. For channel 113, wire pin A0 to GND.
+Radio channel is fixed to 113.
 
 Connect GND, +5V, A4, A5 to the LCD display.
+
+Configured as receiver, and radio disabled, is an unsupported configuration.
 
 ### Receiver module
 
