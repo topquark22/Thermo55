@@ -18,8 +18,8 @@ void setupRadio(bool xmitMode) {
 
   lcd.clear();
 
-  pinMode(PIN_DISABLE_RADIO_, INPUT_PULLUP);
-  radioEnabled = digitalRead(PIN_DISABLE_RADIO_);
+  pinMode(PIN_ENABLE_RADIO, INPUT_PULLUP);
+  radioEnabled = !digitalRead(PIN_ENABLE_RADIO);
 
   if (!xmitMode && !radioEnabled) {
     Serial.println(F("Unsupported configuration"));

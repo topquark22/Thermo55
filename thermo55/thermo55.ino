@@ -110,7 +110,7 @@ void setup() {
   pinMode(PIN_ALWAYS_ON, INPUT_PULLUP);
 
   setOutput(LOW);
-  
+
   lcd.init();
   lcd.backlight();
   lcd.clear();
@@ -132,9 +132,7 @@ void setup() {
     Serial.println(F("low temperature threshold"));
   }
   Serial.println();
-
-
-
+  
   maxTemp = NEGATIVE_INFINITY;
   minTemp = INFINITY;
   

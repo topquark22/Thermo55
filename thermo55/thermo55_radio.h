@@ -9,7 +9,7 @@
 const uint8_t PIN_CE = 10;
 const uint8_t PIN_CSN = 9;
 
-const uint8_t PIN_DISABLE_RADIO_ = A0;
+const uint8_t PIN_ENABLE_RADIO = A0;
 
 // radio power level jumpers
 const uint8_t PIN_PWR2_ = A2;
