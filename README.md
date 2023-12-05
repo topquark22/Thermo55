@@ -21,7 +21,7 @@ Install the following libraries into the Arduino IDE:
 ## Hardware requirements
 
 You will need:
-- 2x Arduino (pref. Nano 3)
+- 2x Arduino (pref. Nano 3) supporting analog input pins A6, A7
 - 2x nRF24L01 radio modules (or preferably 2x Arduino Nano 3 + nRF24L01 integrated boards, as illustrated)
 - AdaFruit MAX31855 thermocouple amplifier breakout board (for transmitter)
 - Type K thermocouple wire
