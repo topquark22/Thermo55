@@ -60,7 +60,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | D12  | XE | E  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
 | D13  | E  | E  | spi          | SCK  (nRF24L01)                |
 | A0   | X  | X  | INPUT_PULLUP | enable radio                   |
-| A1   | X  | X  | INPUT_PULLUP | receiver mode                  |
+| A1   | X  | X  | INPUT_PULLUP | monitor (receiver) mode        |
 | A2   | X  | X  | INPUT_PULLUP | radio power, -2's bit          |
 | A3   | X  | X  | INPUT_PULLUP | radio power, -1's bit          |
 | A4   | L  | X  | i2c          | SDA (LCD 1602)                 |
@@ -68,23 +68,46 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | A6   | N  | X  | INPUT        | threshold POT (fine)           |
 | A7   | N  | X  | INPUT        | threshold POT (coarse)         |
 
-Radio power (MIN=0, LOW=1, HIGH=2, MAX=3) defaults to 3. Wire A2, A3 to GND to subtract 2 and/or 1 respectively.
+Operational modes:
+| A0  | A1  | mode           | radio? | thermocouple? | threshold POT? |
+|-----|-----|----------------|--------|---------------|----------------|
+| NC  | NC  | standalone     | no     | yes           | yes            |
+| NC  | GND | (unsupported)  |        |               |                |
+| GND | NC  | transmitter    | yes    | yes           | no             |
+| GND | GND | receiver       | yes    | no            | yes            |
+
+
+Radio power selection:
+| A2  | A3  | power          |
+|-----|-----|----------------|
+| NC  | NC  | 3 (MAX)        |
+| NC  | GND | 2 (HIGH)       |
+| GND | NC  | 1 (LOW)        |
+| GND | GND | 0 (MIN)        |
 
 Radio channel is fixed to 113.
 
 Connect GND, +5V, A4, A5 to the LCD display.
 
-Configured as receiver, and radio disabled, is an unsupported configuration.
+### Standalone
+
+This configuration can run on a single board and does not use a radio.
+
+Connect POTs as described under **Receiver module**.
+
+Connect thermocouple as described under **Transmitter module**.
 
 ### Receiver module
 
-Connect pin A1 to GND (designates as receiver.)
+Connect pin A0 to GND (enables radio.) 
+
+Connect pin A1 to GND (configures as receiver.)
 
 Connect D5 to a normally-open pushbutton switch.
 
 To keep the display permanently on, switch D6 to GND. Unlike other jumpers, this setting has effect in the loop real-time.
 
-Connect A6, A7 to two POTs configured as voltage dividers. A6 is fine, A7 is coarse adjustment. It is standard to put the coarse knob to the right of the fine knob.
+Connect A6, A7 to two POTs configured as voltage dividers. A6 is fine adjustment, A7 coarse adjustment. (It is standard to mount the coarse knob to the right of the fine knob.)
 
 To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
@@ -92,7 +115,7 @@ Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with you
 
 ### Transmitter module
 
-Leave A1 unconnected (designates as transmitter.)
+Leave A1 unconnected (configures as transmitter.)
 
 If using an LCD display, connect D5 to a normally-open pushbutton switch.
 
@@ -121,7 +144,7 @@ Securing the thermocouple:
 
 The LCD initially displays the radio settings for 1 second. Then it switches to display of the temperature and threshold.
 
-The LCD will dim after 10 seconds. To turn on the display, press the button for 1 second.
+The LCD will dim after 10 seconds (unless always-on display is active). To turn on the display, press the button for 1 second.
 
 To activate the max/min display, press and hold the button for 2 seconds.
 
