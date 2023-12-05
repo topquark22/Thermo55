@@ -2,9 +2,7 @@
 
 An alerting system that raises an alarm when the temperature rises above or falls below a set threshold.
 
-<!---
-insert photos here
---->
+![V3 boards](v3.jpg)
 
 *Standalone mode is supported, as in version 2.x. However, some pin assignments have changed, so the hardware is not compatible.*
 
