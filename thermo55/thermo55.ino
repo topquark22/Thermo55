@@ -81,7 +81,7 @@ float prevThreshold = NEGATIVE_INFINITY;
 // (Note: Type K thermocouple actually supports -200 to +1350)
 const float THRESHOLD_COARSE_LOW = -100;
 const float THRESHOLD_COARSE_HIGH = 300;
-const float THRESHOLD_COARSE_QUANTUM = 10;
+const float THRESHOLD_COARSE_QUANTUM = 5;
 const float THRESHOLD_FINE_LOW = -10;
 const float THRESHOLD_FINE_HIGH = 10;
 const float POT_NOISE_ALLOWANCE = 0.25;
