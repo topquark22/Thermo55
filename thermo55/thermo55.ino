@@ -20,7 +20,7 @@ const int PIN_BUTTON = 5;
 const int PIN_ALWAYS_ON = 6;
 
 // If wired to ground, display temp in degrees Fahrenheit on LCD
-const int PIN_DISP_F = A3;
+const int PIN_DISP_F_ = A3;
 
 // If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;
@@ -67,12 +67,12 @@ void turnOnDisplay() {
   displayCountdown = alwaysOnDisplay ? 0xFFFFFFFF : DISPLAY_TIME;
 }
 
-float celsiusToFahhrenheit(float celsius) {
+float celsiusToFahrenheit(float celsius) {
   return celsius * 9.0 / 5.0 + 32;
 }
 
 float tempToDisplay(float celsius) {
-  return digitalRead(PIN_DISP_F) ? celsiusToFahrenheit(celsius) : celsios;
+  return !digitalRead(PIN_DISP_F_) ? celsiusToFahrenheit(celsius) : celsius;
 }
 
 float prevThreshold = NEGATIVE_INFINITY;
@@ -81,6 +81,7 @@ float prevThreshold = NEGATIVE_INFINITY;
 // (Note: Type K thermocouple actually supports -200 to +1350)
 const float THRESHOLD_COARSE_LOW = -100;
 const float THRESHOLD_COARSE_HIGH = 300;
+const float THRESHOLD_COARSE_QUANTUM = 10;
 const float THRESHOLD_FINE_LOW = -10;
 const float THRESHOLD_FINE_HIGH = 10;
 const float POT_NOISE_ALLOWANCE = 0.25;
@@ -92,7 +93,7 @@ float getThreshold() {
   //coarse -> integer -100 - +300 in increments of 10
   // (R)ound to multiple of 10 to reduce POT noise)
   float threshold_coarse = THRESHOLD_COARSE_LOW + (THRESHOLD_COARSE_HIGH - THRESHOLD_COARSE_LOW) * reading_coarse / 1023;
-  int threshold_coarse10 = 10 * (int) (threshold_coarse / 10);
+  int threshold_coarse10 = THRESHOLD_COARSE_QUANTUM * (int) (threshold_coarse / THRESHOLD_COARSE_QUANTUM);
 
   float delta_fine = THRESHOLD_FINE_LOW + (THRESHOLD_FINE_HIGH - THRESHOLD_FINE_LOW) * reading_fine / 1023;
   float threshold = threshold_coarse10 + delta_fine;
@@ -119,7 +120,7 @@ void setup() {
   pinMode(PIN_BUTTON, INPUT_PULLUP);
   pinMode(PIN_XMIT, INPUT_PULLUP);
   pinMode(PIN_ALWAYS_ON, INPUT_PULLUP);
-  pinMode(PIN_DISP_F, INPUT_PULLUP);
+  pinMode(PIN_DISP_F_, INPUT_PULLUP);
 
   setOutput(LOW);
   enableAuxOutput(false);
