@@ -90,13 +90,13 @@ float getThreshold() {
   int reading_coarse = analogRead(PIN_THRESHOLD_COARSE);
   int reading_fine = analogRead(PIN_THRESHOLD_FINE);
 
-  //coarse -> integer -100 - +300 in increments of 10
-  // (R)ound to multiple of 10 to reduce POT noise)
+  //coarse -> integer -100 - +300 in increments of quantum
+  // (Round to multiple of quantum to reduce POT noise)
   float threshold_coarse = THRESHOLD_COARSE_LOW + (THRESHOLD_COARSE_HIGH - THRESHOLD_COARSE_LOW) * reading_coarse / 1023;
-  int threshold_coarse10 = THRESHOLD_COARSE_QUANTUM * (int) (threshold_coarse / THRESHOLD_COARSE_QUANTUM);
+  int threshold_coarse_quantized = THRESHOLD_COARSE_QUANTUM * (int) (threshold_coarse / THRESHOLD_COARSE_QUANTUM);
 
   float delta_fine = THRESHOLD_FINE_LOW + (THRESHOLD_FINE_HIGH - THRESHOLD_FINE_LOW) * reading_fine / 1023;
-  float threshold = threshold_coarse10 + delta_fine;
+  float threshold = threshold_coarse_quantized + delta_fine;
 
   if (abs(threshold - prevThreshold) > POT_NOISE_ALLOWANCE) {
     turnOnDisplay();
