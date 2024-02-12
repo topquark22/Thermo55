@@ -17,4 +17,6 @@ void enableAuxOutput(bool value);
 
 void blinkLED(int millis); 
 
+float tempToDisplay(float celsius);
+
 #endif

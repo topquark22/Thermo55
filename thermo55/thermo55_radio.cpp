@@ -35,9 +35,9 @@ void setupRadio(bool xmitMode) {
 
 // power level jumpers
   pinMode(PIN_PWR2_, INPUT_PULLUP);
-  pinMode(PIN_PWR1_, INPUT_PULLUP);
+
   // power 0=MIN, 1=LOW, 2=HIGH, 3=MAX
-  rf24_pa_dbm_e power = 2 * digitalRead(PIN_PWR2_) + digitalRead(PIN_PWR1_);
+  rf24_pa_dbm_e power = 2 * digitalRead(PIN_PWR2_) + 1;
   Serial.print(F("Power set to ")); Serial.println(power);
 
   // Arduino Nano does not have enough pins to allocate one for this!

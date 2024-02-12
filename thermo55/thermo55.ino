@@ -19,6 +19,9 @@ const int PIN_BUTTON = 5;
 // wire to GND to keep display permanently on
 const int PIN_ALWAYS_ON = 6;
 
+// If wired to ground, display temp in degrees Fahrenheit on LCD
+const int PIN_DISP_F = A3;
+
 // If wired to ground, alarm on low temp. Else alarm on high temp.
 const int PIN_ALARM_DIR = 4;
 
@@ -62,6 +65,14 @@ int prevButton = HIGH;
 void turnOnDisplay() {
   bool alwaysOnDisplay = !digitalRead(PIN_ALWAYS_ON);
   displayCountdown = alwaysOnDisplay ? 0xFFFFFFFF : DISPLAY_TIME;
+}
+
+float celsiusToFahhrenheit(float celsius) {
+  return celsius * 9.0 / 5.0 + 32;
+}
+
+float tempToDisplay(float celsius) {
+  return digitalRead(PIN_DISP_F) ? celsiusToFahrenheit(celsius) : celsios;
 }
 
 float prevThreshold = NEGATIVE_INFINITY;
@@ -108,6 +119,7 @@ void setup() {
   pinMode(PIN_BUTTON, INPUT_PULLUP);
   pinMode(PIN_XMIT, INPUT_PULLUP);
   pinMode(PIN_ALWAYS_ON, INPUT_PULLUP);
+  pinMode(PIN_DISP_F, INPUT_PULLUP);
 
   setOutput(LOW);
   enableAuxOutput(false);
@@ -249,7 +261,7 @@ void loop() {
       if (threshold >= 0 && threshold < 10.0) {
         lcd.print(F(" "));
       }
-      lcd.print(threshold);
+      lcd.print(tempToDisplay(threshold));
     }
   }
   
@@ -263,7 +275,7 @@ void loop() {
       if (c >= 0 && c < 10.0) {
         lcd.print(F(" "));
       }
-      lcd.print(c);
+      lcd.print(tempToDisplay(c));
     }
 
   } else { // Max/Min mode

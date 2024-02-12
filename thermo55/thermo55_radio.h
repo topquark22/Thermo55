@@ -13,7 +13,6 @@ const uint8_t PIN_ENABLE_RADIO = A0;
 
 // radio power level jumpers
 const uint8_t PIN_PWR2_ = A2;
-const uint8_t PIN_PWR1_ = A3;
 
 // radio channel
 const int CHANNEL_BASE = 113;

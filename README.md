@@ -50,7 +50,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | pin  | T  | R  | type         | meaning                        |
 |------|----|----|--------------|--------------------------------|
 | D2   | N  | X  | OUTPUT       | alert output                   |
-| D3   | N  | X  | OUTPUT       | auxiliary enable        |
+| D3   | N  | X  | OUTPUT       | auxiliary enable (note 1)      |
 | D4   | N  | X  | INPUT_PULLUP | threshold direction            |
 | D5   | L  | X  | INPUT_PULLUP | display pushbutton             |
 | D6   | L  | X  | INPUT_PULLUP | always-on display              |
@@ -64,11 +64,15 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | A0   | X  | X  | INPUT_PULLUP | enable radio                   |
 | A1   | X  | X  | INPUT_PULLUP | monitor (receiver) mode        |
 | A2   | X  | X  | INPUT_PULLUP | radio power, -2's bit          |
-| A3   | X  | X  | INPUT_PULLUP | radio power, -1's bit          |
+| A3   | X  | X  | INPUT_PULLUP | Fahrenheit display (note 2)    |
 | A4   | L  | X  | i2c          | SDA (LCD 1602)                 |
 | A5   | L  | X  | i2c          | SCL (LCD 1602)                 |
 | A6   | N  | X  | INPUT        | threshold POT (fine)           |
 | A7   | N  | X  | INPUT        | threshold POT (coarse)         |
+
+*Note 1:* Pin D3 (auxiliary output) serves to enable/disable some external custom circuit. It is initially disabled (output LOW). It is enabled HIGH the first time the threshold alert is triggered, and remains enabled.
+
+*Note 2:* If A3 jumpered to GND, then the temperature on the LCD is displayed in degrees F. If left unconnected, the display is in degrees C. This only affects the display, no other aspect of operation. The underlying logic always uses degrees C.
 
 Operational modes:
 | A0  | A1  | mode           | radio? | thermocouple? | threshold POT? |
@@ -80,18 +84,14 @@ Operational modes:
 
 
 Radio power selection:
-| A2  | A3  | power          |
-|-----|-----|----------------|
-| NC  | NC  | 3 (MAX)        |
-| NC  | GND | 2 (HIGH)       |
-| GND | NC  | 1 (LOW)        |
-| GND | GND | 0 (MIN)        |
+| A2  | power   |
+|-----|---------|
+| NC  | 3 (MAX) |
+| GND | 1 (LOW) |
 
 Radio channel is fixed to 113.
 
 Connect GND, +5V, A4, A5 to the LCD display.
-
-Pin D3 (auxiliary output) serves to enable/disable some external custom circuit. It is initially disabled (output LOW). It is enabled HIGH the first time the threshold alert is triggered, and remains enabled.
 
 ### Standalone
 
