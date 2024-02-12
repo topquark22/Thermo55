@@ -50,7 +50,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | pin  | T  | R  | type         | meaning                        |
 |------|----|----|--------------|--------------------------------|
 | D2   | N  | X  | OUTPUT       | alert output                   |
-| D3   | N  | X  | OUTPUT       | alert output (inverted)        |
+| D3   | N  | X  | OUTPUT       | auxiliary enable        |
 | D4   | N  | X  | INPUT_PULLUP | threshold direction            |
 | D5   | L  | X  | INPUT_PULLUP | display pushbutton             |
 | D6   | L  | X  | INPUT_PULLUP | always-on display              |
@@ -91,6 +91,8 @@ Radio channel is fixed to 113.
 
 Connect GND, +5V, A4, A5 to the LCD display.
 
+Pin D3 (auxiliary output) serves to enable/disable some external custom circuit. It is initially disabled (output LOW). It is enabled HIGH the first time the threshold alert is triggered, and remains enabled.
+
 ### Standalone
 
 This configuration can run on a single board and does not use a radio.
@@ -113,7 +115,7 @@ Connect A6, A7 to two POTs configured as voltage dividers. A6 is fine adjustment
 
 To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
 
-Connect output pins D2 (alert) and/or D3 (inverted alert) in accordance with your use case.
+Connect output pins D2 (alert) and/or D3 (auxiliary output) in accordance with your use case.
 
 ### Transmitter module
 

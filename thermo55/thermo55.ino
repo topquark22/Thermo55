@@ -101,7 +101,7 @@ void setup() {
   Serial.begin(BAUD_RATE);
 
   pinMode(PIN_OUT, OUTPUT);
-  pinMode(PIN_OUT_, OUTPUT);
+  pinMode(PIN_AUX_ENABLE, OUTPUT);
   pinMode(PIN_THRESHOLD_FINE, INPUT);
   pinMode(PIN_THRESHOLD_COARSE, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
@@ -110,6 +110,7 @@ void setup() {
   pinMode(PIN_ALWAYS_ON, INPUT_PULLUP);
 
   setOutput(LOW);
+  enableAuxOutput(false);
 
   lcd.init();
   lcd.backlight();
@@ -178,6 +179,7 @@ void loop() {
 
    if (button) {
     turnOnDisplay();
+    enableAuxOutput(true);
     if (maxMinDisplay) {
       // button pressed during max/min display; reset values
       maxTemp = NEGATIVE_INFINITY;
