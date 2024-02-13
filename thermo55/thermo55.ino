@@ -280,20 +280,26 @@ void loop() {
     }
 
   } else { // Max/Min mode
-
     lcd.setCursor(0, 0);
-    lcd.print(F("MAX "));
-    Serial.print(F("Maximum since last display: "));
-    Serial.println(maxTemp);
-    lcd.print(tempToDisplay(maxTemp));
-    
-    lcd.setCursor(0, 1);
-    lcd.print(F("MIN "));
-    Serial.print(F("Minimum since last display: "));
-    Serial.println(minTemp);
-    lcd.print(tempToDisplay(minTemp));
-    
-    Serial.println();
+    if (!(maxTemp > NEGATIVE_INFINITY)) {
+      Serial.println(F("No max/min data"));
+      lcd.print(F("NO MAX/MIN DATA"));
+
+    } else {
+
+      lcd.print(F("MAX "));
+      Serial.print(F("Maximum since last display: "));
+      Serial.println(maxTemp);
+      lcd.print(tempToDisplay(maxTemp));
+      
+      lcd.setCursor(0, 1);
+      lcd.print(F("MIN "));
+      Serial.print(F("Minimum since last display: "));
+      Serial.println(minTemp);
+      lcd.print(tempToDisplay(minTemp));
+      
+      Serial.println();
+    }
   }
   
   delay(1000);
