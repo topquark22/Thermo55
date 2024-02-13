@@ -72,7 +72,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 
 *Note 1:* Pin D3 (auxiliary output) serves to enable/disable some external custom circuit. It is initially disabled (output LOW). It is enabled HIGH the first time the threshold alert is triggered, and remains enabled.
 
-*Note 2:* If A3 jumpered to GND, then the temperature on the LCD is displayed in degrees F. If left unconnected, the display is in degrees C. This only affects the display, no other aspect of operation. The underlying logic always uses degrees C.
+*Note 2:* If A3 jumpered to GND, then the temperature on the LCD is displayed in degrees F. If left unconnected, the display is in degrees C. This only affects the display, no other aspect of operation. The underlying logic always uses degrees C. The serial monitor output always displays in degrees C.
 
 Operational modes:
 | A0  | A1  | mode           | radio? | thermocouple? | threshold POT? |
