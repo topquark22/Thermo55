@@ -14,7 +14,7 @@ const int LCD_WIDTH = 16;
 const int LCD_HEIGHT = 2;
 
 // switch lcd display mode (normal or max/min)
-const int PIN_BUTTON = 5;
+const int PIN_BUTTON_ = 5;
 
 // wire to GND to keep display permanently on
 const int PIN_ALWAYS_ON_ = 6;
@@ -118,7 +118,7 @@ void setup() {
   pinMode(PIN_THRESHOLD_FINE, INPUT);
   pinMode(PIN_THRESHOLD_COARSE, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
-  pinMode(PIN_BUTTON, INPUT_PULLUP);
+  pinMode(PIN_BUTTON_, INPUT_PULLUP);
   pinMode(PIN_XMIT, INPUT_PULLUP);
   pinMode(PIN_ALWAYS_ON_, INPUT_PULLUP);
   pinMode(PIN_DISP_F_, INPUT_PULLUP);
@@ -191,7 +191,7 @@ void loop() {
 
   lcd.clear();
 
-  bool button = !digitalRead(PIN_BUTTON);
+  bool button = !digitalRead(PIN_BUTTON_);
 
    if (button || alwaysOnDisplay) {
     turnOnDisplay();
