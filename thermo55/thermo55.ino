@@ -188,12 +188,12 @@ void loop() {
   Serial.println(displayCountdown); // DEBUG
 
   alwaysOnDisplay = !digitalRead(PIN_ALWAYS_ON_);
-  
+
   lcd.clear();
 
   bool button = !digitalRead(PIN_BUTTON);
 
-   if (button) {
+   if (button || alwaysOnDisplay) {
     turnOnDisplay();
     enableAuxOutput(true);
     if (maxMinDisplay) {
