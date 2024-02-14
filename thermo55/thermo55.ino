@@ -17,7 +17,7 @@ const int LCD_HEIGHT = 2;
 const int PIN_BUTTON = 5;
 
 // wire to GND to keep display permanently on
-const int PIN_ALWAYS_ON = 6;
+const int PIN_ALWAYS_ON_ = 6;
 
 // If wired to ground, display temp in degrees Fahrenheit on LCD
 const int PIN_DISP_F_ = A3;
@@ -63,7 +63,7 @@ bool maxMinDisplay;
 int prevButton = HIGH;
 
 void turnOnDisplay() {
-  bool alwaysOnDisplay = !digitalRead(PIN_ALWAYS_ON);
+  bool alwaysOnDisplay = !digitalRead(PIN_ALWAYS_ON_);
   displayCountdown = alwaysOnDisplay ? 0xFFFFFFFF : DISPLAY_TIME;
 }
 
@@ -119,7 +119,7 @@ void setup() {
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
   pinMode(PIN_XMIT, INPUT_PULLUP);
-  pinMode(PIN_ALWAYS_ON, INPUT_PULLUP);
+  pinMode(PIN_ALWAYS_ON_, INPUT_PULLUP);
   pinMode(PIN_DISP_F_, INPUT_PULLUP);
 
   setOutput(LOW);
@@ -280,7 +280,9 @@ void loop() {
     }
 
   } else { // Max/Min mode
+
     lcd.setCursor(0, 0);
+
     if (!(maxTemp > NEGATIVE_INFINITY)) {
       Serial.println(F("No max/min data"));
       lcd.print(F("NO MAX/MIN DATA"));
@@ -301,6 +303,5 @@ void loop() {
       Serial.println();
     }
   }
-  
   delay(1000);
 }
