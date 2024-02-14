@@ -62,9 +62,11 @@ bool maxMinDisplay;
 
 int prevButton = HIGH;
 
+bool alwaysOnDisplay;
+
 void turnOnDisplay() {
-  bool alwaysOnDisplay = !digitalRead(PIN_ALWAYS_ON_);
-  displayCountdown = alwaysOnDisplay ? 0xFFFFFFFF : DISPLAY_TIME;
+  alwaysOnDisplay = !digitalRead(PIN_ALWAYS_ON_);
+  displayCountdown = DISPLAY_TIME;
 }
 
 float celsiusToFahrenheit(float celsius) {
@@ -234,9 +236,11 @@ void loop() {
     displayCountdown--;
     lcd.display();
     lcd.backlight();
-  } else {
+  } else if (!alwaysOnDisplay) {
     lcd.noDisplay();
     lcd.noBacklight();
+    maxMinDisplay = false;
+  } else {
     maxMinDisplay = false;
   }
 
