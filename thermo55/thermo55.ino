@@ -80,12 +80,11 @@ float prevThreshold = NEGATIVE_INFINITY;
 
 // alarm threshold supported range in degrees C
 // (Note: Type K thermocouple actually supports -200 to +1350)
-const float THRESHOLD_COARSE_LOW = -100;
-const float THRESHOLD_COARSE_HIGH = 300;
-const float THRESHOLD_COARSE_QUANTUM = 5;
-const float THRESHOLD_FINE_LOW = -10;
-const float THRESHOLD_FINE_HIGH = 10;
-const float POT_NOISE_ALLOWANCE = 0.25;
+const float THRESHOLD_COARSE_LOW = -100.0;
+const float THRESHOLD_COARSE_HIGH = 300.0;
+const float THRESHOLD_FINE_LOW = -10.0;
+const float THRESHOLD_FINE_HIGH = 10.0;
+const float POT_NOISE_ALLOWANCE = 1.0;
 
 float getThreshold() {
   int reading_coarse = analogRead(PIN_THRESHOLD_COARSE);
@@ -94,10 +93,9 @@ float getThreshold() {
   //coarse -> integer -100 - +300 in increments of quantum
   // (Round to multiple of quantum to reduce POT noise)
   float threshold_coarse = THRESHOLD_COARSE_LOW + (THRESHOLD_COARSE_HIGH - THRESHOLD_COARSE_LOW) * reading_coarse / 1023;
-  int threshold_coarse_quantized = THRESHOLD_COARSE_QUANTUM * (int) (threshold_coarse / THRESHOLD_COARSE_QUANTUM);
 
   float delta_fine = THRESHOLD_FINE_LOW + (THRESHOLD_FINE_HIGH - THRESHOLD_FINE_LOW) * reading_fine / 1023;
-  float threshold = threshold_coarse_quantized + delta_fine;
+  float threshold = threshold_coarse + delta_fine;
 
   if (abs(threshold - prevThreshold) > POT_NOISE_ALLOWANCE) {
     turnOnDisplay();
