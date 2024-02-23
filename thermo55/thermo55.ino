@@ -200,6 +200,7 @@ void loop() {
       // button pressed during max/min display; reset values
       maxTemp = NEGATIVE_INFINITY;
       minTemp = INFINITY;
+      enableAuxOutput(false);
     }
   }
   if (button && prevButton) {
