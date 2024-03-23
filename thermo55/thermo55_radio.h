@@ -6,13 +6,13 @@
 #include <RF24.h>
 
 // These wirings of CE, CSN are used for integrated Nano3/nRF24l01 boards
-const uint8_t PIN_CE = 10;
-const uint8_t PIN_CSN = 9;
+const PROGMEM uint8_t PIN_CE = 10;
+const PROGMEM uint8_t PIN_CSN = 9;
 
-const uint8_t PIN_ENABLE_RADIO = A0;
+const PROGMEM uint8_t PIN_ENABLE_RADIO = A0;
 
 // radio power level jumpers
-const uint8_t PIN_PWR2_ = A2;
+const PROGMEM uint8_t PIN_PWR2_ = A2;
 
 // radio channel
 const int CHANNEL_BASE = 113;

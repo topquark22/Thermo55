@@ -5,10 +5,10 @@
 #include "LiquidCrystal_I2C.h"
 
 // alert output
-const int PIN_OUT = 2;
+const PROGMEM int PIN_OUT = 2;
 
 // auxiliary output control
-const int PIN_AUX_ENABLE = 3;
+const PROGMEM int PIN_AUX_ENABLE = 3;
 
 void setOutput(bool value);
 
