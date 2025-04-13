@@ -61,7 +61,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | D11  | E  | E  | spi          | MOSI (nRF24L01)                |
 | D12  | XE | E  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
 | D13  | E  | E  | spi          | SCK  (nRF24L01)                |
-| A0   | X  | X  | INPUT_PULLUP | disable radio (Note 3)         |
+| A0   | X  | X  | INPUT_PULLUP | enable radio (Note 3)          |
 | A1   | X  | X  | INPUT_PULLUP | monitor (receiver) mode        |
 | A2   | X  | X  | INPUT_PULLUP | radio power, -2's bit          |
 | A3   | X  | X  | INPUT_PULLUP | Celsius display (note 4)       |
