@@ -50,8 +50,8 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | pin  | T  | R  | type         | meaning                        |
 |------|----|----|--------------|--------------------------------|
 | D2   | N  | X  | OUTPUT       | alert output                   |
-| D3   | N  | X  | OUTPUT       | auxiliary enable (note 1)      |
-| D4   | N  | X  | INPUT_PULLUP | threshold direction            |
+| D3   | N  | X  | OUTPUT       | alert output persisted (Note 1) |
+| D4   | N  | X  | INPUT_PULLUP | threshold direction (Note 2)   |
 | D5   | L  | X  | INPUT_PULLUP | display pushbutton             |
 | D6   | L  | X  | INPUT_PULLUP | always-on display              |
 | D7   | X  | N  | spi1         | CLK (MAX31855)                 |
@@ -61,18 +61,22 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | D11  | E  | E  | spi          | MOSI (nRF24L01)                |
 | D12  | XE | E  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
 | D13  | E  | E  | spi          | SCK  (nRF24L01)                |
-| A0   | X  | X  | INPUT_PULLUP | enable radio                   |
+| A0   | X  | X  | INPUT_PULLUP | disable radio (Note 3)         |
 | A1   | X  | X  | INPUT_PULLUP | monitor (receiver) mode        |
 | A2   | X  | X  | INPUT_PULLUP | radio power, -2's bit          |
-| A3   | X  | X  | INPUT_PULLUP | Fahrenheit display (note 2)    |
+| A3   | X  | X  | INPUT_PULLUP | Celsius display (note 4)       |
 | A4   | L  | X  | i2c          | SDA (LCD 1602)                 |
 | A5   | L  | X  | i2c          | SCL (LCD 1602)                 |
 | A6   | N  | X  | INPUT        | threshold POT (fine)           |
 | A7   | N  | X  | INPUT        | threshold POT (coarse)         |
 
-*Note 1:* Pin D3 (auxiliary enable) serves to enable/disable some external custom circuit. It is initially disabled (output LOW). It is enabled HIGH the first time the threshold alert is triggered, and remains enabled until the display is reset by the long button-press (which also resets the MAX/MIN values).
+*Note 1:* Pin D3 (alert output persisted) goes HIGH the first time the threshold alert is triggered, and remains HIGH until a long button-press.
 
-*Note 2:* If A3 jumpered to GND, then the temperature on the LCD is displayed in degrees F. If left unconnected, the display is in degrees C. This only affects the display, no other aspect of operation. The underlying logic always uses degrees C. The serial monitor output always displays in degrees C.
+*Note 2:* If D4 is jumpered to GND, then the alert occurs on a high-to-low temperature transition. Otherwise, it happens on a low-to-high temperature transition.
+
+*Note 3:* It would have been better for this to be an active-low input to disable the radio. This goes against the usual way of doing things. In other words, this must be wired to GND to _not_ disable the radio.
+
+*Note 4:* If A3 is jumpered to GND, then the temperature on the LCD is displayed in degrees F. If left unconnected, the display is in degrees C. The serial monitor output always displays in degrees C.
 
 Operational modes:
 | A0  | A1  | mode           | radio? | thermocouple? | threshold POT? |
@@ -97,6 +101,8 @@ Connect GND, +5V, A4, A5 to the LCD display.
 
 This configuration can run on a single board and does not use a radio.
 
+pin A0 to GND (enables radio.)
+
 Connect POTs as described under **Receiver module**.
 
 Connect thermocouple as described under **Transmitter module**.
@@ -118,6 +124,8 @@ To alert when temperature is below the threshold, wire D4 to GND. To alert when 
 Connect output pins D2 (alert) and/or D3 (auxiliary output) in accordance with your use case.
 
 ### Transmitter module
+
+Connect pin A0 to GND (enables radio.) 
 
 Leave A1 unconnected (configures as transmitter.)
 
