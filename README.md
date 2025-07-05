@@ -138,7 +138,7 @@ If using an LCD display, connect D5 to a normally-open pushbutton switch.
 Connecting the Adafruit thermocouple amplifier breakout board:
 
 | Arduino | MAX31855 |
-----------------------
+|---------|----------|
 | +5V | Vin |
 | GND | GND |
 | D7  | CLK |
