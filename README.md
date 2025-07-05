@@ -18,9 +18,13 @@ Install the following libraries into the Arduino IDE:
 
 ## Hardware requirements
 
-You will need:
-- 2x Arduino (pref. Nano 3) supporting analog input pins A6, A7
-- 2x nRF24L01 radio modules (or preferably 2x Arduino Nano 3 + nRF24L01 integrated boards, as illustrated)
+It is possible to run a transmitter and receiver (RX configuration), or standalone.
+
+The Arduino used as receiver (or standalone) must have analog input pins A6, A7 for setting the threshold. We used Nano v3.
+
+You can operate with an external radio, of a Nano v3 + nRF24L01 integrated noard (as illustrated).
+
+You eill also need:
 - AdaFruit MAX31855 thermocouple amplifier breakout board (for transmitter)
 - Type K thermocouple wire
 - LCD 1602 display with I2C capability (for receiver)
