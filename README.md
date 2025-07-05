@@ -136,11 +136,14 @@ Leave A1 unconnected (configures as transmitter.)
 If using an LCD display, connect D5 to a normally-open pushbutton switch.
 
 Connecting the Adafruit thermocouple amplifier breakout board:
-- Connect +5V to Vin
-- Connect GND to ground
-- Connect CLK to pin 7
-- Connect CS to pin 8
-- Connect DO to pin 12
+
+| Arduino | MAX31855 |
+----------------------
+| +5V | Vin |
+| GND | GND |
+| D7  | CLK |
+| D8  | CS  |
+| 12  | DO  |
 
 Identify the thermocouple wires:
 - Type-K thermocouple wires are typically color-coded.
