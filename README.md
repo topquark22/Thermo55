@@ -143,7 +143,7 @@ Connecting the Adafruit thermocouple amplifier breakout board:
 | GND | GND |
 | D7  | CLK |
 | D8  | CS  |
-| 12  | DO  |
+| D12 | DO  |
 
 Identify the thermocouple wires:
 - Type-K thermocouple wires are typically color-coded.
