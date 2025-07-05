@@ -78,7 +78,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 
 *Note 2:* If D4 is jumpered to GND, then the alert occurs on a high-to-low temperature transition. Otherwise, it happens on a low-to-high temperature transition.
 
-*Note 3:* It would have been better for this to be an active-low input to disable the radio. This goes against the usual way of doing things. In other words, this must be wired to GND to _not_ disable the radio.
+*Note 3:* Jumper to GND to enable the radio. Leave unconnected for standalone configuration.
 
 *Note 4:* If A3 is jumpered to GND, then the temperature on the LCD is displayed in degrees F. If left unconnected, the display is in degrees C. The serial monitor output always displays in degrees C.
 
