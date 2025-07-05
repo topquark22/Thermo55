@@ -105,7 +105,7 @@ Connect GND, +5V, A4, A5 to the LCD display.
 
 This configuration can run on a single board and does not use a radio.
 
-pin A0 left unconnected.
+Leave pin A0 unconnected, to disable the radio functionality.
 
 Connect POTs as described under **Receiver module**.
 
