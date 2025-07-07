@@ -9,35 +9,35 @@
 #define NEGATIVE_INFINITY -99999
 
 // LCD I2C address and size
-const int LCD_I2C_ADDR = 0x27;
-const int LCD_WIDTH = 16;
-const int LCD_HEIGHT = 2;
+const PROGMEM int LCD_I2C_ADDR = 0x27;
+const PROGMEM int LCD_WIDTH = 16;
+const PROGMEM int LCD_HEIGHT = 2;
 
 // switch lcd display mode (normal or max/min)
-const int PIN_BUTTON_ = 5;
+const PROGMEM int PIN_BUTTON_ = 5;
 
 // wire to GND to keep display permanently on
-const int PIN_ALWAYS_ON_ = 6;
+const PROGMEM int PIN_ALWAYS_ON_ = 6;
 
 // If wired to ground, display temp in degrees Fahrenheit on LCD
-const int PIN_DISP_F_ = A3;
+const PROGMEM int PIN_DISP_F_ = A3;
 
 // If wired to ground, alarm on low temp. Else alarm on high temp.
-const int PIN_ALARM_DIR = 4;
+const PROGMEM int PIN_ALARM_DIR = 4;
 
 // If wired to ground, receiver mode, else transmit mode
-const int PIN_XMIT = A1;
+const PROGMEM int PIN_XMIT = A1;
 
 bool xmitMode;
 
 // analog input to set alarm threshold
-const int PIN_THRESHOLD_COARSE = A7;
-const int PIN_THRESHOLD_FINE = A6;
+const PROGMEM int PIN_THRESHOLD_COARSE = A7;
+const PROGMEM int PIN_THRESHOLD_FINE = A6;
 
 // SPI hardware configuration
-const int thermoDO = 12; // MISO
-const int thermoCS = 8; // Chip select
-const int thermoCLK = 7; // SPI serial clock (NOTE must not be the same as the nRF24L01 clock)
+const PROGMEM int thermoDO = 12; // MISO
+const PROGMEM int thermoCS = 8; // Chip select
+const PROGMEM int thermoCLK = 7; // SPI serial clock (NOTE must not be the same as the nRF24L01 clock)
 
 Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
@@ -51,8 +51,10 @@ LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
 float maxTemp = NEGATIVE_INFINITY;
 float minTemp = INFINITY;
 
-// time display stays on normally
-const int DISPLAY_TIME = 10;
+// time display stays on normally (can be set at compile time)
+#ifndef DISPLAY_TIME
+  #define DISPLAY_TIME 10
+#endif
 
 // countdown time for display
 uint32_t displayCountdown;
@@ -149,7 +151,7 @@ void setup() {
   maxTemp = NEGATIVE_INFINITY;
   minTemp = INFINITY;
   
-  displayCountdown = 10;
+  displayCountdown = DISPLAY_TIME;
   turnOnDisplay();
   maxMinDisplay = false;
 
