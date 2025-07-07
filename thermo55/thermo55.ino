@@ -149,6 +149,7 @@ void setup() {
   maxTemp = NEGATIVE_INFINITY;
   minTemp = INFINITY;
   
+  displayCountdown = 10;
   turnOnDisplay();
   maxMinDisplay = false;
 
@@ -183,15 +184,13 @@ void checkThermocouple() {
 
 void loop() {
 
-  Serial.println(displayCountdown); // DEBUG
-
   alwaysOnDisplay = !digitalRead(PIN_ALWAYS_ON_);
 
   lcd.clear();
 
   bool button = !digitalRead(PIN_BUTTON_);
 
-   if (button || alwaysOnDisplay) {
+   if (button) {
     turnOnDisplay();
     enableAuxOutput(true);
     if (maxMinDisplay) {
@@ -236,11 +235,11 @@ void loop() {
     displayCountdown--;
     lcd.display();
     lcd.backlight();
-  } else if (!alwaysOnDisplay) {
-    lcd.noDisplay();
-    lcd.noBacklight();
-    maxMinDisplay = false;
   } else {
+    if (!alwaysOnDisplay) {
+      lcd.noDisplay();
+      lcd.noBacklight();
+    }
     maxMinDisplay = false;
   }
 
