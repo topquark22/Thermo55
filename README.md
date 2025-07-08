@@ -140,10 +140,11 @@ Connecting the Adafruit thermocouple amplifier breakout board:
 | Arduino | MAX31855 |
 |---------|----------|
 | +5V | Vin |
+| --  | V3o |
 | GND | GND |
-| D7  | CLK |
-| D8  | CS  |
 | D12 | DO  |
+| D8  | CS  |
+| D7  | CLK |
 
 Identify the thermocouple wires:
 - Type-K thermocouple wires are typically color-coded.
