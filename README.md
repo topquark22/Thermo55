@@ -72,7 +72,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | A0   | X  | X  | INPUT_PULLUP | enable radio (Note 3)          |
 | A1   | X  | X  | INPUT_PULLUP | monitor (receiver) mode        |
 | A2   | X  | X  | INPUT_PULLUP | radio power, -2's bit          |
-| A3   | X  | X  | INPUT_PULLUP | Celsius display (note 4)       |
+| A3   | X  | X  | INPUT_PULLUP | Fahrenheit display (note 4)    |
 | A4   | L  | X  | i2c          | SDA (LCD 1602)                 |
 | A5   | L  | X  | i2c          | SCL (LCD 1602)                 |
 | A6   | N  | X  | INPUT        | threshold POT (fine)           |
