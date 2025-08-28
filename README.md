@@ -8,6 +8,10 @@ An alerting system that raises an alarm when the temperature rises above or fall
 
 Additionally, remote monitoring of a separate thermometer module is supported via nRF24L01 radio.
 
+## Power note
+
+USB power may not be sufficient to illuminate bright-white characters on the LCD. If this happens, try switching to external power on Vin or use a voltage regulator.
+
 ## Software requirements
 
 Install the following libraries into the Arduino IDE:
