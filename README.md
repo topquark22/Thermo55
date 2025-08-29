@@ -175,7 +175,7 @@ To activate the max/min display, press and hold the button for 2 seconds.
 
 To reset the max/min values, continue holding or press the button again during the max/min display.
 
-# Use cases
+# Builds
 
 ### Transmitter
 ![V5 transmitter](v5_xmit.jpg)
