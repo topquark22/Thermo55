@@ -4,9 +4,7 @@
 #include <Arduino.h>
 #include "LiquidCrystal_I2C.h"
 
-// alert output
-const PROGMEM int PIN_OUT = 3;
-const PROGMEM uint8_t PIN_OUT_ = A3;
+
 
 void setOutput(bool value);
 

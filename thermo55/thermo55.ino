@@ -13,6 +13,10 @@ const PROGMEM uint8_t LCD_I2C_ADDR = 0x27;
 const PROGMEM uint8_t LCD_WIDTH = 16;
 const PROGMEM uint8_t LCD_HEIGHT = 2;
 
+// alert output
+const PROGMEM uint8_t PIN_OUT = 3;
+const PROGMEM uint8_t PIN_OUT_ = A3;
+
 // switch lcd display mode (normal or max/min)
 const PROGMEM uint8_t PIN_BUTTON_ = 5;
 
