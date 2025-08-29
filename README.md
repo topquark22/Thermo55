@@ -62,7 +62,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 
 | pin  | T  | R  | type         | meaning                        |
 |------|----|----|--------------|--------------------------------|
-| D2   | N  | X  | INPUT_PULLUP | Fahrenheit display (Note 1)    |
+| D2   | L  | X  | INPUT_PULLUP | Fahrenheit display (Note 1)    |
 | D3   | N  | X  | OUTPUT       | alert output                   |
 | D4   | N  | X  | INPUT_PULLUP | threshold direction (Note 2)   |
 | D5   | L  | X  | INPUT_PULLUP | display pushbutton             |
