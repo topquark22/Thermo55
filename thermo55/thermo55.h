@@ -5,15 +5,10 @@
 #include "LiquidCrystal_I2C.h"
 
 // alert output
-const PROGMEM int PIN_OUT = 2;
-
-// auxiliary output control
-const PROGMEM int PIN_AUX_ENABLE = 3;
+const PROGMEM int PIN_OUT = 3;
+const PROGMEM uint8_t PIN_OUT_ = A3;
 
 void setOutput(bool value);
-
-// Enable output to any auxiliary circuit. Generally we want to do this until the first time the threshold is triggered.
-void enableAuxOutput(bool value);
 
 // read akways-on display switch
 bool isAlwaysOnDisplay();

@@ -2,11 +2,17 @@
 
 An alerting system that raises an alarm when the temperature rises above or falls below a set threshold.
 
-![V3 boards](v3.jpg)
-
-*Standalone mode is supported, as in version 2.x. However, some pin assignments have changed, so the hardware is not compatible.*
+![V5 boards](v5.jpg)
 
 Additionally, remote monitoring of a separate thermometer module is supported via nRF24L01 radio.
+
+### Release notes
+
+- V3
+*Standalone mode is supported, as in version 2.x. However, some pin assignments have changed, so the hardware is not compatible.*
+
+-V5
+*Pin assignments for D2, D3, and A3 have changed. D3 is now the main alert output (previously D2). D3 is now an input, so you cannot run V5 on V4 hardware if you have been using D3 as persistent output, at risk of a dead short.*
 
 ## Software requirements
 
@@ -57,8 +63,8 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 
 | pin  | T  | R  | type         | meaning                        |
 |------|----|----|--------------|--------------------------------|
-| D2   | N  | X  | OUTPUT       | alert output                   |
-| D3   | N  | X  | OUTPUT       | alert output persisted (Note 1) |
+| D2   | N  | X  | INPUT_PULLUP | Fahrenheit display (Note 1)    |
+| D3   | N  | X  | OUTPUT       | alert output                   |
 | D4   | N  | X  | INPUT_PULLUP | threshold direction (Note 2)   |
 | D5   | L  | X  | INPUT_PULLUP | display pushbutton             |
 | D6   | L  | X  | INPUT_PULLUP | always-on display              |
@@ -72,19 +78,17 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | A0   | X  | X  | INPUT_PULLUP | enable radio (Note 3)          |
 | A1   | X  | X  | INPUT_PULLUP | monitor (receiver) mode        |
 | A2   | X  | X  | INPUT_PULLUP | radio power, -2's bit          |
-| A3   | X  | X  | INPUT_PULLUP | Fahrenheit display (note 4)    |
+| A3   | X  | X  | OUTPUT       | alert output, inverted         |
 | A4   | L  | X  | i2c          | SDA (LCD 1602)                 |
 | A5   | L  | X  | i2c          | SCL (LCD 1602)                 |
 | A6   | N  | X  | INPUT        | threshold POT (fine)           |
 | A7   | N  | X  | INPUT        | threshold POT (coarse)         |
 
-*Note 1:* Pin D3 (alert output persisted) goes HIGH the first time the threshold alert is triggered, and remains HIGH until a long button-press.
+*Note 1:* If D2 is jumpered to GND, then the temperature on the LCD is displayed in degrees F. If left unconnected, the display is in degrees C. The serial monitor output always displays in degrees C.
 
 *Note 2:* If D4 is jumpered to GND, then the alert occurs on a high-to-low temperature transition. Otherwise, it happens on a low-to-high temperature transition.
 
 *Note 3:* Jumper to GND to enable the radio. Leave unconnected for standalone configuration.
-
-*Note 4:* If A3 is jumpered to GND, then the temperature on the LCD is displayed in degrees F. If left unconnected, the display is in degrees C. The serial monitor output always displays in degrees C.
 
 Operational modes:
 | A0  | A1  | mode           | radio? | thermocouple? | threshold POT? |

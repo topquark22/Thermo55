@@ -20,7 +20,7 @@ const PROGMEM uint8_t PIN_BUTTON_ = 5;
 const PROGMEM uint8_t PIN_ALWAYS_ON_ = 6;
 
 // If wired to ground, display temp in degrees Fahrenheit on LCD
-const PROGMEM uint8_t PIN_DISP_F_ = A3;
+const PROGMEM uint8_t PIN_DISP_F_ = 2;
 
 // If wired to ground, alarm on low temp. Else alarm on high temp.
 const PROGMEM uint8_t PIN_ALARM_DIR = 4;
@@ -114,7 +114,7 @@ void setup() {
   Serial.begin(BAUD_RATE);
 
   pinMode(PIN_OUT, OUTPUT);
-  pinMode(PIN_AUX_ENABLE, OUTPUT);
+  pinMode(PIN_OUT_, OUTPUT);
   pinMode(PIN_THRESHOLD_FINE, INPUT);
   pinMode(PIN_THRESHOLD_COARSE, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
@@ -124,7 +124,6 @@ void setup() {
   pinMode(PIN_DISP_F_, INPUT_PULLUP);
 
   setOutput(LOW);
-  enableAuxOutput(false);
 
   lcd.init();
   lcd.backlight();
@@ -194,12 +193,10 @@ void loop() {
 
    if (button) {
     turnOnDisplay();
-    enableAuxOutput(true);
     if (maxMinDisplay) {
       // button pressed during max/min display; reset values
       maxTemp = NEGATIVE_INFINITY;
       minTemp = INFINITY;
-      enableAuxOutput(false);
     }
   }
   if (button && prevButton) {

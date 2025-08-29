@@ -1,15 +1,8 @@
 #import "thermo55.h"
 
 void setOutput(bool value) {
-  if (value) {
-    // enable the auxiliary output the first time the threshold is triggered high
-    enableAuxOutput(true);
-  }
   digitalWrite(PIN_OUT, value);
-}
-
-void enableAuxOutput(bool value) {
-  digitalWrite(PIN_AUX_ENABLE, value);
+  digitalWrite(PIN_OUT_, !value);
 }
 
 // never returns
