@@ -2,8 +2,6 @@
 
 An alerting system that raises an alarm when the temperature rises above or falls below a set threshold.
 
-![V5 boards](v5.jpg)
-
 Additionally, remote monitoring of a separate thermometer module is supported via nRF24L01 radio.
 
 ### Release notes
@@ -11,7 +9,7 @@ Additionally, remote monitoring of a separate thermometer module is supported vi
 - V3:
 Standalone mode is supported, as in version 2.x. However, some pin assignments have changed, so the hardware is not compatible.
 - V5:
-Pin assignments for D2, D3, and A3 have changed. D3 is now the main alert output (previously D2), and A3 is the inverted output. D2 is now an input, so you cannot run V5 on V4 hardware.
+Pin assignments for D2, D3, and A3 have changed: D3 is now the main alert output (previously D2). A3 is now the inverted output, so you must disconnect any jumper there to avoid a dead short. D2 is now the switch for Fahrenheit display. The "persistent output" feature has been removed.
 
 ## Software requirements
 
@@ -176,3 +174,10 @@ The LCD will dim after 10 seconds (unless always-on display is active). To turn 
 To activate the max/min display, press and hold the button for 2 seconds.
 
 To reset the max/min values, continue holding or press the button again during the max/min display.
+
+# Use cases
+
+### Transmitter
+![V5 transmitter](v5_xmit.jpg)
+### Receiver
+![V5 receiver](v5_recv.jpg)
