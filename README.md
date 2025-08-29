@@ -9,10 +9,10 @@ Additionally, remote monitoring of a separate thermometer module is supported vi
 ### Release notes
 
 - V3:
-*Standalone mode is supported, as in version 2.x. However, some pin assignments have changed, so the hardware is not compatible.*
+Standalone mode is supported, as in version 2.x. However, some pin assignments have changed, so the hardware is not compatible.
 
 - V5:
-*Pin assignments for D2, D3, and A3 have changed. D3 is now the main alert output (previously D2), and A3 is the inverted output. D2 is now an input, so you cannot run V5 on V4 hardware.*
+Pin assignments for D2, D3, and A3 have changed. D3 is now the main alert output (previously D2), and A3 is the inverted output. D2 is now an input, so you cannot run V5 on V4 hardware.
 
 ## Software requirements
 
@@ -30,7 +30,7 @@ The Arduino used as receiver (or standalone) must have analog input pins A6, A7 
 
 You can operate with an external radio, of a Nano v3 + nRF24L01 integrated board (as illustrated).
 
-You eill also need:
+You will also need:
 - AdaFruit MAX31855 thermocouple amplifier breakout board (for transmitter)
 - Type K thermocouple wire
 - LCD 1602 display with I2C capability (for receiver)
