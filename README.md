@@ -8,11 +8,11 @@ Additionally, remote monitoring of a separate thermometer module is supported vi
 
 ### Release notes
 
-- V3
+- V3:
 *Standalone mode is supported, as in version 2.x. However, some pin assignments have changed, so the hardware is not compatible.*
 
--V5
-*Pin assignments for D2, D3, and A3 have changed. D3 is now the main alert output (previously D2). D3 is now an input, so you cannot run V5 on V4 hardware if you have been using D3 as persistent output, at risk of a dead short.*
+- V5:
+*Pin assignments for D2, D3, and A3 have changed. D3 is now the main alert output (previously D2), and A3 is the inverted output. D2 is now an input, so you cannot run V5 on V4 hardware.*
 
 ## Software requirements
 
