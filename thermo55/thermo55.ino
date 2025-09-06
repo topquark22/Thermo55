@@ -239,6 +239,8 @@ void loop() {
   if (!xmitMode || !isRadioEnabled()) {
     float threshold = getThreshold();
 
+    bool alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
+
     bool alarm = (alarmOnHighTemp && c >= threshold && c < INFINITY) || (!alarmOnHighTemp && c <= threshold);
     setOutput(alarm);
     if (alarm) {
