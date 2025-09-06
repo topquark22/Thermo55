@@ -119,7 +119,7 @@ Connect pin A0 to GND (enables radio.)
 
 Connect pin A1 to GND (configures as receiver.)
 
-Connect D5 to a normally-open pushbutton switch.
+Connect D5 to GND via a normally-open pushbutton switch.
 
 For Fahrenheit display on the LCD, switch D2 to GND. This setting has effect in the loop real-time. It does not affect the numbers on the serial monitor, which are always degrees C.
 
@@ -127,7 +127,7 @@ To alert when temperature is below the threshold, wire D4 to GND. To alert when 
 
 To keep the display permanently on, switch D6 to GND. This setting has effect in the loop real-time.
 
-Connect A6, A7 to two POTs configured as voltage dividers. A6 is fine adjustment, A7 coarse adjustment. (It is standard to mount the coarse knob to the right of the fine knob.)
+Connect A6, A7 to two POTs configured as voltage dividers. A6 is fine adjustment, A7 coarse adjustment. (It is customary to mount the coarse knob to the right of the fine knob.)
 
 Connect output pins D3 (alert) and/or A3 (inverted alert) in accordance with your use case.
 
