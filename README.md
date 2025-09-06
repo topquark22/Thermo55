@@ -123,11 +123,11 @@ Connect pin A1 to GND (configures as receiver.)
 
 Connect D5 to a normally-open pushbutton switch.
 
-To keep the display permanently on, switch D6 to GND. Unlike other jumpers, this setting has effect in the loop real-time.
+To keep the display permanently on, switch D6 to GND.
 
 Connect A6, A7 to two POTs configured as voltage dividers. A6 is fine adjustment, A7 coarse adjustment. (It is standard to mount the coarse knob to the right of the fine knob.)
 
-To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected.
+To alert when temperature is below the threshold, switch D4 to GND. To alert when temperature is above the threshold, leave D4 open.
 
 Connect output pins D2 (alert) and/or D3 (auxiliary output) in accordance with your use case.
 

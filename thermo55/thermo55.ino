@@ -41,8 +41,6 @@ const PROGMEM uint8_t PIN_thermoCLK = 7; // SPI serial clock (NOTE must not be t
 
 Adafruit_MAX31855 thermocouple(PIN_thermoCLK, PIN_thermoCS, PIN_thermoDO);
 
-bool alarmOnHighTemp;
-
 // Connect LCD I2C pin SDA to A4
 // Connect LCD I2C pin SCL to A5
 LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
@@ -139,13 +137,6 @@ void setup() {
     Serial.println(F("receiver"));
   }
 
-  alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
-  Serial.print(F("Will alarm on "));
-  if (alarmOnHighTemp) {
-    Serial.println(F("high temperature threshold"));
-  } else {
-    Serial.println(F("low temperature threshold"));
-  }
   Serial.println();
   
   maxTemp = NEGATIVE_INFINITY;
