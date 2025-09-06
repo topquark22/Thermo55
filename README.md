@@ -121,11 +121,11 @@ Connect pin A1 to GND (configures as receiver.)
 
 Connect D5 to GND via a normally-open pushbutton switch.
 
-For Fahrenheit display on the LCD, switch D2 to GND. This setting has effect in the loop real-time. It does not affect the numbers on the serial monitor, which are always degrees C.
+For Fahrenheit display on the LCD, switch D2 to GND. It does not affect the numbers on the serial monitor, which are always degrees C.
 
-To alert when temperature is below the threshold, wire D4 to GND. To alert when temperature is above the threshold, leave D4 unconnected. This setting only takes effect at device start/reset.
+To alert when temperature is below the threshold, switch D4 to GND. To alert when temperature is above the threshold, leave D4 open.
 
-To keep the display permanently on, switch D6 to GND. This setting has effect in the loop real-time.
+To keep the display permanently on, switch D6 to GND.
 
 Connect A6, A7 to two POTs configured as voltage dividers. A6 is fine adjustment, A7 coarse adjustment. (It is customary to mount the coarse knob to the right of the fine knob.)
 
