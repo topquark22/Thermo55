@@ -99,7 +99,9 @@ Radio power selection:
 | NC  | 3 (MAX) |
 | GND | 1 (LOW) |
 
-Radio channel is fixed to 113.
+Radio channel is hard-coded to 113. If you need to change this, you can define it at compile time using the symbol `THERMO55_RADIO_CHANNEL`.
+
+Radio device ID is a required arbitrary `LL` value, that is also hard-coded, but can be redefined at compile time using the symbol `THERMO55_DEVICE_ID`.
 
 Connect GND, +5V, A4, A5 to the LCD display.
 
