@@ -14,10 +14,17 @@ const PROGMEM uint8_t PIN_ENABLE_RADIO = A0;
 // radio power level jumpers
 const PROGMEM uint8_t PIN_PWR2_ = A2;
 
-// radio channel
-const int CHANNEL_BASE = 113;
+// radio channel (allow to override at compile time)
+#ifndef THERMO55_RADIO_CHANNEL
+  #define THERMO55_RADIO_CHANNEL 113
+#endif
+const int CHANNEL_BASE = THERMO55_RADIO_CHANNEL;
 
-const uint64_t DEVICE_ID = 0x7E0000A700LL;
+// radio device ID (allow to override at compile time)
+#ifndef THERMO55_DEVICE_ID
+  #define THERMO55_DEVICE_ID 0x7E0000A700LL
+#endif
+const uint64_t DEVICE_ID = THERMO55_DEVICE_ID;
 
 void setupRadio(bool xmitMode);
 
