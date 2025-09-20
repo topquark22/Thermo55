@@ -82,7 +82,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 
 *Note 2:* If D4 is jumpered to GND, then the alert occurs on a high-to-low temperature transition. Otherwise, it happens on a low-to-high temperature transition.
 
-*Note 3:* Jumper to GND to enable the radio. Leave unconnected for standalone configuration.
+*Note 3:* Jumper A0 to GND to enable the radio. Leave unconnected for standalone configuration.
 
 Operational modes:
 | A0  | A1  | mode           | radio? | thermocouple? | threshold POT? |
