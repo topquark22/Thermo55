@@ -105,7 +105,7 @@ Radio device ID is a required arbitrary `LL` value, that is also hard-coded, but
 
 Connect GND, +5V, A4, A5 to the LCD display.
 
-If operating in Transmitter or Standalone mode, connect GND. +5V, CS, CLK and DO to the Adafruit thermocouple breakout board. Note that the MAX31855 chip itself is a 3.3V device, but the breakout board has a 3.3V regulator. Leave the 3.3V output from the breakout board unconnected.
+If operating in Transmitter or Standalone mode, connect GND. +5V, CS, CLK and DO to the Adafruit thermocouple breakout board. Note that the [MAX31855.md](MAX31855) chip itself is a 3.3V device, but the breakout board has a 3.3V regulator. Leave the 3.3V output from the breakout board unconnected.
 
 ### Standalone
 
