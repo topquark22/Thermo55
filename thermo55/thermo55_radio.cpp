@@ -164,7 +164,7 @@ void serviceTemperatureRequests(float tempC) {
   }
 
   // Prepare the reply payload
- uint32_t value = (uint32_t)(tempC * 100.0f);
+  uint32_t value = (uint32_t)(tempC * 100.0f);
   commBuffer[0] = (value >> 24) & 0xFF;
   commBuffer[1] = (value >> 16) & 0xFF;
   commBuffer[2] = (value >> 8)  & 0xFF;
