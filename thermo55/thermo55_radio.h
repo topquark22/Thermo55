@@ -27,11 +27,14 @@ const int CHANNEL_BASE = THERMO55_RADIO_CHANNEL;
 const uint64_t DEVICE_ID = THERMO55_DEVICE_ID;
 
 void setupRadio(bool xmitMode);
-
 boolean isRadioEnabled();
 
+// original one-way helpers (still available if you want them)
 float receiveCelsius();
-
 void transmitCelsius(float c);
+
+// NEW: request/response API
+bool requestCelsius(float *c);
+void serviceTemperatureRequests(float tempC);
 
 #endif
