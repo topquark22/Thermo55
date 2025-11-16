@@ -86,7 +86,7 @@ void setupRadio(bool xmitMode) {
 // assume radio enabled
 float receiveCelsius() {
   if (!radio.available()) {
-    return INF_TEMP;
+    return MAX_TEMP;
   }
   radio.read(commBuffer, 4); // Read data from the nRF24L01
   uint32_t value = ( (uint32_t)commBuffer[0] << 24) |
@@ -174,5 +174,3 @@ void serviceTemperatureRequests(float tempC) {
   radio.write(commBuffer, 4);
   radio.startListening();
 }
-
-

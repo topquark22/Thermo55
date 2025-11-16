@@ -46,8 +46,8 @@ Adafruit_MAX31855 thermocouple(PIN_thermoCLK, PIN_thermoCS, PIN_thermoDO);
 LiquidCrystal_I2C lcd(LCD_I2C_ADDR, LCD_WIDTH, LCD_HEIGHT);
 
 // track max and min temp since last measurement
-float maxTemp = NEGATIVE_INF_TEMP;
-float minTemp = INF_TEMP;
+float maxTemp = MIN_TEMP;
+float minTemp = MAX_TEMP;
 
 // time display stays on normally (can be set at compile time)
 #ifndef DISPLAY_TIME
@@ -91,7 +91,7 @@ float tempToDisplay(float celsius) {
   return !digitalRead(PIN_DISP_F_) ? celsiusToFahrenheit(celsius) : celsius;
 }
 
-float prevThreshold = NEGATIVE_INF_TEMP;
+float prevThreshold = MIN_TEMP;
 
 // alarm threshold supported range in degrees C
 // (Note: Type K thermocouple actually supports -200 to +1350)
@@ -153,8 +153,8 @@ void setup() {
 
   Serial.println();
   
-  maxTemp = NEGATIVE_INF_TEMP;
-  minTemp = INF_TEMP;
+  maxTemp = MIN_TEMP;
+  minTemp = MAX_TEMP;
   
   displayCountdown = DISPLAY_TIME;
   turnOnDisplay();
@@ -201,8 +201,8 @@ void loop() {
     turnOnDisplay();
     if (maxMinDisplay) {
       // button pressed during max/min display; reset values
-      maxTemp = NEGATIVE_INF_TEMP;
-      minTemp = INF_TEMP;
+      maxTemp = MIN_TEMP;
+      minTemp = MAX_TEMP;
     }
   }
   if (button && prevButton) {
@@ -211,7 +211,7 @@ void loop() {
   }
   prevButton = button;
 
-  float c = INF_TEMP;
+  float c = MAX_TEMP;
 
   if (xmitMode) {
     checkThermocouple();
@@ -223,11 +223,11 @@ void loop() {
     if (requestCelsius(&c)) {
       // got a fresh reading
     } else {
-      c = INF_TEMP;
+      c = MAX_TEMP;
     }
   }
 
-  if (c > maxTemp && c < INF_TEMP) {
+  if (c > maxTemp && c < MAX_TEMP) {
     maxTemp = c;
   }
   if (c < minTemp) {
@@ -253,7 +253,7 @@ void loop() {
 
     bool alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
 
-    bool alarm = (alarmOnHighTemp && c >= threshold && c < INF_TEMP) || (!alarmOnHighTemp && c <= threshold);
+    bool alarm = (alarmOnHighTemp && c >= threshold && c < MAX_TEMP) || (!alarmOnHighTemp && c <= threshold);
     setOutput(alarm);
     if (alarm) {
       Serial.println(F("ALARM ON"));
@@ -278,7 +278,7 @@ void loop() {
   
   if (!maxMinDisplay) { // normal mode
   
-    if (c < INF_TEMP) {
+    if (c < MAX_TEMP) {
       Serial.print(F("Temperature: "));
       Serial.println(c);
       lcd.setCursor(0, 0);
@@ -293,7 +293,7 @@ void loop() {
 
     lcd.setCursor(0, 0);
 
-    if (!(maxTemp > NEGATIVE_INF_TEMP)) {
+    if (!(maxTemp > MIN_TEMP)) {
       Serial.println(F("No max/min data"));
       lcd.print(F("NO MAX/MIN DATA"));
 

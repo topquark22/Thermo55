@@ -20,13 +20,15 @@ const PROGMEM uint8_t PIN_PWR2_ = A2;
 #endif
 const int CHANNEL_BASE = THERMO55_RADIO_CHANNEL;
 
-// radio device ID (allow to override at compile time)
+// 40-bit radio device ID (allow to override at compile time)
 #ifndef THERMO55_DEVICE_ID
   #define THERMO55_DEVICE_ID 0x7E0000A700LL
 #endif
+
 const uint64_t DEVICE_ID = THERMO55_DEVICE_ID;
 
 void setupRadio(bool xmitMode);
+
 boolean isRadioEnabled();
 
 // original one-way helpers (still available if you want them)
