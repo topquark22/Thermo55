@@ -136,7 +136,7 @@ bool requestCelsius(float *c) {
 
   // Read the 4-byte centi-degree response
   radio.read(commBuffer, 4);
-  int value = ( (uint32_t)commBuffer[0] << 24) |
+  uint32_t value = ( (uint32_t)commBuffer[0] << 24) |
               ( (uint32_t)commBuffer[1] << 16) |
               ( (uint32_t)commBuffer[2] << 8)  |
                 (uint32_t)commBuffer[3];
