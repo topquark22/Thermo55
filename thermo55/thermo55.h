@@ -9,9 +9,4 @@
 
 #include "LiquidCrystal_I2C.h"
 
- // above highest reading for K-type thermocouple
-#define MAX_TEMP 99999
- // below lowest reading for K-type thermocouple
-#define MIN_TEMP -99999
-
 #endif

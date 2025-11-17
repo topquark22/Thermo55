@@ -1,154 +1,151 @@
 #include "thermo55.h"
 #include "thermo55_radio.h"
 
-uint8_t commBuffer[4]; // to allow for left-shift operations. Actual value is 8 bits
+#include <SPI.h>
 
 RF24 radio(PIN_CE, PIN_CSN, SPI_CLOCK_DIV4);
 
 extern LiquidCrystal_I2C lcd;
 
-bool radioEnabled;
+static bool radioEnabled = false;
+static bool isMasterNode = false;   // false on thermocouple node (xmitMode==true), true on display node
 
 bool isRadioEnabled() {
   return radioEnabled;
 }
 
-void setupRadio(bool xmitMode) {
+// Simple request / response packet formats.
+// All multi-byte fields are sent MSB-first (big-endian) over the air.
+struct ThermoReq {
+  uint8_t  cmd;      // 1 = READ_TEMP
+  uint8_t  reserved; // currently unused
+  uint16_t seq;      // sequence number from master
+};
 
+struct ThermoResp {
+  uint8_t  status;   // 0 = OK, non-zero = error
+  uint8_t  reserved; // currently unused
+  uint16_t seq;      // echoed sequence number
+  int32_t  tempC_x100; // temperature in centi-degrees Celsius
+};
+
+static uint16_t g_seqCounter = 0;
+
+void setupRadio(bool xmitMode) {
   lcd.clear();
 
   pinMode(PIN_ENABLE_RADIO, INPUT_PULLUP);
   radioEnabled = !digitalRead(PIN_ENABLE_RADIO);
 
-  if (!xmitMode && !radioEnabled) {
-    Serial.println(F("Unsupported configuration"));
-    lcd.print("UNSUPPORTED");
-    lcd.setCursor(0, 1);
-    lcd.print(F("CONFIGURATION"));
-    delay(100);
-    exit(1);
-  }
-
   if (!radioEnabled) {
+    // Radio is disabled via jumper; don't touch the RF24 at all.
+    Serial.println(F("Radio disabled (PIN_ENABLE_RADIO high)"));
+    lcd.print(F("RADIO DISABLED"));
+    delay(250);
     return;
   }
 
-// power level jumpers
+  // Power level jumper
   pinMode(PIN_PWR2_, INPUT_PULLUP);
-
-  // power 0=MIN, 1=LOW, 2=HIGH, 3=MAX
+  // Original design: 0=MIN, 1=LOW, 2=HIGH, 3=MAX
   rf24_pa_dbm_e power = (rf24_pa_dbm_e)(2 * digitalRead(PIN_PWR2_) + 1);
-  Serial.print(F("Power set to ")); Serial.println(power);
 
-  // Arduino Nano does not have enough pins to allocate one for this!
-  //pinMode(PIN_CHANNEL, INPUT_PULLUP);
-  int channel = CHANNEL_BASE; // + 5 * digitalRead(PIN_CHANNEL);
+  radio.begin();
 
-  radio.begin();  
-
-  if (radio.isChipConnected()) {
-    // Data rate: Can set to RF24_1MBPS, RF24_2MBPS, RF24_250KBPS (nRF24L01+ only)
-    radio.setDataRate(RF24_1MBPS);
-    radio.setPALevel(power);
-    radio.setChannel(channel);
-
-    Serial.print(F("Radio power set to "));
-    Serial.println(power);
-    lcd.print(F("POWER"));
-    lcd.setCursor(8, 0);
-    lcd.print(power);
-
-    Serial.print(F("Radio channel set to "));
-    Serial.println(channel);
-    lcd.setCursor(0, 1);
-    lcd.print(F("CHANNEL"));
-    lcd.setCursor(8, 1);
-    lcd.print(channel);
-    delay(1000);
-  } else {
+  if (!radio.isChipConnected()) {
     Serial.println(F("Radio fault"));
     lcd.clear();
     lcd.print(F("RADIO FAULT"));
-    delay(100);
-    exit(1);
+    delay(500);
+    radioEnabled = false;
+    return;
   }
 
-  uint64_t deviceID = DEVICE_ID;     // use full 40-bit/64-bit address
+  radio.setDataRate(RF24_1MBPS);
+  radio.setPALevel(power);
+  radio.setChannel(CHANNEL_BASE);
 
-  // Both sides can TX and RX on the same address
-  radio.openWritingPipe(deviceID);
-  radio.openReadingPipe(1, deviceID);
+  // Robust comms: auto-ack, retries, dynamic payloads and ACK payloads.
+  radio.setAutoAck(true);
+  radio.enableDynamicPayloads();
+  radio.enableAckPayload();
+  radio.setRetries(5, 15); // 5 retries, 15 * 250us between
 
-  // Start in listening mode on both boards
+  // Both nodes share the same address; master==display, slave==thermocouple.
+  radio.openWritingPipe(DEVICE_ID);
+  radio.openReadingPipe(1, DEVICE_ID);
   radio.startListening();
-}
 
-// assume radio enabled
-float receiveCelsius() {
-  if (!radio.available()) {
-    return MAX_TEMP;
+  isMasterNode = !xmitMode; // original: xmitMode true on TX node
+
+  Serial.print(F("Radio OK, role: "));
+  lcd.clear();
+  if (isMasterNode) {
+    Serial.println(F("MASTER (display)"));
+    lcd.print(F("RADIO MASTER"));
+  } else {
+    Serial.println(F("SLAVE (sensor)"));
+    lcd.print(F("RADIO SLAVE"));
   }
-  radio.read(commBuffer, 4); // Read data from the nRF24L01
-  uint32_t value = ( (uint32_t)commBuffer[0] << 24) |
-                   ( (uint32_t)commBuffer[1] << 16) |
-                   ( (uint32_t)commBuffer[2] << 8)  |
-                     (uint32_t)commBuffer[3];
-  float c = (float)value / 100;
-  return c;
-}
-
-// assume radio enabled
-void transmitCelsius(float c) {
-  uint32_t value = 100 * c;
-  commBuffer[0] = (value >> 24) & 0xFF;
-  commBuffer[1] = (value >> 16) & 0xFF;
-  commBuffer[2] = (value >> 8) & 0xFF;
-  commBuffer[3] = value & 0xFF;
-  radio.write(commBuffer, 4);
+  lcd.setCursor(0, 1);
+  lcd.print(F("CH "));
+  lcd.print((int)CHANNEL_BASE);
+  lcd.print(F(" PWR "));
+  lcd.print((int)power);
+  delay(750);
 }
 
 // Master side (LCD / receiver board):
-// Send a 1-byte dummy request, then wait for a 4-byte temperature response.
-bool requestCelsius(float *c) {
+// Send a ThermoReq and wait for a ThermoResp attached as an ACK payload.
+// Returns true on success and fills outC with the remote temperature.
+bool requestCelsius(float &outC) {
   if (!radioEnabled) {
     return false;
   }
 
-  // 1-byte “please send me a temperature” request
-  uint8_t reqByte = 0x55;
+  ThermoReq req;
+  req.cmd      = 1;           // READ_TEMP
+  req.reserved = 0;
+  req.seq      = ++g_seqCounter;
 
-  // Send request
-  radio.stopListening();
-  bool ok = radio.write(&reqByte, 1);
-  radio.startListening();
+  ThermoResp resp;
+  const uint8_t MAX_TRIES = 3;
 
-  if (!ok) {
-    return false; // radio-level failure
-  }
+  for (uint8_t attempt = 0; attempt < MAX_TRIES; ++attempt) {
+    radio.stopListening();
+    bool ok = radio.write(&req, sizeof(req));
+    radio.startListening();
 
-  // Wait up to ~100 ms for the response
-  unsigned long start = millis();
-  while (!radio.available()) {
-    if (millis() - start > 100) {
-      return false; // timeout
+    if (!ok) {
+      // RF level failure even after auto-retries; try again.
+      continue;
+    }
+
+    // If the slave attached an ACK payload, read it.
+    if (radio.isAckPayloadAvailable()) {
+      while (radio.isAckPayloadAvailable()) {
+        radio.read(&resp, sizeof(resp));
+      }
+
+      if (resp.seq == req.seq && resp.status == 0) {
+        outC = resp.tempC_x100 / 100.0f;
+        return true;
+      }
+      // Wrong seq or error status; treat as failure and retry.
+    } else {
+      // Got an ACK with no payload; treat as failure and retry.
     }
   }
 
-  // Read the 4-byte centi-degree response
-  radio.read(commBuffer, 4);
-  uint32_t value = ( (uint32_t)commBuffer[0] << 24) |
-              ( (uint32_t)commBuffer[1] << 16) |
-              ( (uint32_t)commBuffer[2] << 8)  |
-                (uint32_t)commBuffer[3];
-
-  *c = (float)value / 100.0f;
-  return true;
+  return false; // no valid reply after bounded retries
 }
 
 // Slave side (thermocouple / transmitter board):
-// If a request packet is waiting, consume it and immediately send
-// the current temperature as a 4-byte centi-degree payload.
-void serviceTemperatureRequests(float tempC) {
+// Called frequently from loop() with the CURRENT local temperature.
+// If a ThermoReq packet is present, consume it and attach a ThermoResp
+// as an ACK payload. We do NOT actively transmit; the master pulls data
+// by sending a request packet.
+void processRadioAsSlave(float currentTemp) {
   if (!radioEnabled) {
     return;
   }
@@ -157,20 +154,23 @@ void serviceTemperatureRequests(float tempC) {
     return; // nothing to do
   }
 
-  // Consume the request byte(s); we don't really care about contents.
-  uint8_t reqBuf[8];
-  while (radio.available()) {
-    radio.read(reqBuf, sizeof(reqBuf));
+  ThermoReq req;
+
+  // Read the incoming request packet
+  radio.read(&req, sizeof(req));
+
+  if (req.cmd != 1) {
+    // Unknown command; ignore.
+    return;
   }
 
-  // Prepare the reply payload
-  uint32_t value = (uint32_t)(tempC * 100.0f);
-  commBuffer[0] = (value >> 24) & 0xFF;
-  commBuffer[1] = (value >> 16) & 0xFF;
-  commBuffer[2] = (value >> 8)  & 0xFF;
-  commBuffer[3] = value & 0xFF;
+  ThermoResp resp;
+  resp.status     = 0;
+  resp.reserved   = 0;
+  resp.seq        = req.seq;
+  resp.tempC_x100 = (int32_t)(currentTemp * 100.0f);
 
-  radio.stopListening();
-  radio.write(commBuffer, 4);
-  radio.startListening();
+  // Attach the reply as an ACK payload for this pipe.
+  // The RF24 hardware will send it back to the master as part of the ACK.
+  radio.writeAckPayload(1, &resp, sizeof(resp));
 }
