@@ -168,15 +168,6 @@ Securing the thermocouple:
 - Use Kapton tape for attaching the thermocouple to a surface like a transistor. It's heat resistant and leaves minimal residue.
 - The adhesive used in Kapton tape is typically a silicone adhesive which can withstand high temperatures.
 
-## Diagnostics
-
-If radio enabled but not connected properly:
-- 250 ms blink of alarm signal
-
-If thermocouple enabled but not connected properly:
-- 500 ms blink of alarm signal
-- LCD displays more detailed error message (open circuit or short)
-
 ## Operation
 
 The LCD initially displays the radio settings for 1 second. Then it switches to display of the temperature and threshold.
@@ -186,6 +177,18 @@ The LCD will dim after 10 seconds (unless always-on display is active). To turn 
 To activate the max/min display, press and hold the button for 2 seconds.
 
 To reset the max/min values, continue holding or press the button again during the max/min display.
+
+## Diagnostics
+
+### Radio
+
+If radio is enabled but not connected properly, "RADIO FAULT" is displayed on the LCD. The alarm signal blinks with a frequency of 250 ms. 
+
+### Thermocouple
+
+This applies to transmitter mode with thermocouple breakout board attached. If thermocouple is not connected properly to the breakout board:
+- alarm signal blinks with frequency of 500 ms
+- LCD displays more detailed error message (open circuit or short)
 
 # Builds
 
