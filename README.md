@@ -168,6 +168,15 @@ Securing the thermocouple:
 - Use Kapton tape for attaching the thermocouple to a surface like a transistor. It's heat resistant and leaves minimal residue.
 - The adhesive used in Kapton tape is typically a silicone adhesive which can withstand high temperatures.
 
+## Diagnostics
+
+If radio enabled but not connected properly:
+- 250 ms blink of alarm signal
+
+If thermocouple enabled but not connected properly:
+- 500 ms blink of alarm signal
+- LCD displays more detailed error message (open circuit or short)
+
 ## Operation
 
 The LCD initially displays the radio settings for 1 second. Then it switches to display of the temperature and threshold.

@@ -69,23 +69,6 @@ void setOutput(bool value) {
   digitalWrite(PIN_OUT_, !value);
 }
 
-// never returns
-void blinkLED(int millis) {
-  while (true) {
-    setOutput(HIGH);
-    delay(millis);
-    setOutput(LOW);
-    delay(millis);
-  }
-}
-
-void errExit() {
-  Serial.println(F("Radio fault"));
-  lcd.clear();
-  lcd.print(F("RADIO FAULT"));
-  blinkLED(250);
-}
-
 void turnOnDisplay() {
   displayCountdown = DISPLAY_TIME;
 }
@@ -125,6 +108,23 @@ float getThreshold() {
   prevThreshold = threshold;
 
   return threshold;
+}
+
+// never returns
+void blinkLED(int millis) {
+  while (true) {
+    setOutput(HIGH);
+    delay(millis);
+    setOutput(LOW);
+    delay(millis);
+  }
+}
+
+void errExit() {
+  Serial.println(F("Radio fault"));
+  lcd.clear();
+  lcd.print(F("RADIO FAULT"));
+  blinkLED(250);
 }
 
 const int BAUD_RATE = 9600;
@@ -192,7 +192,11 @@ void checkThermocouple() {
     } else if (error & MAX31855_FAULT_SHORT_VCC) {
       Serial.println(F("Short to VCC!"));
       lcd.print(F("SHORT TO VCC"));
+    } else {
+      Serial.println(F("Unspecified error"));
+      lcd.print(F("UNSPECIFIED"));
     }
+    blinkLED(250);
   }
 }
 
