@@ -196,7 +196,7 @@ void checkThermocouple() {
       Serial.println(F("Unspecified error"));
       lcd.print(F("UNSPECIFIED"));
     }
-    blinkLED(250);
+    blinkLED(500);
   }
 }
 
