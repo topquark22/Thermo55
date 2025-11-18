@@ -14,4 +14,6 @@
  // below lowest reading for K-type thermocouple
 #define MIN_TEMP -99999
 
+void errExit();
+
 #endif

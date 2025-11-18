@@ -79,6 +79,13 @@ void blinkLED(int millis) {
   }
 }
 
+void errExit() {
+  Serial.println(F("Radio fault"));
+  lcd.clear();
+  lcd.print(F("RADIO FAULT"));
+  blinkLED(250);
+}
+
 void turnOnDisplay() {
   displayCountdown = DISPLAY_TIME;
 }

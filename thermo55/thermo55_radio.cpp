@@ -66,11 +66,7 @@ void setupRadio(bool xmitMode) {
     lcd.print(channel);
     delay(1000);
   } else {
-    Serial.println(F("Radio fault"));
-    lcd.clear();
-    lcd.print(F("RADIO FAULT"));
-    delay(100);
-    exit(1);
+    errExit();
   }
 
   uint64_t deviceID = DEVICE_ID;     // use full 40-bit/64-bit address
