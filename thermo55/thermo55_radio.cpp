@@ -1,7 +1,7 @@
 #include "thermo55.h"
 #include "thermo55_radio.h"
 
-uint8_t commBuffer[4]; // to allow for left-shift operations. Actual value is 8 bits
+uint8_t commBuffer[4];
 
 RF24 radio(PIN_CE, PIN_CSN, SPI_CLOCK_DIV4);
 
