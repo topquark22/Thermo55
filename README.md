@@ -106,8 +106,6 @@ Connect GND, +5V, A4, A5 to the LCD display.
 
 If operating in Transmitter or Standalone mode, connect GND. +5V, CS, CLK and DO to the Adafruit thermocouple breakout board. Note that the [MAX31855](./MAX31855.md) chip itself is a 3.3V device, but the breakout board has its own 3.3V regulator. The 3.3V (3Vo) output from the breakout board can be left unconnected.
 
-Connect D5 to GND via a normally-open pushbutton switch. For debouncing, also connect D5 to GND via a 100nF (0.1µF) ceramic capacitor.
-
 ### Standalone
 
 This configuration can run on a single board and does not use a radio.
@@ -124,7 +122,7 @@ Connect pin A0 to GND (enables radio.)
 
 Connect pin A1 to GND (configures as receiver.)
 
-Connect D5 to GND via a normally-open pushbutton switch.
+Connect D5 to GND via a normally-open pushbutton switch, used for selecting and resetting the MAX/MIN display. Also connect D5 to GND via a 100nF (0.1µF) ceramic capacitor; this works with the ATmega's internal pullup resistor and Schmitt-trigger input to debounce the switch.
 
 For Fahrenheit display on the LCD, switch D2 to GND. It does not affect the numbers on the serial monitor, which are always degrees C.
 
