@@ -4,6 +4,8 @@ An alerting system that raises an alarm when the temperature rises above or fall
 
 Additionally, remote monitoring of a separate thermometer module is supported via nRF24L01 radio.
 
+*Important:* If upgrading from v4.x or lower to v5 or higher, hardware changes are required. Please review the [release notes](v5_relnotes.md).
+
 ## Software requirements
 
 Install the following libraries into the Arduino IDE:
