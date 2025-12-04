@@ -92,7 +92,6 @@ Operational modes:
 | GND | NC  | transmitter    | yes    | yes           | no             |
 | GND | GND | receiver       | yes    | no            | yes            |
 
-
 Radio power selection:
 | A2  | power   |
 |-----|---------|
@@ -106,6 +105,10 @@ Radio device ID is a required arbitrary `LL` value, that is also hard-coded, but
 Connect GND, +5V, A4, A5 to the LCD display.
 
 If operating in Transmitter or Standalone mode, connect GND. +5V, CS, CLK and DO to the Adafruit thermocouple breakout board. Note that the [MAX31855](./MAX31855.md) chip itself is a 3.3V device, but the breakout board has its own 3.3V regulator. The 3.3V (3Vo) output from the breakout board can be left unconnected.
+
+### Display pushbutton
+
+Connect D5 to GND via a normally-open pushbutton switch. For debouncing, also connect D5 to ground via a 100nF (0.1µF) ceramic capacitor.
 
 ### Standalone
 
