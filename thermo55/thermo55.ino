@@ -279,7 +279,8 @@ void loop() {
       Serial.println(threshold);
       Serial.println();
       lcd.setCursor(0, 1);
-      lcd.print(F("THRESHOLD  "));
+      lcd.print(F("THRESHOLD"));
+      lcd.print(alarmOnHighTemp ? F("  ") : F("* "));
       if (threshold >= 0 && threshold < 10.0) {
         lcd.print(F(" "));
       }
