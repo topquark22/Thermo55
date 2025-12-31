@@ -45,42 +45,34 @@ If using an external radio, use the pins marked *E*. If using an integrated Nano
 
 There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 for the thermocouple.
 
-**T**: connections for transmitter (thermometer)  
-**R**: connections for receiver (monitor)
+All INPUT_PULLUP pins are active low according to the function described.
 
-- X : relevant connection
-- N : no connection
-- L : connect if LCD used
-- E : to external radio if used
+| pin  | type         | meaning                        |
+|------|--------------|--------------------------------|
+| D2   | INPUT_PULLUP | Fahrenheit display (Note 1)    |
+| D3   | OUTPUT       | alert output                   |
+| D4   | INPUT_PULLUP | threshold direction (Note 2)   |
+| D5   | INPUT_PULLUP | display pushbutton             |
+| D6   | INPUT_PULLUP | always-on display              |
+| D7   | spi1         | CLK (MAX31855)                 |
+| D8   | spi1         | CS  (MAX31855)                 |
+| D9   | spi          | CSN (nRF24L01)                 |
+| D10  | spi          | CE  (nRF24L01)                 |
+| D11  | spi          | MOSI (nRF24L01)                |
+| D12  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
+| D13  | spi          | SCK  (nRF24L01)                |
+| A0   | INPUT_PULLUP | ensable radio                  |
+| A1   | INPUT_PULLUP | monitor (receiver) mode        |
+| A2   | INPUT_PULLUP | low power radio setting        |
+| A3   | OUTPUT       | alert output, inverted         |
+| A4   | i2c          | SDA (LCD 1602)                 |
+| A5   | i2c          | SCL (LCD 1602)                 |
+| A6   | INPUT        | threshold POT (fine)           |
+| A7   | INPUT        | threshold POT (coarse)         |
 
-| pin  | T  | R  | type         | meaning                        |
-|------|----|----|--------------|--------------------------------|
-| D2   | L  | X  | INPUT_PULLUP | Fahrenheit display (Note 1)    |
-| D3   | N  | X  | OUTPUT       | alert output                   |
-| D4   | N  | X  | INPUT_PULLUP | threshold direction (Note 2)   |
-| D5   | L  | X  | INPUT_PULLUP | display pushbutton             |
-| D6   | L  | X  | INPUT_PULLUP | always-on display              |
-| D7   | X  | N  | spi1         | CLK (MAX31855)                 |
-| D8   | X  | N  | spi1         | CS  (MAX31855)                 |
-| D9   | E  | E  | spi          | CSN (nRF24L01)                 |
-| D10  | E  | E  | spi          | CE  (nRF24L01)                 |
-| D11  | E  | E  | spi          | MOSI (nRF24L01)                |
-| D12  | XE | E  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
-| D13  | E  | E  | spi          | SCK  (nRF24L01)                |
-| A0   | X  | X  | INPUT_PULLUP | enable radio (Note 3)          |
-| A1   | X  | X  | INPUT_PULLUP | monitor (receiver) mode        |
-| A2   | X  | X  | INPUT_PULLUP | radio power, -2's bit          |
-| A3   | N  | X  | OUTPUT       | alert output, inverted         |
-| A4   | L  | X  | i2c          | SDA (LCD 1602)                 |
-| A5   | L  | X  | i2c          | SCL (LCD 1602)                 |
-| A6   | N  | X  | INPUT        | threshold POT (fine)           |
-| A7   | N  | X  | INPUT        | threshold POT (coarse)         |
-
-*Note 1:* If D2 is jumpered to GND, then the temperature on the LCD is displayed in degrees F. If left unconnected, the display is in degrees C. The serial monitor output always displays in degrees C.
+*Note 1:* The serial monitor output always displays in degrees C.
 
 *Note 2:* If D4 is jumpered to GND, then the alert occurs on a high-to-low temperature transition. Otherwise, it happens on a low-to-high temperature transition.
-
-*Note 3:* Jumper A0 to GND to enable the radio. Leave unconnected for standalone configuration.
 
 Operational modes:
 | A0  | A1  | mode           | radio? | thermocouple? | threshold POT? |
