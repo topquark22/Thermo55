@@ -114,8 +114,6 @@ Connect POTs as described under **Receiver module**.
 
 Connect thermocouple as described under **Transmitter module**.
 
-To disable thresholds/alerts, connect the coarse threshold to GND (pin A7).
-
 ### Receiver module
 
 Connect pin A0 to GND (enables radio.) 
@@ -141,6 +139,8 @@ Connect pin A0 to GND (enables radio.)
 Leave A1 unconnected (configures as transmitter.)
 
 If using an LCD display, connect D5 to a normally-open pushbutton switch.
+
+To disable thresholds/alerts, connect the coarse threshold to GND (pin A7).
 
 Connecting the Adafruit thermocouple amplifier breakout board:
 
