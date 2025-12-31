@@ -91,6 +91,9 @@ const float THRESHOLD_FINE_LOW = -10.0;
 const float THRESHOLD_FINE_HIGH = 10.0;
 const float POT_NOISE_ALLOWANCE = 1.0;
 
+ // Threshold below which not to alarm or display threshold
+ const float THRESHOLD_MIN = -100;
+
 float getThreshold() {
   int reading_coarse = analogRead(PIN_THRESHOLD_COARSE);
   int reading_fine = analogRead(PIN_THRESHOLD_FINE);
@@ -264,25 +267,29 @@ void loop() {
 
     bool alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
 
-    bool alarm = (alarmOnHighTemp && c >= threshold && c < MAX_TEMP) || (!alarmOnHighTemp && c <= threshold);
-    setOutput(alarm);
-    if (alarm) {
-      Serial.println(F("ALARM ON"));
-      turnOnDisplay();
-      maxMinDisplay = false;
-    } else {
-      Serial.println(F("ALARM OFF"));
+    if (threshold >= THRESHOLD_MIN) { // can disable alarm this way
+      bool alarm = (alarmOnHighTemp && c >= threshold && c < MAX_TEMP) || (!alarmOnHighTemp && c <= threshold);
+      setOutput(alarm);
+      if (alarm) {
+        Serial.println(F("ALARM ON"));
+        turnOnDisplay();
+        maxMinDisplay = false;
+      } else {
+        Serial.println(F("ALARM OFF"));
+      }
     }
 
     if (!maxMinDisplay) {
       Serial.print(F("Threshold:   "));
       Serial.println(threshold);
       Serial.println();
-      lcd.setCursor(0, 1);
-      lcd.print(F("THRESHOLD"));
-      lcd.print(alarmOnHighTemp ? F("  ") : F("* "));
-      if (threshold >= 0 && threshold < 10.0) {
-        lcd.print(F(" "));
+      if (threshold >= THRESHOLD_MIN) { // normal range
+        lcd.setCursor(0, 1);
+        lcd.print(F("THRESHOLD"));
+        lcd.print(alarmOnHighTemp ? F("  ") : F("* "));
+        if (threshold >= 0 && threshold < 10.0) {
+          lcd.print(F(" "));
+        }
       }
       lcd.print(tempToDisplay(threshold));
     }

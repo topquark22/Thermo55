@@ -114,6 +114,8 @@ Connect POTs as described under **Receiver module**.
 
 Connect thermocouple as described under **Transmitter module**.
 
+To disable thresholds/alerts, connect the coarse threshold to GND (pin A7).
+
 ### Receiver module
 
 Connect pin A0 to GND (enables radio.) 
@@ -124,7 +126,7 @@ Connect D5 to GND via a normally-open pushbutton switch, used for selecting and 
 
 For Fahrenheit display on the LCD, switch D2 to GND. It does not affect the numbers on the serial monitor, which are always degrees C.
 
-To alert when temperature is below the threshold, switch D4 to GND. To alert when temperature is above the threshold, leave D4 open.
+To alert when temperature is below the threshold, switch D4 to GND. To alert when temperature is above the threshold, switch D4 open.
 
 To keep the display permanently on, switch D6 to GND.
 
