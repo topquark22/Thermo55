@@ -45,8 +45,6 @@ If using an external radio, use the pins marked *E*. If using an integrated Nano
 
 There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 for the thermocouple.
 
-All INPUT_PULLUP pins are active low according to the function described.
-
 | pin  | type         | meaning                        |
 |------|--------------|--------------------------------|
 | D2   | INPUT_PULLUP | Fahrenheit display (Note 1)    |
