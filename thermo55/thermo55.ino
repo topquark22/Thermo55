@@ -33,11 +33,12 @@ bool xmitMode;
 // analog input to set alarm threshold
 const PROGMEM uint8_t PIN_THRESHOLD_COARSE = A7;
 const PROGMEM uint8_t PIN_THRESHOLD_FINE = A6;
+const PROGMEM uint8_t PIN_HYSTERESIS = A2;
 
 // SPI hardware configuration
-const PROGMEM uint8_t PIN_thermoDO = 12; // MISO
-const PROGMEM uint8_t PIN_thermoCS = 8; // Chip select
-const PROGMEM uint8_t PIN_thermoCLK = 7; // SPI serial clock (NOTE must not be the same as the nRF24L01 clock)
+const PROGMEM uint8_t PIN_thermoDO = 12;  // MISO
+const PROGMEM uint8_t PIN_thermoCS = 8;   // Chip select
+const PROGMEM uint8_t PIN_thermoCLK = 7;  // SPI serial clock (NOTE must not be the same as the nRF24L01 clock)
 
 Adafruit_MAX31855 thermocouple(PIN_thermoCLK, PIN_thermoCS, PIN_thermoDO);
 
@@ -51,7 +52,7 @@ float minTemp = MAX_TEMP;
 
 // time display stays on normally (can be set at compile time)
 #ifndef DISPLAY_TIME
-  #define DISPLAY_TIME 10
+#define DISPLAY_TIME 10
 #endif
 
 // countdown time for display
@@ -73,12 +74,16 @@ void turnOnDisplay() {
   displayCountdown = DISPLAY_TIME;
 }
 
-float celsiusToFahrenheit(float celsius) {
-  return celsius * 9.0 / 5.0 + 32;
+// absolute degrees
+float tempToDisplay(float celsius) {
+  float temp = !digitalRead(PIN_DISP_F_) ? celsius * 9.0 / 5.0 + 32 : celsius;
+  return temp;
 }
 
-float tempToDisplay(float celsius) {
-  return !digitalRead(PIN_DISP_F_) ? celsiusToFahrenheit(celsius) : celsius;
+// relative degrees
+float hysToDisplay(float celsius) {
+  float hys = !digitalRead(PIN_DISP_F_) ? celsius * 9.0 / 5.0 : celsius;
+  return hys;
 }
 
 float prevThreshold = MIN_TEMP;
@@ -89,10 +94,12 @@ const float THRESHOLD_COARSE_LOW = -100.0;
 const float THRESHOLD_COARSE_HIGH = 300.0;
 const float THRESHOLD_FINE_LOW = -10.0;
 const float THRESHOLD_FINE_HIGH = 10.0;
+const float HYSTERESIS_LOW = 0.1;
+const float HYSTERESIS_HIGH = 20.0;
 const float POT_NOISE_ALLOWANCE = 1.0;
 
- // Threshold below which not to alarm or display threshold
- const float THRESHOLD_MIN = -100;
+// Threshold below which not to alarm or display threshold
+const float THRESHOLD_MIN = -100;
 
 float getThreshold() {
   int reading_coarse = analogRead(PIN_THRESHOLD_COARSE);
@@ -111,6 +118,19 @@ float getThreshold() {
   prevThreshold = threshold;
 
   return threshold;
+}
+
+float getHysteresis() {
+  int reading_hysteresis = analogRead(PIN_HYSTERESIS);
+  float hysteresis = HYSTERESIS_HIGH * reading_hysteresis / 1023;
+  if (hysteresis < HYSTERESIS_LOW) {
+    hysteresis = 0;
+  }
+  return hysteresis;
+}
+
+bool isHysteresis() {
+  return getHysteresis() >= HYSTERESIS_LOW;
 }
 
 // never returns
@@ -133,13 +153,14 @@ void errExit() {
 const int BAUD_RATE = 9600;
 
 void setup() {
-  
+
   Serial.begin(BAUD_RATE);
 
   pinMode(PIN_OUT, OUTPUT);
   pinMode(PIN_OUT_, OUTPUT);
   pinMode(PIN_THRESHOLD_FINE, INPUT);
   pinMode(PIN_THRESHOLD_COARSE, INPUT);
+  pinMode(PIN_HYSTERESIS, INPUT);
   pinMode(PIN_ALARM_DIR, INPUT_PULLUP);
   pinMode(PIN_BUTTON_, INPUT_PULLUP);
   pinMode(PIN_XMIT, INPUT_PULLUP);
@@ -162,10 +183,10 @@ void setup() {
   }
 
   Serial.println();
-  
+
   maxTemp = MIN_TEMP;
   minTemp = MAX_TEMP;
-  
+
   displayCountdown = DISPLAY_TIME;
   turnOnDisplay();
   maxMinDisplay = false;
@@ -203,6 +224,28 @@ void checkThermocouple() {
   }
 }
 
+// is the alarm already on?
+bool isAlarming = false;
+
+bool checkAlarmCondition(float c) {
+
+  bool alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
+
+  float threshold = getThreshold();
+  float hysteresis = getHysteresis();
+
+  bool alarm;
+  if (!isAlarming) {
+    alarm = (alarmOnHighTemp && c >= threshold && c < MAX_TEMP)
+            || (!alarmOnHighTemp && c <= threshold);
+  } else {
+    alarm = (alarmOnHighTemp && c >= threshold - hysteresis && c < MAX_TEMP)
+            || (!alarmOnHighTemp && c <= threshold + hysteresis);
+  }
+  isAlarming = alarm;
+  return alarm;
+}
+
 void loop() {
 
   alwaysOnDisplay = !digitalRead(PIN_ALWAYS_ON_);
@@ -211,7 +254,7 @@ void loop() {
 
   bool button = !digitalRead(PIN_BUTTON_);
 
-   if (button) {
+  if (button) {
     turnOnDisplay();
     if (maxMinDisplay) {
       // button pressed during max/min display; reset values
@@ -262,13 +305,15 @@ void loop() {
     maxMinDisplay = false;
   }
 
+  bool alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
+
   if (!xmitMode || !isRadioEnabled()) {
     float threshold = getThreshold();
+    float hysteresis = getHysteresis();
 
-    bool alarmOnHighTemp = digitalRead(PIN_ALARM_DIR);
+    if (threshold >= THRESHOLD_MIN) {  // can disable alarm this way
+      bool alarm = checkAlarmCondition(c);
 
-    if (threshold >= THRESHOLD_MIN) { // can disable alarm this way
-      bool alarm = (alarmOnHighTemp && c >= threshold && c < MAX_TEMP) || (!alarmOnHighTemp && c <= threshold);
       setOutput(alarm);
       if (alarm) {
         Serial.println(F("ALARM ON"));
@@ -282,21 +327,38 @@ void loop() {
     if (!maxMinDisplay) {
       Serial.print(F("Threshold:   "));
       Serial.println(threshold);
+      Serial.print(F("Hysteresis:   "));
+      Serial.println(hysteresis);
       Serial.println();
-      if (threshold >= THRESHOLD_MIN) { // normal range
+      if (threshold >= THRESHOLD_MIN) {  // normal range
         lcd.setCursor(0, 1);
-        lcd.print(F("THRESHOLD"));
-        lcd.print(alarmOnHighTemp ? F("  ") : F("* "));
-        if (threshold >= 0 && threshold < 10.0) {
-          lcd.print(F(" "));
+        if (!isHysteresis()) {
+          lcd.print(F("THRESHOLD"));
+          lcd.print(alarmOnHighTemp ? F("  ") : F("* "));
+          if (threshold >= 0 && threshold < 10.0) {
+            lcd.print(F(" "));
+          }
+          lcd.print(tempToDisplay(threshold));
+        } else {  // hysteresis
+          lcd.print(F("THR"));
+          if(!alarmOnHighTemp) {
+            lcd.setCursor(2, 1);
+            lcd.print(F("*"));
+          }
+          if (threshold >= 0 && threshold < 10.0) {
+            lcd.print(F(" "));
+          }
+          lcd.print(tempToDisplay(threshold));
+          lcd.setCursor(9, 1);
+          lcd.print(F("HYS"));  // TODO verify number of spaces
+          lcd.print(hysToDisplay(hysteresis));
         }
       }
-      lcd.print(tempToDisplay(threshold));
     }
   }
-  
-  if (!maxMinDisplay) { // normal mode
-  
+
+  if (!maxMinDisplay) {  // normal mode
+
     if (c < MAX_TEMP) {
       Serial.print(F("Temperature: "));
       Serial.println(c);
@@ -308,7 +370,7 @@ void loop() {
       lcd.print(tempToDisplay(c));
     }
 
-  } else { // Max/Min mode
+  } else {  // Max/Min mode
 
     lcd.setCursor(0, 0);
 
@@ -322,13 +384,13 @@ void loop() {
       Serial.print(F("Maximum since last display: "));
       Serial.println(maxTemp);
       lcd.print(tempToDisplay(maxTemp));
-      
+
       lcd.setCursor(0, 1);
       lcd.print(F("MIN "));
       Serial.print(F("Minimum since last display: "));
       Serial.println(minTemp);
       lcd.print(tempToDisplay(minTemp));
-      
+
       Serial.println();
     }
   }

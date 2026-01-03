@@ -1,5 +1,4 @@
-#ifndef THERMO55_H
-#define THERMO55_H
+#pragma once
 
 #include <Arduino.h>
 
@@ -15,5 +14,3 @@
 #define MIN_TEMP -99999
 
 void errExit();
-
-#endif

@@ -11,9 +11,6 @@ const PROGMEM uint8_t PIN_CSN = 9;
 
 const PROGMEM uint8_t PIN_ENABLE_RADIO = A0;
 
-// radio power level jumpers
-const PROGMEM uint8_t PIN_PWR2_ = A2;
-
 // radio channel (allow to override at compile time)
 #ifndef THERMO55_RADIO_CHANNEL
   #define THERMO55_RADIO_CHANNEL 113
