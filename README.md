@@ -61,7 +61,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | D13  | spi          | SCK  (nRF24L01)                |
 | A0   | INPUT_PULLUP | ensable radio                  |
 | A1   | INPUT_PULLUP | monitor (receiver) mode        |
-| A2   | INPUT_PULLUP | low power radio setting        |
+| A2   | INPUT        | hysteresis POT            |
 | A3   | OUTPUT       | alert output, inverted         |
 | A4   | i2c          | SDA (LCD 1602)                 |
 | A5   | i2c          | SCL (LCD 1602)                 |
@@ -118,9 +118,17 @@ To alert when temperature is below the threshold, switch D4 to GND. To alert whe
 
 To keep the display permanently on, switch D6 to GND.
 
+Connect output pins D3 (alert) and/or A3 (inverted alert) in accordance with your use case.
+
 Connect A6, A7 to two POTs configured as voltage dividers. A6 is fine adjustment, A7 coarse adjustment. (It is customary to mount the coarse knob to the right of the fine knob.)
 
-Connect output pins D3 (alert) and/or A3 (inverted alert) in accordance with your use case.
+Connect A2 to a voltage divider (if using hysteresis), or to GND.
+
+### Threshold and hysteresis
+
+The coarse adjustment ranges from -100 to 300 degrees C. The fine adjustment gives you -10 to 10 degrees on either side in finer steps.
+
+Hysteresis is the number of degrees C that the temperature is allowed to go below (following on-high alarm) or above (following on-low alarm) without turning off the alarm. The range is between 0 and 20 degrees C.
 
 ### Transmitter module
 
