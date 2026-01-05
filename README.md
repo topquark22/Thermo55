@@ -61,7 +61,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | D13  | spi          | SCK  (nRF24L01)                |
 | A0   | INPUT_PULLUP | ensable radio                  |
 | A1   | INPUT_PULLUP | monitor (receiver) mode        |
-| A2   | INPUT        | hysteresis POT            |
+| A2   | INPUT        | hysteresis POT                 |
 | A3   | OUTPUT       | alert output, inverted         |
 | A4   | i2c          | SDA (LCD 1602)                 |
 | A5   | i2c          | SCL (LCD 1602)                 |
