@@ -59,7 +59,7 @@ There are two SPI buses with separate clocks: One (spi) for the radio, and spi1 
 | D11  | spi          | MOSI (nRF24L01)                |
 | D12  | spi, spi1    | MISO (nRF24L01), DO (MAX31855) |
 | D13  | spi          | SCK  (nRF24L01)                |
-| A0   | INPUT_PULLUP | ensable radio                  |
+| A0   | INPUT_PULLUP | enable radio                   |
 | A1   | INPUT_PULLUP | monitor (receiver) mode        |
 | A2   | INPUT        | hysteresis POT                 |
 | A3   | OUTPUT       | alert output, inverted         |
